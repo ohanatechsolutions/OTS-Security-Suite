@@ -8,7 +8,7 @@ unreviewed binary to the public.
 
 Open [GitHub Releases](https://github.com/ohanatechsolutions/OTS_Security_Suite/releases)
 while signed into the **ohanatechsolutions** account. The **DRAFT**
-v0.9.0-test.1 prerelease is visible to repository collaborators with
+v0.9.0-test.2 prerelease is visible to repository collaborators with
 appropriate permissions, not the general public. Its assets are:
 
 - OTS-Security-Suite-Setup-x64.exe — genuine x64-targeted Inno Setup installer
@@ -55,3 +55,5 @@ standalone repository was deleted by the owner. The new preview includes a
 Git-history checks; it is **not** an exact clone. Offline CVE/SCA is disabled
 and unavailable. Treat the absence of findings as a limited check, not a
 complete safety verdict. The original System Sanitizer submodule remains pinned.
+
+**Release-workflow correction:** The earlier test.1 draft has a valid 102,426,238-byte EXE and matching checksum, but its post-create job incorrectly queried a draft release through the tag endpoint (HTTP 404). The corrected test.2 job verifies draft assets through the authenticated release listing. Test.1 is historical; use the newer test.2 draft for testing after its own CI succeeds.

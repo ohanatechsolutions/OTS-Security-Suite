@@ -400,18 +400,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tag="v0.9.0-test.1"
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+          tag="v0.9.0-test.2"
+          if [[ -n "$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[] | select(.tag_name == "v0.9.0-test.2") | .id' | head -n 1)" ]]; then
             echo "::error::Test prerelease already exists; refuse to overwrite assets or retag"
             exit 1
           fi
           cat > release/NOTES.md <<'NOTES'
-          # OTS Security Suite 0.9.0 — owner-only test preview 1
+          # OTS Security Suite 0.9.0 — owner-only test preview 2
 
           **DRAFT PRERELEASE / UNSIGNED WINDOWS TEST BUILD — NOT APPROVED FOR PUBLIC DISTRIBUTION.**
 
           This preview bundles the native Windows desktop host, RepoScan engine,
-          OTS W.H.I.T.E. auditor, OTS System Sanitizer, and unpacked Chrome MV3 extension.
+          new in-repository OTS W.H.I.T.E. preview auditor, OTS System Sanitizer,
+          and unpacked Chrome MV3 extension. The deleted standalone W.H.I.T.E.
+          engine is not present; full parity is not claimed. Offline SCA/CVE
+          checks are unavailable and disabled in the test-preview UI.
 
           The installer was built on GitHub's Windows runner after Go tests/vet,
           Python/WHITE and Sanitizer tests, WPF UI automation, per-user install,
@@ -446,12 +449,12 @@ jobs:
             release/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "OTS Security Suite v0.9.0 Test Preview 1 (UNSIGNED)" \
+            --title "OTS Security Suite v0.9.0 Test Preview 2 (UNSIGNED)" \
             --draft --prerelease \
             --notes-file release/NOTES.md
-          verified="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" \
-            --jq '(.draft == true) and (.prerelease == true) and ([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) and ([.assets[].name] | index("SHA256SUMS.txt") != null)')"
-          if [[ "$verified" != "true" ]]; then
+          verified="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            --jq '[.[] | select(.tag_name == "v0.9.0-test.2" and .draft == true and .prerelease == true) | select([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) | select([.assets[].name] | index("SHA256SUMS.txt") != null)] | length')"
+          if [[ "$verified" != "1" ]]; then
             echo "::error::Draft prerelease or expected assets could not be verified"
             exit 1
           fi
