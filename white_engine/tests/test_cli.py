@@ -117,7 +117,7 @@ class WhiteAuditTests(unittest.TestCase):
 
     def test_worktree_file_budget_counts_uninspected_files(self):
         for index in range(3):
-            (self.root / f"{index}.bin").write_bytes(b"\\x00not-text")
+            (self.root / f"{index}.bin").write_bytes(b"\x00not-text")
         with mock.patch("ots_white.cli.MAX_FILES", 2):
             code, result = self.report("--no-sca")
         self.assertEqual(code, 2)
@@ -128,7 +128,7 @@ class WhiteAuditTests(unittest.TestCase):
         self.assertEqual(result["checks"]["secrets"], "failed")
 
     def test_explicit_exclusions_do_not_consume_budget(self):
-        (self.root / "excluded.bin").write_bytes(b"\\x00not-text")
+        (self.root / "excluded.bin").write_bytes(b"\x00not-text")
         (self.root / "kept.py").write_text("print('ok')\n", encoding="utf-8")
         with mock.patch("ots_white.cli.MAX_FILES", 1):
             code, result = self.report("--no-sca", "--exclude", "*.bin")
@@ -143,7 +143,7 @@ class WhiteAuditTests(unittest.TestCase):
 
         def fake_git(root, args, **kwargs):
             if args[:2] == ["rev-list", "--objects"]:
-                return one + b" first.py\\n" + two + b" second.py\\n"
+                return one + b" first.py\n" + two + b" second.py\n"
             if args[:2] == ["cat-file", "-t"]:
                 return b"blob"
             if args[:2] == ["cat-file", "-s"]:
@@ -152,8 +152,8 @@ class WhiteAuditTests(unittest.TestCase):
                 return b"x"
             raise AssertionError(f"Unexpected Git command: {args}")
 
-        with mock.patch("ots_white.cli.MAX_HISTORY_BLOBS", 1), \\
-             mock.patch("ots_white.cli._git", side_effect=fake_git):
+        with (mock.patch("ots_white.cli.MAX_HISTORY_BLOBS", 1),
+              mock.patch("ots_white.cli._git", side_effect=fake_git)):
             code, result = self.report("--no-sca", "--history")
         self.assertEqual(code, 2)
         self.assertEqual(result["checks"]["history"], "failed")
