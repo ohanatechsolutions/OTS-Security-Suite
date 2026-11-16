@@ -2,7 +2,7 @@ name: OTS Security Suite — Windows build and integration checks
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, 'preview/ots-security-suite-v0.9.0-test1']
   pull_request:
     branches: [main]
 permissions:
@@ -345,7 +345,7 @@ jobs:
           Write-Host 'Synthetic user-vault preservation through install/uninstall verified'
           Write-Host 'Installer, bundled modules, icon, URI registration and uninstaller smoke checks passed'
       - name: Upload Windows installer (unsigned test build)
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/preview/ots-security-suite-v0.9.0-test1')
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Windows-Beta
@@ -354,3 +354,106 @@ jobs:
             artifacts/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 7
+
+  draft-test-prerelease:
+    name: Create owner-only DRAFT prerelease after Windows QA
+    needs: [windows-build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/preview/ots-security-suite-v0.9.0-test1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Only this isolated job can write releases, not Windows build steps.
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Retrieve exact successful Windows build artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" \
+            --name OTS-Security-Suite-Windows-Beta --dir release
+          test -s release/OTS-Security-Suite-Setup-x64.exe
+          test -s release/SHA256SUMS.txt
+          expected="$(awk 'NR==1 {print $1}' release/SHA256SUMS.txt | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+          actual="$(sha256sum release/OTS-Security-Suite-Setup-x64.exe | awk '{print $1}')"
+          if [[ ! "$expected" =~ ^[a-f0-9]{64}$ || "$expected" != "$actual" ]]; then
+            echo "::error::Installer does not match Windows build checksum"
+            exit 1
+          fi
+          header="$(od -An -tx1 -N2 release/OTS-Security-Suite-Setup-x64.exe | tr -d '[:space:]')"
+          if [[ "$header" != "4d5a" ]]; then
+            echo "::error::Installer does not have an MZ executable header"
+            exit 1
+          fi
+          size="$(stat -c%s release/OTS-Security-Suite-Setup-x64.exe)"
+          if (( size < 1048576 )); then
+            echo "::error::Installer size is implausibly small"
+            exit 1
+          fi
+          echo "Verified installer SHA-256: $actual"
+          echo "Verified MZ header and size: $size bytes"
+      - name: Create owner-only DRAFT prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v0.9.0-test.1"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Test prerelease already exists; refuse to overwrite assets or retag"
+            exit 1
+          fi
+          cat > release/NOTES.md <<'NOTES'
+          # OTS Security Suite 0.9.0 — owner-only test preview 1
+
+          **DRAFT PRERELEASE / UNSIGNED WINDOWS TEST BUILD — NOT APPROVED FOR PUBLIC DISTRIBUTION.**
+
+          This preview bundles the native Windows desktop host, RepoScan engine,
+          OTS W.H.I.T.E. auditor, OTS System Sanitizer, and unpacked Chrome MV3 extension.
+
+          The installer was built on GitHub's Windows runner after Go tests/vet,
+          Python/WHITE and Sanitizer tests, WPF UI automation, per-user install,
+          repair/uninstall, quarantine-retention canary, and source audit passed.
+          The binary and SHA256SUMS.txt are taken from the same successful run.
+
+          **Target:** Windows 10/11 x64. **Version:** 0.9.0 test preview.
+          **Signing:** Not Authenticode-signed. Windows SmartScreen may warn.
+          Do not disable Windows Defender or bypass organizational security policy.
+
+          **Install only on a disposable Windows test VM or spare machine.**
+          Back up existing encrypted quarantine and any relevant DPAPI user profile.
+          Test GUI scaling, taskbar/title icon, clean Chrome profile, cancellation,
+          safe synthetic scans, legacy vault recovery, and uninstall behavior.
+          Do not run real malware, delete real files, or use production credentials.
+
+          **Verification:** Compare the installer SHA-256 with the included
+          SHA256SUMS.txt. This verifies integrity relative to the same build; it
+          does not establish publisher identity.
+
+          **Remaining NO-GO gates:** Independent Win10/Win11 QA, Chrome handoff,
+          genuine historical DPAPI recovery, privacy/security review, integrated
+          redistribution-license decision, legitimate publisher signing and
+          explicit production release approval.
+
+          The original applications and the default main branch remain unchanged.
+          NOTES
+          printf '\nSource commit: %s\nCI run: https://github.com/%s/actions/runs/%s\n' \
+            "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" >> release/NOTES.md
+          gh release create "$tag" \
+            release/OTS-Security-Suite-Setup-x64.exe \
+            release/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "OTS Security Suite v0.9.0 Test Preview 1 (UNSIGNED)" \
+            --draft --prerelease \
+            --notes-file release/NOTES.md
+          verified="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" \
+            --jq '(.draft == true) and (.prerelease == true) and ([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) and ([.assets[].name] | index("SHA256SUMS.txt") != null)')"
+          if [[ "$verified" != "true" ]]; then
+            echo "::error::Draft prerelease or expected assets could not be verified"
+            exit 1
+          fi
+          echo "Owner-only draft prerelease created and both assets verified."
