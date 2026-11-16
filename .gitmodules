@@ -1,6 +1,3 @@
-[submodule "modules/OTS_WHITE"]
-    path = modules/OTS_WHITE
-    url = https://github.com/ohanatechsolutions/OTS_W.H.I.T.E..git
 [submodule "modules/OTS_System_Sanitizer"]
     path = modules/OTS_System_Sanitizer
     url = https://github.com/ohanatechsolutions/OTS_System_Santizer.git
