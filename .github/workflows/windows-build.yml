@@ -1,8 +1,19 @@
 name: OTS Security Suite — Windows build and integration checks
 on:
   workflow_dispatch:
+    inputs:
+      create_draft:
+        description: 'Create a new owner-only draft test prerelease after Windows QA'
+        type: boolean
+        required: false
+        default: false
+      prerelease_tag:
+        description: 'Unused unique test tag, e.g. v0.9.0-test.3'
+        type: string
+        required: false
+        default: 'v0.9.0-test.3'
   push:
-    branches: [main, 'preview/ots-security-suite-v0.9.0-test1']
+    branches: [main]
   pull_request:
     branches: [main]
 permissions:
@@ -344,7 +355,7 @@ jobs:
           Write-Host 'Synthetic user-vault preservation through install/uninstall verified'
           Write-Host 'Installer, bundled modules, icon, URI registration and uninstaller smoke checks passed'
       - name: Upload Windows installer (unsigned test build)
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/preview/ots-security-suite-v0.9.0-test1')
+        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Windows-Beta
@@ -357,7 +368,7 @@ jobs:
   draft-test-prerelease:
     name: Create owner-only DRAFT prerelease after Windows QA
     needs: [windows-build]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/preview/ots-security-suite-v0.9.0-test1'
+    if: github.event_name == 'workflow_dispatch' && inputs.create_draft == true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only this isolated job can write releases, not Windows build steps.
@@ -397,16 +408,21 @@ jobs:
       - name: Create owner-only DRAFT prerelease
         env:
           GH_TOKEN: ${{ github.token }}
+          PRERELEASE_TAG: ${{ inputs.prerelease_tag }}
         shell: bash
         run: |
           set -euo pipefail
-          tag="v0.9.0-test.2"
-          if [[ -n "$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[] | select(.tag_name == "v0.9.0-test.2") | .id' | head -n 1)" ]]; then
+          tag="$PRERELEASE_TAG"
+          if [[ ! "$tag" =~ ^v0\.9\.0-test\.[0-9]+$ ]]; then
+            echo "::error::Expected a new v0.9.0-test.N tag"
+            exit 1
+          fi
+          if [[ -n "$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" | jq -r --arg tag "$tag" '.[] | select(.tag_name == $tag) | .id' | head -n 1)" ]]; then
             echo "::error::Test prerelease already exists; refuse to overwrite assets or retag"
             exit 1
           fi
           cat > release/NOTES.md <<'NOTES'
-          # OTS Security Suite 0.9.0 — owner-only test preview 2
+          # OTS Security Suite 0.9.0 — owner-only manually requested test preview
 
           **DRAFT PRERELEASE / UNSIGNED WINDOWS TEST BUILD — NOT APPROVED FOR PUBLIC DISTRIBUTION.**
 
@@ -449,11 +465,10 @@ jobs:
             release/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "OTS Security Suite v0.9.0 Test Preview 2 (UNSIGNED)" \
+            --title "OTS Security Suite $tag (UNSIGNED)" \
             --draft --prerelease \
             --notes-file release/NOTES.md
-          verified="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
-            --jq '[.[] | select(.tag_name == "v0.9.0-test.2" and .draft == true and .prerelease == true) | select([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) | select([.assets[].name] | index("SHA256SUMS.txt") != null)] | length')"
+          verified="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" | jq -r --arg tag "$tag" '[.[] | select(.tag_name == $tag and .draft == true and .prerelease == true) | select([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) | select([.assets[].name] | index("SHA256SUMS.txt") != null)] | length')"
           if [[ "$verified" != "1" ]]; then
             echo "::error::Draft prerelease or expected assets could not be verified"
             exit 1
