@@ -93,17 +93,30 @@ def _scan_text(report: dict, text: str, path: str, *, history: bool = False, com
 
 def _worktree(root: Path, report: dict, patterns: list[str]) -> None:
     total = 0
-    for base, dirs, files in os.walk(root, topdown=True, followlinks=False):
+
+    def on_walk_error(_error: OSError) -> None:
+        # os.walk silently discards permission/I/O errors unless onerror is set.
+        # Do not expose user paths or filesystem exception text in reports.
+        report["unreadable_dirs"] += 1
+        if "One or more directories could not be enumerated; audit incomplete" not in report["errors"]:
+            report["errors"].append("One or more directories could not be enumerated; audit incomplete")
+
+    for base, dirs, files in os.walk(root, topdown=True, followlinks=False, onerror=on_walk_error):
         base_path = Path(base)
         dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not (base_path / d).is_symlink() and not _excluded((base_path / d).relative_to(root).as_posix() + "/", patterns))
         for name in sorted(files):
             path = base_path / name
             relative = path.relative_to(root).as_posix()
-            if _excluded(relative, patterns) or path.is_symlink():
+            if _excluded(relative, patterns):
+                continue
+            # Count *all* in-scope file entries, even binary, symlinked, unreadable
+            # and oversized files. Otherwise those files bypass the file budget.
+            report["inventoried_files"] += 1
+            if report["inventoried_files"] > MAX_FILES:
+                raise RuntimeError("Worktree file inventory exceeded safe limit; audit incomplete")
+            if path.is_symlink():
                 report["skipped_files"] += 1
                 continue
-            if report["scanned_files"] >= MAX_FILES:
-                raise RuntimeError("Worktree file count exceeded safe limit; audit incomplete")
             try:
                 data = _read_regular(path)
             except (OSError, PermissionError):
@@ -150,8 +163,11 @@ def _history(root: Path, report: dict, patterns: list[str]) -> None:
         name = path.decode("utf-8", "replace").replace("\\", "/")
         if _excluded(name, patterns) or any(part in SKIP_DIRS for part in name.split("/")):
             continue
-        if report["scanned_history_blobs"] >= MAX_HISTORY_BLOBS:
-            raise RuntimeError("Git history object count exceeded safe limit")
+        # Bound all traversed history entries, including oversized, binary
+        # and non-blob objects, instead of counting only successfully scanned text.
+        report["inventoried_history_objects"] += 1
+        if report["inventoried_history_objects"] > MAX_HISTORY_BLOBS:
+            raise RuntimeError("Git history object inventory exceeded safe limit; audit incomplete")
         kind = _git(root, ["cat-file", "-t", oid.decode("ascii")], max_output=128).strip()
         if kind != b"blob":
             continue
@@ -178,12 +194,17 @@ def audit(root: Path, *, history: bool, no_sca: bool, patterns: list[str]) -> di
     report = {"tool": TOOL, "schema_version": SCHEMA, "complete": False,
               "checks": {"secrets": "completed", "sast": "completed", "history": "skipped", "sca": "skipped"},
               "errors": [], "findings": [], "scanned_files": 0, "skipped_files": 0,
+              "inventoried_files": 0, "unreadable_dirs": 0,
               "scanned_history_blobs": 0, "skipped_history_blobs": 0,
+              "inventoried_history_objects": 0,
               "limitations": ["Heuristic source audit only; not proof of safety", "Historical audit excludes unreachable Git objects, LFS and remote refs"]}
     try:
         if not root.is_dir():
             raise RuntimeError("Selected audit root is not a directory")
         _worktree(root, report, patterns)
+        if report["unreadable_dirs"]:
+            report["checks"]["secrets"] = "failed"
+            report["checks"]["sast"] = "failed"
     except (OSError, RuntimeError) as exc:
         report["errors"].append(str(exc) if isinstance(exc, RuntimeError) else "Worktree inspection failed")
         report["checks"]["secrets"] = "failed"
