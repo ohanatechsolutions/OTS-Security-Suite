@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 from ots_white.cli import main
 
 class WhiteAuditTests(unittest.TestCase):
@@ -92,6 +93,73 @@ class WhiteAuditTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertFalse(result["complete"])
         self.assertTrue(result["errors"])
+
+    def test_unreadable_subdirectory_fails_closed_without_leaking_path(self):
+        (self.root / "safe.py").write_text("print('safe')\n", encoding="utf-8")
+
+        def walk_with_denied_subdirectory(root, *, topdown, followlinks, onerror):
+            self.assertTrue(topdown)
+            self.assertFalse(followlinks)
+            self.assertIsNotNone(onerror)
+            yield str(root), [], ["safe.py"]
+            # os.walk's default onerror=None would silently discard this error.
+            onerror(PermissionError("PRIVATE_PATH_MUST_NOT_APPEAR"))
+
+        with mock.patch("ots_white.cli.os.walk", side_effect=walk_with_denied_subdirectory):
+            code, result = self.report("--no-sca")
+        self.assertEqual(code, 2)
+        self.assertFalse(result["complete"])
+        self.assertEqual(result["scanned_files"], 1)
+        self.assertEqual(result["unreadable_dirs"], 1)
+        self.assertEqual(result["checks"]["secrets"], "failed")
+        self.assertEqual(result["checks"]["sast"], "failed")
+        self.assertNotIn("PRIVATE_PATH_MUST_NOT_APPEAR", json.dumps(result))
+
+    def test_worktree_file_budget_counts_uninspected_files(self):
+        for index in range(3):
+            (self.root / f"{index}.bin").write_bytes(b"\\x00not-text")
+        with mock.patch("ots_white.cli.MAX_FILES", 2):
+            code, result = self.report("--no-sca")
+        self.assertEqual(code, 2)
+        self.assertFalse(result["complete"])
+        self.assertEqual(result["inventoried_files"], 3)
+        self.assertEqual(result["scanned_files"], 0)
+        self.assertEqual(result["skipped_files"], 2)
+        self.assertEqual(result["checks"]["secrets"], "failed")
+
+    def test_explicit_exclusions_do_not_consume_budget(self):
+        (self.root / "excluded.bin").write_bytes(b"\\x00not-text")
+        (self.root / "kept.py").write_text("print('ok')\n", encoding="utf-8")
+        with mock.patch("ots_white.cli.MAX_FILES", 1):
+            code, result = self.report("--no-sca", "--exclude", "*.bin")
+        self.assertEqual(code, 0)
+        self.assertEqual(result["inventoried_files"], 1)
+        self.assertEqual(result["scanned_files"], 1)
+        self.assertTrue(result["complete"])
+
+    def test_history_object_budget_counts_uninspected_objects(self):
+        one = b"a" * 40
+        two = b"b" * 40
+
+        def fake_git(root, args, **kwargs):
+            if args[:2] == ["rev-list", "--objects"]:
+                return one + b" first.py\\n" + two + b" second.py\\n"
+            if args[:2] == ["cat-file", "-t"]:
+                return b"blob"
+            if args[:2] == ["cat-file", "-s"]:
+                return b"1"
+            if args[:2] == ["cat-file", "blob"]:
+                return b"x"
+            raise AssertionError(f"Unexpected Git command: {args}")
+
+        with mock.patch("ots_white.cli.MAX_HISTORY_BLOBS", 1), \\
+             mock.patch("ots_white.cli._git", side_effect=fake_git):
+            code, result = self.report("--no-sca", "--history")
+        self.assertEqual(code, 2)
+        self.assertEqual(result["checks"]["history"], "failed")
+        self.assertEqual(result["inventoried_history_objects"], 2)
+        self.assertEqual(result["scanned_history_blobs"], 1)
+        self.assertFalse(result["complete"])
 
 if __name__ == "__main__":
     unittest.main()
