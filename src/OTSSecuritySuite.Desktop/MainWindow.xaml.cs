@@ -231,7 +231,7 @@ public partial class MainWindow : Window
                     ? $"Audit completed · {assessment.FindingCount} findings require review"
                     : assessment.FindingCount > 0
                         ? $"Audit completed · {assessment.FindingCount} findings below the configured failure threshold"
-                        : "Audit completed · no findings from the enabled checks";
+                        : "Audit completed · no findings in inspected supported files; review excluded and skipped items in the report";
         }
         catch (TimeoutException) { if (!_isClosing) WhiteStatus.Text = "Audit timed out after 12 minutes; termination requested."; }
         catch (OperationCanceledException) { if (!_isClosing) WhiteStatus.Text = "Audit cancelled; termination requested."; }
