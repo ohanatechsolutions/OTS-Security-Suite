@@ -46,3 +46,12 @@ decision, legitimate signing and owner release approvals are completed.
 
 **N/A for this preview:** app stores, SaaS infrastructure, payment systems,
 mobile/firmware deployment. This is an offline-first Windows desktop test.
+
+## 2026-11-15 WHITE migration note
+
+The original OTS W.H.I.T.E. source was **not** embedded in the suite and its
+standalone repository was deleted by the owner. The new preview includes a
+**replacement heuristic auditor** with selected secrets, SAST and reachable
+Git-history checks; it is **not** an exact clone. Offline CVE/SCA is disabled
+and unavailable. Treat the absence of findings as a limited check, not a
+complete safety verdict. The original System Sanitizer submodule remains pinned.

@@ -1,3 +1,13 @@
+## [Unreleased] — 2026-11-15 test preview
+### Changed
+- Replaced the unavailable, owner-deleted OTS W.H.I.T.E. Git submodule with new in-repository Python preview source audit engine.
+- Added metadata-only heuristic secrets/SAST and reachable Git-history scanning, strict fail-closed limits, synthetic regression tests, and local build provenance.
+- Disabled unavailable offline dependency CVE option rather than falsely reporting a clean scan.
+- Kept the System Sanitizer submodule and all existing WPF/Go integration and quarantine protections unchanged.
+### Known limitations
+- This is not a recovered or parity-verified version of the deleted W.H.I.T.E. source. The old rule corpus and offline SCA capabilities are not present; independent review remains required.
+- Unsigned owner-only test installer; no public release approval.
+
 # Changelog — OTS Security Suite
 
 All notable changes are recorded against the repository. This is an **unreleased integration preview**; entries below do not imply a signed product or public installer.

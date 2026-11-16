@@ -88,13 +88,13 @@ jobs:
       - name: Build W.H.I.T.E. as offline CLI
         shell: pwsh
         run: |
-          python -m pip install --disable-pip-version-check -e modules/OTS_WHITE pyinstaller==6.22.3
-          python -m PyInstaller --noconfirm --clean --onefile --console --name OTSWhiteAudit --paths modules/OTS_WHITE tools/white_entry.py
+          python -m pip install --disable-pip-version-check pyinstaller==6.22.3
+          python -m PyInstaller --noconfirm --clean --onefile --console --name OTSWhiteAudit --paths white_engine tools/white_entry.py
           if ($LASTEXITCODE -ne 0) { throw 'W.H.I.T.E. build failed' }
           Copy-Item dist/OTSWhiteAudit.exe bundle/engines/
-          Push-Location modules/OTS_WHITE
-          python -m unittest discover -s tests -p 'test_*.py'
-          Pop-Location
+          $env:PYTHONPATH = (Resolve-Path 'white_engine').Path
+          python -m unittest discover -s white_engine/tests -p 'test_*.py'
+          Remove-Item Env:PYTHONPATH
           if ($LASTEXITCODE -ne 0) { throw 'W.H.I.T.E. tests failed' }
       - name: Offline W.H.I.T.E. source security audit (metadata only)
         shell: pwsh
@@ -184,8 +184,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Force bundle/licenses | Out-Null
           $required = @(
-            @('modules/OTS_WHITE/LICENSE', 'bundle/licenses/OTS_WHITE_LICENSE.txt'),
-            @('modules/OTS_WHITE/THIRD_PARTY_NOTICES.md', 'bundle/licenses/OTS_WHITE_THIRD_PARTY_NOTICES.md'),
+            @('white_engine/NOTICE.md', 'bundle/licenses/OTS_WHITE_NOTICE.md'),
             @('modules/OTS_System_Sanitizer/LICENSE', 'bundle/licenses/OTS_System_Sanitizer_LICENSE.txt'),
             @('modules/OTS_System_Sanitizer/THIRD_PARTY_NOTICES.md', 'bundle/licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md'),
             @('scanner/NOTICE.md', 'bundle/licenses/RepoScan_NOTICE.md')
@@ -201,7 +200,7 @@ jobs:
           $manifest = Get-Content -LiteralPath bundle/licenses/BUILD-MANIFEST.json -Raw | ConvertFrom-Json
           $checkedOut = (git rev-parse HEAD).Trim()
           if ($manifest.source.checked_out_commit -ne $checkedOut -or
-              $manifest.source.white_submodule_commit -ne (git -C modules/OTS_WHITE rev-parse HEAD).Trim() -or
+              $manifest.source.white_source -ne 'white_engine/ots_white' -or
               $manifest.source.sanitizer_submodule_commit -ne (git -C modules/OTS_System_Sanitizer rev-parse HEAD).Trim() -or
               $manifest.direct_components.Count -lt 6 -or
               $manifest.toolchains.go -notmatch 'go1\.27\.4' -or
@@ -271,7 +270,7 @@ jobs:
           $setup = Start-Process -FilePath $installer -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-') -Wait -PassThru
           if ($setup.ExitCode -ne 0) { throw "Silent setup failed: exit $($setup.ExitCode)" }
           $installPath = Join-Path $env:LOCALAPPDATA 'Programs/Ohana Tech Solutions/Security Suite'
-          foreach ($required in @('OTSSecuritySuite.exe','engines/OTSScannerEngine.exe','engines/OTSWhiteAudit.exe','engines/OTSSystemSanitizer.exe','extension/manifest.json','extension/popup.js','licenses/OTS_WHITE_LICENSE.txt','licenses/OTS_WHITE_THIRD_PARTY_NOTICES.md','licenses/OTS_System_Sanitizer_LICENSE.txt','licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md','licenses/RepoScan_NOTICE.md','licenses/BUILD-MANIFEST.json')) {
+          foreach ($required in @('OTSSecuritySuite.exe','engines/OTSScannerEngine.exe','engines/OTSWhiteAudit.exe','engines/OTSSystemSanitizer.exe','extension/manifest.json','extension/popup.js','licenses/OTS_WHITE_NOTICE.md','licenses/OTS_System_Sanitizer_LICENSE.txt','licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md','licenses/RepoScan_NOTICE.md','licenses/BUILD-MANIFEST.json')) {
             if (-not (Test-Path (Join-Path $installPath $required))) { throw "Installer missing $required" }
           }
           Add-Type -AssemblyName System.Drawing

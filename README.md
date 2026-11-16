@@ -13,7 +13,7 @@ Follow the [one-page owner finish line](docs/OWNER_FINISH_LINE.md) for the exact
 ## Modules
 
 1. **Repository Security** — the independent Go scanner from OTS GitHub Malware Scanner v2.5. The local server is started on an ephemeral loopback port by the WPF host, is opened inside native WebView2, and is killed when the suite window closes. URL scanning retrieves public GitHub/Bitbucket snapshots; local-folder scanning requires no ScanRepo.dev backend. The Go engine has 95 heuristic rules and format-aware baseline inspection.
-2. **Code and Secrets Audit** — OTS W.H.I.T.E. packaged as a dedicated Python CLI executable. Secret detection, SAST, optional history, and optional offline OSV vulnerability checks can be selected in the suite. JSON output is redacted by W.H.I.T.E. before being displayed or exported. The OSV scanner/cache is **not** bundled and must be provided separately if that option is selected.
+2. **Code and Secrets Audit** — a **new, self-contained OTS W.H.I.T.E. preview replacement**, not the deleted standalone codebase. It supports metadata-only heuristic secret checks, selected SAST patterns, optional locally reachable Git-history blob review, explicit incomplete states, and redacted JSON. **Offline dependency CVE/SCA is not implemented in this preview**; its UI control is disabled and CLI requests fail incomplete, never clean. The old engine's exact detection parity is **not established**.
 3. **Windows Security** — OTS System Sanitizer's existing .NET 10 core provides quick/deep local inspection, Defender invocation, investigation, encrypted user-scoped quarantine, restore, and reviewed destruction. The original Sanitizer GUI is also bundled for all its existing specialist operations while the consolidated interface is expanded.
 4. **Space Recovery** — Sanitizer's cleanup service, with per-file selection and explicit deletion confirmation.
 5. **Chrome Extension** — uses the installed `ots-security://` custom URI handler to open the native suite, rather than depending on a fixed local port or ScanRepo.dev.
@@ -35,7 +35,7 @@ The native Windows icon and title-bar icon are both set to the user's supplied s
 
 ### Building on Windows
 
-You need .NET 10 SDK, Go 1.27.4+ (security-maintained toolchain), Python 3.12, PyInstaller, Inno Setup 6, Microsoft WebView2 runtime, and the two Git submodules (both public).
+You need .NET 10 SDK, Go 1.27.4+ (security-maintained toolchain), Python 3.12, PyInstaller, Inno Setup 6, Microsoft WebView2 runtime, and the **System Sanitizer** Git submodule. W.H.I.T.E. source is now included directly in this repository.
 
 ```powershell
 git clone --recurse-submodules https://github.com/ohanatechsolutions/OTS_Security_Suite.git
@@ -55,14 +55,14 @@ node --check extension/popup.js
 
 ### Privacy and safety boundaries
 
-All local folder/content scans are read-only unless you explicitly request quarantine or cleanup. The repository scanner reads source, hashes files and analyzes archive entries without executing third-party repository code. The suite does not run untrusted Git hooks or package installation scripts. The local scanner session URL carries a secret and must not be written into logs. Remote repository scans still need a network connection to GitHub/Bitbucket. The W.H.I.T.E. module's offline dependency scanning requires a local OSV cache.
+All local folder/content scans are read-only unless you explicitly request quarantine or cleanup. The repository scanner reads source, hashes files and analyzes archive entries without executing third-party repository code. The suite does not run untrusted Git hooks or package installation scripts. The local scanner session URL carries a secret and must not be written into logs. Remote repository scans still need a network connection to GitHub/Bitbucket. The replacement W.H.I.T.E. engine has no offline dependency CVE scanner yet. Selecting that CLI check returns an explicitly incomplete report; the UI option is disabled.
 
 The Windows quarantine system is user-scoped and cannot offer kernel-level malware isolation; do not disable Microsoft Defender or other existing protections. Files reported as suspicious are not automatically proven infected. Destructive actions require explicit confirmation.
 
 ### Source provenance
 
 - `scanner/`: OTS's independent Go malware scanner source (formerly v2.5)
-- `modules/OTS_WHITE`: Git submodule containing the original OTS W.H.I.T.E. source
+- `white_engine/ots_white`: self-contained replacement audit engine; the original W.H.I.T.E. source repository was deleted by its owner
 - `modules/OTS_System_Sanitizer`: Git submodule containing the original System Sanitizer source
 - `src/OTSSecuritySuite.Desktop/`: new native suite shell
 - `extension/`: locally launched repository scanner extension

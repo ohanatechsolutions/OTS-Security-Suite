@@ -1,3 +1,5 @@
+> **2026-11-15 owner decision / new build candidate:** The owner deleted the standalone OTS W.H.I.T.E. repository and directed the suite to proceed independently. The previous WHITE Git submodule is **not** part of the new preview candidate. A new in-repository Python heuristic auditor replaces its CLI contract, but **full legacy WHITE parity and offline dependency CVE analysis are NOT VERIFIED / NOT AVAILABLE**. The new candidate must pass its own Windows CI before an unsigned **draft** test prerelease may be created. Previous successful CI and installer hashes apply only to historical submodule builds. Main and original Sanitizer remain unchanged. See [WHITE replacement scope](../white_engine/NOTICE.md) and [test preview handoff](TEST_PRE_RELEASE.md).
+
 # OTS Security Suite — Owner Finish Line
 
 **Status:** Verified engineering preview; **NO-GO for signed public release** until the real-machine and publisher gates below. This is the short handoff: the repository contains the real code, tests, installer, security policy, and release tooling. No paid services, public release, branch deletion, or private-key access were performed.

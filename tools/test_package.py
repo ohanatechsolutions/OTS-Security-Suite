@@ -31,6 +31,7 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertNotIn('http://127.0.0.1:48728', (ROOT/'extension/popup.js').read_text(encoding="utf-8"))
     def test_submodule_locations(self):
         m = (ROOT/'.gitmodules').read_text(encoding="utf-8")
-        self.assertIn('OTS_W.H.I.T.E.',m)
+        self.assertNotIn('OTS_W.H.I.T.E.',m)
+        self.assertTrue((ROOT/'white_engine/ots_white/cli.py').is_file())
         self.assertIn('OTS_System_Santizer',m)
 if __name__=='__main__': unittest.main()

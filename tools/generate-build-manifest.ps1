@@ -16,9 +16,8 @@ try {
     $webviewVersion=[string]$webview[0].Version
 
     $checkout=([string](& git rev-parse HEAD)).Trim()
-    $white=([string](& git -C modules/OTS_WHITE rev-parse HEAD)).Trim()
     $sanitizer=([string](& git -C modules/OTS_System_Sanitizer rev-parse HEAD)).Trim()
-    foreach($sha in @($checkout,$white,$sanitizer)){
+    foreach($sha in @($checkout,$sanitizer)){
         if($sha -notmatch '^[a-fA-F0-9]{40}$'){throw 'Invalid source or submodule commit.'}
     }
     $go=([string](& go version)).Trim()
@@ -44,8 +43,8 @@ try {
             version=$webviewVersion; source='Microsoft NuGet package' },
         [ordered]@{ name='RepoScan'; type='Go local/static scanner'; version='2.5.0';
             source='scanner/'; external_go_dependencies='none in go.mod' },
-        [ordered]@{ name='OTS W.H.I.T.E.'; type='Python CLI submodule'; commit=$white;
-            source='modules/OTS_WHITE' },
+        [ordered]@{ name='OTS W.H.I.T.E.'; type='self-contained Python CLI preview';
+            source='white_engine/ots_white'; parity='heuristic secrets/SAST/reachable Git history; offline SCA unavailable' },
         [ordered]@{ name='OTS System Sanitizer'; type='.NET submodule'; commit=$sanitizer;
             source='modules/OTS_System_Sanitizer' },
         [ordered]@{ name='PyInstaller'; type='build-only packaging'; version=$installerVersion },
@@ -58,7 +57,7 @@ try {
         source=[ordered]@{
             repo='ohanatechsolutions/OTS_Security_Suite'
             checked_out_commit=$checkout
-            white_submodule_commit=$white
+            white_source='white_engine/ots_white'
             sanitizer_submodule_commit=$sanitizer
         }
         product=[ordered]@{name='OTS Security Suite'; version=$suiteVersion;
