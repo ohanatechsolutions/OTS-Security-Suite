@@ -355,7 +355,8 @@ jobs:
           Write-Host 'Synthetic user-vault preservation through install/uninstall verified'
           Write-Host 'Installer, bundled modules, icon, URI registration and uninstaller smoke checks passed'
       - name: Upload Windows installer (unsigned test build)
-        if: github.event_name == 'workflow_dispatch'
+        # Owner-approved one-time test merge only; PR builds cannot upload assets.
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.3]'))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Windows-Beta
@@ -366,9 +367,10 @@ jobs:
           retention-days: 7
 
   draft-test-prerelease:
-    name: Create owner-only DRAFT prerelease after Windows QA
+    name: Release test preview after Windows QA (manual draft or one-time approved public test)
     needs: [windows-build]
-    if: github.event_name == 'workflow_dispatch' && inputs.create_draft == true
+    # No automatic public release for ordinary main commits or PRs.
+    if: (github.event_name == 'workflow_dispatch' && inputs.create_draft == true) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.3]'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only this isolated job can write releases, not Windows build steps.
@@ -408,7 +410,7 @@ jobs:
       - name: Create owner-only DRAFT prerelease
         env:
           GH_TOKEN: ${{ github.token }}
-          PRERELEASE_TAG: ${{ inputs.prerelease_tag }}
+          PRERELEASE_TAG: ${{ github.event_name == 'push' && 'v0.9.0-test.3' || inputs.prerelease_tag }}
         shell: bash
         run: |
           set -euo pipefail
@@ -422,9 +424,9 @@ jobs:
             exit 1
           fi
           cat > release/NOTES.md <<'NOTES'
-          # OTS Security Suite 0.9.0 — owner-only manually requested test preview
+          # OTS Security Suite 0.9.0 — UNSIGNED preview for isolated owner testing
 
-          **DRAFT PRERELEASE / UNSIGNED WINDOWS TEST BUILD — NOT APPROVED FOR PUBLIC DISTRIBUTION.**
+          **UNSIGNED TEST PREVIEW ONLY — NOT A PRODUCTION SECURITY PRODUCT.**
 
           This preview bundles the native Windows desktop host, RepoScan engine,
           new in-repository OTS W.H.I.T.E. preview auditor, OTS System Sanitizer,
@@ -451,26 +453,42 @@ jobs:
           SHA256SUMS.txt. This verifies integrity relative to the same build; it
           does not establish publisher identity.
 
-          **Remaining NO-GO gates:** Independent Win10/Win11 QA, Chrome handoff,
-          genuine historical DPAPI recovery, privacy/security review, integrated
-          redistribution-license decision, legitimate publisher signing and
-          explicit production release approval.
+          **Preview limitations:** New W.H.I.T.E. is heuristic and does not yet
+          provide full historical feature parity or offline dependency CVE/SCA.
+          Detection is not independently certified; unsupported, inaccessible and
+          budget-limited sources must be interpreted against actual report coverage.
 
-          The original applications and the default main branch remain unchanged.
+          **Production NO-GO gates:** Independent Win10/Win11 QA, clean Chrome
+          native-protocol test, genuine historical DPAPI restore, external security
+          review, redistribution-license decision, legitimate publisher signature
+          and a separate owner-approved production release. Test approval does not
+          satisfy any of these production gates.
+
+          All original utility repositories and source branches are preserved.
           NOTES
           printf '\nSource commit: %s\nCI run: https://github.com/%s/actions/runs/%s\n' \
             "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" >> release/NOTES.md
+          release_flags=(--prerelease)
+          expected_draft=false
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            release_flags+=(--draft)
+            expected_draft=true
+          fi
           gh release create "$tag" \
             release/OTS-Security-Suite-Setup-x64.exe \
             release/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "OTS Security Suite $tag (UNSIGNED)" \
-            --draft --prerelease \
+            --title "OTS Security Suite $tag (UNSIGNED TEST ONLY)" \
+            "${release_flags[@]}" \
             --notes-file release/NOTES.md
-          verified="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" | jq -r --arg tag "$tag" '[.[] | select(.tag_name == $tag and .draft == true and .prerelease == true) | select([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) | select([.assets[].name] | index("SHA256SUMS.txt") != null)] | length')"
+          # Draft releases cannot be retrieved through the tag endpoint (404).
+          # REST releases listing resolves both draft and published prereleases.
+          release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+          verified="$(jq -r --arg tag "$tag" --argjson draft "$expected_draft" '[.[] | select(.tag_name == $tag and .draft == $draft and .prerelease == true) | select([.assets[].name] | index("OTS-Security-Suite-Setup-x64.exe") != null) | select([.assets[].name] | index("SHA256SUMS.txt") != null)] | length' <<< "$release_json")"
           if [[ "$verified" != "1" ]]; then
-            echo "::error::Draft prerelease or expected assets could not be verified"
+            echo "::error::Test prerelease or expected assets could not be verified"
             exit 1
           fi
-          echo "Owner-only draft prerelease created and both assets verified."
+          echo "Test prerelease assets verified (draft=$expected_draft)."
+          jq -r --arg tag "$tag" '.[] | select(.tag_name == $tag) | .html_url' <<< "$release_json"
