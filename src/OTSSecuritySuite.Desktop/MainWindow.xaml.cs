@@ -366,6 +366,26 @@ public partial class MainWindow : Window
                 p.Name + ": " + p.State + (p.State == AntivirusRuntimeState.On &&
                 !p.SignaturesCurrent ? " (signatures outdated)" : "")));
         AntivirusGuidance.Text = assessment.Guidance;
+        ProtectionHeader.Content = assessment.Coverage switch {
+            AntivirusCoverage.Protected => "ANTIVIRUS ON · VIEW STATUS",
+            AntivirusCoverage.NeedsAttention => "ANTIVIRUS NEEDS UPDATE · REVIEW",
+            AntivirusCoverage.Unprotected => "UNPROTECTED · OPEN WINDOWS SECURITY",
+            _ => "ANTIVIRUS UNKNOWN · CHECK STATUS"
+        };
+        ProtectionHeader.Foreground = assessment.Coverage switch {
+            AntivirusCoverage.Protected => System.Windows.Media.Brushes.LightGreen,
+            AntivirusCoverage.Unprotected => System.Windows.Media.Brushes.OrangeRed,
+            AntivirusCoverage.NeedsAttention => System.Windows.Media.Brushes.Gold,
+            _ => System.Windows.Media.Brushes.LightGray
+        };
+    }
+
+    private void OpenProtectionFromHeader(object sender, RoutedEventArgs e)
+    {
+        if (_antivirusAssessment?.Coverage == AntivirusCoverage.Unprotected)
+            OpenWindowsSecurity(sender, e);
+        else
+            ShowSystem(sender, e);
     }
 
     private void OpenWindowsSecurity(object sender, RoutedEventArgs e)

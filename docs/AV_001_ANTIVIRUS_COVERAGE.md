@@ -9,7 +9,7 @@ Date: 2026-11-18 (HST). State: **Implementation in review; independent device ac
 - Preserve any current antivirus choice: OTS does not install, activate, deactivate or replace Norton, AVG, Defender or another product.
 - When no antivirus is registered, direct the user to **Windows Security** to activate or repair the built-in Microsoft Defender Antivirus on Windows 10/11; never suggest third-party Defender downloads.
 - A Defender quick scan may be requested only when WSC reports Defender active. Other audit tools remain user-operated; a protection warning is not silently bypassed.
-- Show the status in the existing Windows Security tab; refresh on startup, tab navigation and button action. No telemetry is sent remotely.
+- Show the status in the existing Windows Security tab and a persistent header indicator; refresh on startup, tab navigation and button action. An unprotected header indicator directs users to Windows Security before undertaking work, without silently altering protection or blocking read-only investigations. No telemetry is sent remotely.
 
 ## Risk and limitations
 

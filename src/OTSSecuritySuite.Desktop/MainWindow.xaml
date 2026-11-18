@@ -14,7 +14,7 @@
           <TextBlock Text="OTS SECURITY SUITE" FontSize="24" FontWeight="Bold" Foreground="#F2FFF0"/>
           <TextBlock Text="OHANA TECH SOLUTIONS · LOCAL SECURITY TOOLS" Foreground="#9BC5A3" FontSize="11" Margin="0,3,0,0"/>
         </StackPanel>
-        <TextBlock Text="●  LOCAL-FIRST" Foreground="#39FF14" FontSize="13" FontWeight="Bold" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <Button Name="ProtectionHeader" Click="OpenProtectionFromHeader" Content="CHECKING ANTIVIRUS..." Foreground="#C7EACA" Background="#14271A" BorderBrush="#426C49" FontSize="12" FontWeight="Bold" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10,7" ToolTip="View Windows antivirus protection status"/>
       </DockPanel>
     </Border>
     <Grid Grid.Row="1">
