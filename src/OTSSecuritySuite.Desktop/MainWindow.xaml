@@ -110,7 +110,7 @@
                     <GridViewColumn Header="Event" DisplayMemberBinding="{Binding EventId}" Width="55"/>
                     <GridViewColumn Header="Observation" DisplayMemberBinding="{Binding Summary}" Width="280"/>
                     <GridViewColumn Header="Outcome" DisplayMemberBinding="{Binding Outcome}" Width="230"/>
-                  </GridView></ListView>
+                  </GridView></ListView.View></ListView>
               </DockPanel>
             </TabItem>
           </TabControl>
