@@ -12,6 +12,7 @@
     <Compile Include="../../src/OTSSecuritySuite.Desktop/WhiteAuditRunner.cs" Link="WhiteAuditRunner.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/NetworkProtectionAudit.cs" Link="NetworkProtectionAudit.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/WindowsThreatActivity.cs" Link="WindowsThreatActivity.cs" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/FirewallOverlap.cs" Link="FirewallOverlap.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/ProtocolActivation.cs" Link="ProtocolActivation.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/WhiteReportWriter.cs" Link="WhiteReportWriter.cs" />
