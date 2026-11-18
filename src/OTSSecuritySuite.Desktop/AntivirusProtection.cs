@@ -36,7 +36,7 @@ public sealed record AntivirusAssessment(
         if (products.Count == 0)
             return new(AntivirusCoverage.Unprotected, products,
                 "UNPROTECTED · No antivirus registered",
-                "Windows 10/11 includes Microsoft Defender Antivirus. Open Windows Security to enable or repair Virus & threat protection; do not download an unofficial installer.");
+                "Microsoft Defender Antivirus is built into Windows 10/11. Open Windows Security to enable or repair Virus & threat protection; do not download an unofficial installer.");
         if (products.Any(p => p.State == AntivirusRuntimeState.Unknown))
             return new(AntivirusCoverage.Unknown, products,
                 "UNKNOWN · Installed antivirus status is unavailable",
