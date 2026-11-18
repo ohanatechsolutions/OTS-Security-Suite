@@ -8,10 +8,10 @@ on:
         required: false
         default: false
       prerelease_tag:
-        description: 'Unused unique test tag, e.g. v0.9.0-test.3'
+        description: 'Unused unique test tag, e.g. v0.9.0-test.4'
         type: string
         required: false
-        default: 'v0.9.0-test.3'
+        default: 'v0.9.0-test.4'
   push:
     branches: [main]
   pull_request:
@@ -367,7 +367,7 @@ jobs:
           Write-Host 'Installer, bundled modules, icon, URI registration and uninstaller smoke checks passed'
       - name: Upload Windows installer (unsigned test build)
         # Owner-approved one-time test merge only; PR builds cannot upload assets.
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.3]'))
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.4]'))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Windows-Beta
@@ -381,7 +381,7 @@ jobs:
     name: Release test preview after Windows QA (manual draft or one-time approved public test)
     needs: [windows-build]
     # No automatic public release for ordinary main commits or PRs.
-    if: (github.event_name == 'workflow_dispatch' && inputs.create_draft == true) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.3]'))
+    if: (github.event_name == 'workflow_dispatch' && inputs.create_draft == true) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.4]'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only this isolated job can write releases, not Windows build steps.
@@ -421,7 +421,7 @@ jobs:
       - name: Create owner-only DRAFT prerelease
         env:
           GH_TOKEN: ${{ github.token }}
-          PRERELEASE_TAG: ${{ github.event_name == 'push' && 'v0.9.0-test.3' || inputs.prerelease_tag }}
+          PRERELEASE_TAG: ${{ github.event_name == 'push' && 'v0.9.0-test.4' || inputs.prerelease_tag }}
         shell: bash
         run: |
           set -euo pipefail
