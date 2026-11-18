@@ -43,8 +43,8 @@ try {
             version=$webviewVersion; source='Microsoft NuGet package' },
         [ordered]@{ name='RepoScan'; type='Go local/static scanner'; version='2.5.0';
             source='scanner/'; external_go_dependencies='none in go.mod' },
-        [ordered]@{ name='OTS W.H.I.T.E.'; type='self-contained Python CLI preview';
-            source='white_engine/ots_white'; parity='heuristic secrets/SAST/reachable Git history; offline SCA unavailable' },
+        [ordered]@{ name='Legacy W.H.I.T.E. audit'; type='CI-only source security check, not distributed';
+            source='white_engine/ots_white'; parity='not a shipped scanner; offline SCA unavailable' },
         [ordered]@{ name='OTS System Sanitizer'; type='.NET vendored source'; source_tree_sha=$sanitizer; upstream_commit='823ad825dc1358009d3404f54604465c86747eba';
             source='modules/OTS_System_Sanitizer' },
         [ordered]@{ name='PyInstaller'; type='build-only packaging'; version=$installerVersion },
@@ -57,7 +57,7 @@ try {
         source=[ordered]@{
             repo='ohanatechsolutions/OTS_Security_Suite'
             checked_out_commit=$checkout
-            white_source='white_engine/ots_white'
+            legacy_audit_ci_only='white_engine/ots_white'
             sanitizer_source_tree_sha=$sanitizer
             sanitizer_original_upstream_commit='823ad825dc1358009d3404f54604465c86747eba'
         }
@@ -68,7 +68,7 @@ try {
         direct_components=$components
         evidence_scope='Direct components and build tools only; NOT a full transitive SBOM or vulnerability certification.'
         separate_dependencies=@('Microsoft Edge WebView2 Runtime on target Windows machine',
-            'Offline OSV-Scanner and pre-populated cache only if user selects SCA')
+            'RepoScan offline dependency vulnerability analysis not yet implemented')
         privacy='No credentials, username, source code or raw scan results recorded.'
     }
     $full=[IO.Path]::GetFullPath($OutputPath)

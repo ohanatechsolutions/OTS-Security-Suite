@@ -34,43 +34,15 @@ function Click-Ui([string] $automationId) {
     $pattern.Invoke()
 }
 
-$fixture = Join-Path $env:TEMP ('OTS-Suite-UI-' + [Guid]::NewGuid().ToString('N'))
-New-Item -ItemType Directory -Path $fixture | Out-Null
+# A separate W.H.I.T.E. panel must not be present in the installed host.
+$oldTab = [System.Windows.Automation.PropertyCondition]::new(
+    [System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'WhiteTab')
+if ($root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $oldTab)) {
+    throw 'W.H.I.T.E. is still exposed as an end-user tab'
+}
+Click-Ui 'RepoTab'
+Write-Host 'PASS: RepoScan is the only repository-scanning tab'
 try {
-    Set-Content -Path (Join-Path $fixture 'hello.py') -Value 'print("harmless CI UI test")' -Encoding utf8
-    Click-Ui 'WhiteTab'
-    $folder = Get-Ui 'WhiteFolder'
-    $folderValue = $folder.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern)
-    $folderValue.SetValue($fixture)
-
-    $importControl = Get-Ui 'WhiteImport'
-    if (-not $importControl.Current.IsEnabled) { throw 'Import report control was unexpectedly disabled' }
-    Click-Ui 'WhiteRun'
-    $status = Get-Ui 'WhiteStatus'
-    $finished = $false
-    for ($i = 0; $i -lt 200; $i++) {
-        Start-Sleep -Milliseconds 200
-        $label = $status.Current.Name
-        if ($label -like 'Audit completed*') {
-            $finished = $true
-            break
-        }
-        if ($label -like 'Audit could not finish*' -or $label -like 'Audit incomplete*' -or
-            $label -like 'Audit engine failed*' -or $label -like 'Audit timed out*') {
-            throw "Installed WPF audit failed synthetic end-to-end check: $label"
-        }
-    }
-    if (-not $finished) { throw "Installed WPF audit did not complete within 40 seconds. Status: $($status.Current.Name)" }
-    $output = Get-Ui 'WhiteOutput'
-    $outValue = $output.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern)
-    $reportText = $outValue.Current.Value
-    $report = $reportText | ConvertFrom-Json
-    if (-not $report.complete -or $report.scanned_files -ne 1) {
-        throw "WPF audit output JSON did not reflect completed single-file synthetic scan"
-    }
-    $cancel = Get-Ui 'WhiteCancel'
-    if ($cancel.Current.IsEnabled) { throw 'Cancel Audit remained enabled after completed run' }
-    Write-Host 'PASS WPF UI Automation: navigation, text input, real packaged WHITE execution and JSON presentation'
     # A second native launch must hand off to the first and exit cleanly;
     # running a separate instance would create a second Go scanner.
     $exe = (Get-CimInstance Win32_Process -Filter "ProcessId=$($root.Current.ProcessId)").ExecutablePath
@@ -93,5 +65,5 @@ try {
     }
     Write-Host 'PASS WPF UI Automation: Windows Security tab navigation'
 } finally {
-    Remove-Item -LiteralPath $fixture -Recurse -Force -ErrorAction SilentlyContinue
+    # No synthetic files or destructive operations were needed.
 }

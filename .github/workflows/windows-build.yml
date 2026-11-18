@@ -101,13 +101,13 @@ jobs:
           go build -trimpath -ldflags '-s -w' -o ../bundle/engines/OTSScannerEngine.exe ./cmd/scanner
           if ($LASTEXITCODE -ne 0) { throw 'Scanner build failed' }
           Pop-Location
-      - name: Build W.H.I.T.E. as offline CLI
+      - name: Build legacy source auditor for internal CI only
         shell: pwsh
         run: |
           python -m pip install --disable-pip-version-check pyinstaller==6.22.3
           python -m PyInstaller --noconfirm --clean --onefile --console --name OTSWhiteAudit --paths white_engine tools/white_entry.py
           if ($LASTEXITCODE -ne 0) { throw 'W.H.I.T.E. build failed' }
-          Copy-Item dist/OTSWhiteAudit.exe bundle/engines/
+          # Legacy audit remains internal to CI; never copy to installed bundle.
           $env:PYTHONPATH = (Resolve-Path 'white_engine').Path
           python -m unittest discover -s white_engine/tests -p 'test_*.py'
           Remove-Item Env:PYTHONPATH
@@ -117,7 +117,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $root = (Resolve-Path '.').Path
-          $exe = (Resolve-Path 'bundle/engines/OTSWhiteAudit.exe').Path
+          $exe = (Resolve-Path 'dist/OTSWhiteAudit.exe').Path
           # Do not print the raw scanner JSON, source snippets or secret findings
           # into public GitHub Actions logs. Offline SCA is explicitly skipped.
           $reportJson = (& $exe $root '--format' 'json' '--history' '--no-sca' '--fail-on' 'none' '--exclude' 'bundle/*' '--exclude' '*.exe' '--exclude' '*.dll' '--exclude' '*.png' '--exclude' '*.ico' '--exclude' 'artifacts/*') -join "`n"
@@ -154,7 +154,7 @@ jobs:
           $sample = Join-Path $env:TEMP 'ots-suite-white-audit-fixture'
           New-Item -ItemType Directory -Path $sample -Force | Out-Null
           Set-Content -Path (Join-Path $sample 'hello.py') -Value "print('hello world')" -Encoding utf8
-          $binary = (Resolve-Path 'bundle/engines/OTSWhiteAudit.exe').Path
+          $binary = (Resolve-Path 'dist/OTSWhiteAudit.exe').Path
           try {
             $json = (& $binary $sample '--format' 'json' '--no-sca') -join "`n"
             if ($LASTEXITCODE -ne 0) { throw 'Packaged W.H.I.T.E. returned an unexpected failure for benign synthetic code' }
@@ -179,7 +179,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Sanitizer smoke tests failed' }
           dotnet publish modules/OTS_System_Sanitizer/src/OTSSystemSanitizer.Desktop/OTSSystemSanitizer.Desktop.csproj -c Release -r win-x64 --self-contained true -o bundle/engines
           if ($LASTEXITCODE -ne 0) { throw 'Sanitizer build failed' }
-      - name: W.H.I.T.E. process cancellation and privacy regression tests
+      - name: Legacy source-audit cancellation and privacy checks (CI-only)
         shell: pwsh
         run: |
           dotnet run --project tests/OTSSecuritySuite.AuditSmoke/OTSSecuritySuite.AuditSmoke.csproj -c Release
@@ -196,7 +196,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Suite host build failed' }
           Copy-Item -Path extension -Destination bundle/extension -Recurse -Force
           if ($LASTEXITCODE -ne 0) { throw 'Suite host build failed' }
-          foreach ($path in @('bundle/OTSSecuritySuite.exe','bundle/engines/OTSWhiteAudit.exe','bundle/engines/OTSScannerEngine.exe','bundle/engines/OTSSystemSanitizer.exe')) {
+          foreach ($path in @('bundle/OTSSecuritySuite.exe','bundle/engines/OTSScannerEngine.exe','bundle/engines/OTSSystemSanitizer.exe')) {
             if (-not (Test-Path $path)) { throw "Missing output $path" }
           }
       - name: Preserve upstream MIT license and third-party attribution in installer
@@ -205,7 +205,6 @@ jobs:
           $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Force bundle/licenses | Out-Null
           $required = @(
-            @('white_engine/NOTICE.md', 'bundle/licenses/OTS_WHITE_NOTICE.md'),
             @('modules/OTS_System_Sanitizer/LICENSE', 'bundle/licenses/OTS_System_Sanitizer_LICENSE.txt'),
             @('modules/OTS_System_Sanitizer/THIRD_PARTY_NOTICES.md', 'bundle/licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md'),
             @('scanner/NOTICE.md', 'bundle/licenses/RepoScan_NOTICE.md')
@@ -221,7 +220,7 @@ jobs:
           $manifest = Get-Content -LiteralPath bundle/licenses/BUILD-MANIFEST.json -Raw | ConvertFrom-Json
           $checkedOut = (git rev-parse HEAD).Trim()
           if ($manifest.source.checked_out_commit -ne $checkedOut -or
-              $manifest.source.white_source -ne 'white_engine/ots_white' -or
+              $manifest.source.legacy_audit_ci_only -ne 'white_engine/ots_white' -or
               $manifest.source.sanitizer_source_tree_sha -ne (git rev-parse 'HEAD:modules/OTS_System_Sanitizer').Trim() -or
               $manifest.source.sanitizer_original_upstream_commit -ne '823ad825dc1358009d3404f54604465c86747eba' -or
               $manifest.direct_components.Count -lt 6 -or
@@ -292,7 +291,7 @@ jobs:
           $setup = Start-Process -FilePath $installer -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-') -Wait -PassThru
           if ($setup.ExitCode -ne 0) { throw "Silent setup failed: exit $($setup.ExitCode)" }
           $installPath = Join-Path $env:LOCALAPPDATA 'Programs/Ohana Tech Solutions/Security Suite'
-          foreach ($required in @('OTSSecuritySuite.exe','engines/OTSScannerEngine.exe','engines/OTSWhiteAudit.exe','engines/OTSSystemSanitizer.exe','extension/manifest.json','extension/popup.js','licenses/OTS_WHITE_NOTICE.md','licenses/OTS_System_Sanitizer_LICENSE.txt','licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md','licenses/RepoScan_NOTICE.md','licenses/BUILD-MANIFEST.json')) {
+          foreach ($required in @('OTSSecuritySuite.exe','engines/OTSScannerEngine.exe','engines/OTSSystemSanitizer.exe','extension/manifest.json','extension/popup.js','licenses/OTS_System_Sanitizer_LICENSE.txt','licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md','licenses/RepoScan_NOTICE.md','licenses/BUILD-MANIFEST.json')) {
             if (-not (Test-Path (Join-Path $installPath $required))) { throw "Installer missing $required" }
           }
           Add-Type -AssemblyName System.Drawing
@@ -318,7 +317,7 @@ jobs:
             Write-Host "Installed WPF suite stayed alive after launch (PID $($desktop.Id))"
             if ($desktop.MainWindowHandle -ne [IntPtr]::Zero) {
               & pwsh -NoProfile -File tools/windows-ui-smoke.ps1 -WindowHandle $desktop.MainWindowHandle.ToInt64()
-              if ($LASTEXITCODE -ne 0) { throw 'Installed WPF navigation/WHITE UI smoke failed' }
+              if ($LASTEXITCODE -ne 0) { throw 'Installed RepoScan/navigation smoke failed' }
               $closed = $desktop.CloseMainWindow()
               if (-not $closed -or -not $desktop.WaitForExit(15000)) {
                 throw 'Installed WPF suite did not close gracefully on window-close request'

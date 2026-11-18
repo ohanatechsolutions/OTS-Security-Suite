@@ -19,6 +19,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
     <ProjectReference Include="..\..\modules\OTS_System_Sanitizer\src\OTSSystemSanitizer.Core\OTSSystemSanitizer.Core.csproj" />
+    <Compile Remove="WhiteAuditRunner.cs" />
+    <Compile Remove="WhiteReportWriter.cs" />
     <Resource Include="AppIcon.ico" />
     <Resource Include="OhanaLogo.png" />
   </ItemGroup>
