@@ -1,0 +1,91 @@
+name: Archive historical installer into restricted draft release
+
+# Restricted archive only: repository security publication check is failing.
+# A successful migration does not approve public distribution.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/archive-held-installer.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ots-sanitizer-archive-held-installer
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      INSTALLER: installer/OTSSystemSanitizerSetup-x64.exe
+      CHECKSUM: installer/OTSSystemSanitizerSetup-x64.sha256
+      RELEASE_TAG: v0.4.0-legacy-security-hold
+    steps:
+      - name: Checkout exact commit without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Fail closed on invalid PE or mismatching SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, os, re, struct
+          from pathlib import Path
+          exe=Path(os.environ['INSTALLER'])
+          manifest=Path(os.environ['CHECKSUM'])
+          if not exe.is_file() or not manifest.is_file():
+              raise SystemExit('Installer or matching checksum missing')
+          data=exe.read_bytes()
+          if len(data)<65536 or data[:2]!=b'MZ':
+              raise SystemExit('Invalid DOS executable header')
+          pos=struct.unpack_from('<I',data,0x3c)[0]
+          if pos<64 or pos>len(data)-24 or data[pos:pos+4]!=b'PE\0\0':
+              raise SystemExit('Invalid Windows PE executable header')
+          machine=struct.unpack_from('<H',data,pos+4)[0]
+          if machine not in (0x8664,0x14c):
+              raise SystemExit('Unexpected Windows PE machine architecture')
+          lines=manifest.read_text(encoding='utf-8-sig').strip().splitlines()
+          if len(lines)!=1:
+              raise SystemExit('Invalid checksum manifest format')
+          match=re.fullmatch(r'([a-fA-F0-9]{64})\s+\*?([^/\\]+)',lines[0])
+          if match is None or match.group(2)!=exe.name:
+              raise SystemExit('Wrong filename in checksum manifest')
+          actual=hashlib.sha256(data).hexdigest()
+          if actual!=match.group(1).lower():
+              raise SystemExit('Checksum mismatch: do not archive or remove tracked original')
+          print('Static checks passed; SHA256',actual,'size',len(data),'machine',hex(machine))
+          PY
+
+      - name: Create non-public draft release (SECURITY HOLD)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Existing release; refusing to overwrite"
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" "$INSTALLER" "$CHECKSUM" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title 'OTS System Sanitizer v0.4.0 legacy archive — SECURITY HOLD' \
+            --notes 'RESTRICTED DRAFT. Archival copy of previously tracked installer only. NOT APPROVED FOR DISTRIBUTION: publication-security scan reported potential secret-pattern findings in repository history (run 41706727937). Static PE and SHA-256 checks do NOT constitute an antivirus scan, code-signing check, clean-install verification or release approval. Do not publish this draft until security review and Windows release gates pass.' \
+            --draft
+
+      - name: Verify draft archive asset is byte-for-byte identical
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ots-archive-check"
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$(basename "$INSTALLER")" --dir "$RUNNER_TEMP/ots-archive-check"
+          cmp -- "$INSTALLER" "$RUNNER_TEMP/ots-archive-check/$(basename "$INSTALLER")"
+          echo "Restricted draft archive is byte-for-byte identical to original"

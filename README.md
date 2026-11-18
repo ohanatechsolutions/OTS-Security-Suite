@@ -1,3 +1,5 @@
+> **2026-11-18 consolidation candidate (NOT YET CI-VERIFIED):** The full 42-file System Sanitizer source tree is being moved into this repository, replacing its Git submodule dependency. See [repository consolidation audit](docs/REPOSITORY_CONSOLIDATION_2026-11-18.md). The old OTS W.H.I.T.E. repo was already deleted; the replacement audit engine is not historical feature-parity certified. Do not delete the standalone Sanitizer repo until the updated main-branch Windows build, safe installed flows and independent archives are verified. The test build evidence below applies to earlier commits.
+
 > **2026-11-15 — VERIFIED owner-only test prerelease:** [GitHub Windows Actions #43820859841](https://github.com/ohanatechsolutions/OTS_Security_Suite/actions/runs/43820859841) **SUCCESS** (both Windows build and draft prerelease jobs), source commit 953f1f3037cb4a2f8781c95ae8823370db5ef086. The owner-visible [DRAFT v0.9.0-test.2 prerelease](https://github.com/ohanatechsolutions/OTS_Security_Suite/releases/tag/untagged-8b649701cd0ffb13c62d) contains a **real unsigned** OTS-Security-Suite-Setup-x64.exe (102,419,492 bytes, genuine MZ PE) and SHA256SUMS.txt. The authenticated GitHub Release API independently confirms draft=true, prerelease=true, both assets and installer digest sha256:f672384e94c26c97664a368dfba98fafcb52c17b62fb0ead4a3ad11ae7841dd2. The Windows job verified Go, 95 rules, 8/8 new Python WHITE tests, 22/22 .NET tests, WPF UI automation, Inno installation, repair/uninstall and synthetic quarantine preservation. **Only a TEST PREVIEW is available; independent Windows10/11 acceptance, genuine legacy vault QA, Chrome clean-profile, old WHITE detection parity, offline SCA, code signing and public release approval remain NOT VERIFIED / NO-GO.** The older test.1 draft is superseded. Further draft release creation is manual-only, with a unique tag, to prevent unintended repeat publication or CI costs.
 
 # OTS Security Suite — Integrated Preview 0.9.0
@@ -37,10 +39,10 @@ The native Windows icon and title-bar icon are both set to the user's supplied s
 
 ### Building on Windows
 
-You need .NET 10 SDK, Go 1.27.4+ (security-maintained toolchain), Python 3.12, PyInstaller, Inno Setup 6, Microsoft WebView2 runtime, and the **System Sanitizer** Git submodule. W.H.I.T.E. source is now included directly in this repository.
+You need .NET 10 SDK, Go 1.27.4+ (security-maintained toolchain), Python 3.12, PyInstaller, Inno Setup 6, Microsoft WebView2 runtime, and the **vendored System Sanitizer** source. W.H.I.T.E. source is now included directly in this repository.
 
 ```powershell
-git clone --recurse-submodules https://github.com/ohanatechsolutions/OTS_Security_Suite.git
+git clone https://github.com/ohanatechsolutions/OTS_Security_Suite.git
 cd OTS_Security_Suite
 # GitHub Actions -> Windows build and integration checks -> Run workflow
 ```
@@ -65,7 +67,7 @@ The Windows quarantine system is user-scoped and cannot offer kernel-level malwa
 
 - `scanner/`: OTS's independent Go malware scanner source (formerly v2.5)
 - `white_engine/ots_white`: self-contained replacement audit engine; the original W.H.I.T.E. source repository was deleted by its owner
-- `modules/OTS_System_Sanitizer`: Git submodule containing the original System Sanitizer source
+- `modules/OTS_System_Sanitizer`: complete vendored System Sanitizer source snapshot (original commit `823ad825`, tree `c56ef135`); no external Git submodule
 - `src/OTSSecuritySuite.Desktop/`: new native suite shell
 - `extension/`: locally launched repository scanner extension
 - `installer/`: Inno Setup packaging

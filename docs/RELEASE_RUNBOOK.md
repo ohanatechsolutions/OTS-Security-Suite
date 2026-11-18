@@ -3,7 +3,7 @@
 **No release is approved yet.** This is a controlled, reproducible runbook. It does not authorize signing, publishing, paid certificates, migration, deleting a branch or changing a user machine without consent.
 
 ## 1. Freeze and review
-1. Confirm a reviewed immutable source commit SHA and pinned W.H.I.T.E./Sanitizer submodule revisions.
+1. Confirm a reviewed immutable source commit SHA, in-repo W.H.I.T.E. revision and the vendored Sanitizer tree SHA (`c56ef135da8b509c88d4175feba1e6055fd4b6f7`).
 2. Confirm `docs/BUILD_BLUEPRINT.md` and requirements have not changed without recorded review.
 3. Check every automated CI step and inspect failures, not merely the GitHub green badge.
 4. Verify all P0/critical cases in `docs/QA_ACCEPTANCE.md` against supported Windows 10/11 and clean Chrome profiles.

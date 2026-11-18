@@ -32,6 +32,11 @@ jobs:
           submodules: recursive
           persist-credentials: false
           fetch-depth: 0
+      - name: Verify self-contained Sanitizer source
+        shell: pwsh
+        run: |
+          & pwsh -NoProfile -File tools/verify-vendored-sanitizer.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Vendored Sanitizer tree does not match the approved source snapshot' }
       - name: Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
