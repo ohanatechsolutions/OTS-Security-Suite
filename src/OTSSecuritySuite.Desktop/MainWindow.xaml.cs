@@ -21,6 +21,7 @@ public partial class MainWindow : Window
     private string? _lastWhiteOutput;
     private string? _launchRepository;
     private bool _isClosing;
+    private AntivirusAssessment? _antivirusAssessment;
 
     public MainWindow()
     {
@@ -35,6 +36,7 @@ public partial class MainWindow : Window
     private async void OnWindowLoaded(object sender, RoutedEventArgs e)
     {
         FitInitialWindowToWorkArea();
+        UpdateAntivirusDisplay();
         await StartRepositoryEngineAsync();
     }
 
@@ -170,7 +172,7 @@ public partial class MainWindow : Window
     }
     private void ShowRepository(object sender, RoutedEventArgs e) => SetPanel(RepositoryPanel);
     private void ShowWhite(object sender, RoutedEventArgs e) => SetPanel(WhitePanel);
-    private void ShowSystem(object sender, RoutedEventArgs e) => SetPanel(SystemPanel);
+    private void ShowSystem(object sender, RoutedEventArgs e) { SetPanel(SystemPanel); UpdateAntivirusDisplay(); }
     private void ShowCleanup(object sender, RoutedEventArgs e) { RefreshVault(); SetPanel(CleanupPanel); }
 
     private void BrowseWhiteFolder(object sender, RoutedEventArgs e)
@@ -343,8 +345,51 @@ public partial class MainWindow : Window
             }
         }
     }
+    private void RefreshAntivirus(object sender, RoutedEventArgs e) => UpdateAntivirusDisplay();
+
+    private void UpdateAntivirusDisplay()
+    {
+        if (_isClosing) return;
+        // WSC COM queries are performed on WPF's STA; a failed query is UNKNOWN, never "safe".
+        _antivirusAssessment = WindowsAntivirusInventory.Read();
+        var assessment = _antivirusAssessment;
+        AntivirusSummary.Text = assessment.Summary;
+        AntivirusSummary.Foreground = assessment.Coverage switch {
+            AntivirusCoverage.Protected => System.Windows.Media.Brushes.LightGreen,
+            AntivirusCoverage.Unprotected => System.Windows.Media.Brushes.OrangeRed,
+            AntivirusCoverage.NeedsAttention => System.Windows.Media.Brushes.Gold,
+            _ => System.Windows.Media.Brushes.LightGray
+        };
+        AntivirusProducts.Text = assessment.Products.Count == 0
+            ? "No registered antivirus products reported."
+            : string.Join("   |   ", assessment.Products.Select(p =>
+                p.Name + ": " + p.State + (p.State == AntivirusRuntimeState.On &&
+                !p.SignaturesCurrent ? " (signatures outdated)" : "")));
+        AntivirusGuidance.Text = assessment.Guidance;
+    }
+
+    private void OpenWindowsSecurity(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // Official built-in Windows Security URI; never download or silently toggle an AV.
+            Process.Start(new ProcessStartInfo("windowsdefender:") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            SystemStatus.Text = "Windows Security could not be opened: " + ex.Message +
+                ". Open Start and search for Windows Security > Virus & threat protection.";
+        }
+    }
+
     private async void RunDefender(object sender, RoutedEventArgs e)
     {
+        UpdateAntivirusDisplay();
+        if (_antivirusAssessment?.ActiveDefender != true)
+        {
+            SystemStatus.Text = "Microsoft Defender is not reported active. No scan requested. Open Windows Security to check your installed antivirus.";
+            return;
+        }
         SystemStatus.Text = "Requesting Microsoft Defender Quick Scan...";
         try { SystemStatus.Text = await DefenderIntegration.RunScanAsync(ScanMode.Quick, CancellationToken.None); }
         catch (Exception ex) { SystemStatus.Text = "Defender request failed: " + ex.Message; }
