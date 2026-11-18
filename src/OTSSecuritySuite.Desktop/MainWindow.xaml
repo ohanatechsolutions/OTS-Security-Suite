@@ -80,9 +80,10 @@
           </Grid.RowDefinitions>
           <TextBlock Grid.Row="0" Text="NETWORK DEFENSE · READ-ONLY" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,14"/>
           <TextBlock Grid.Row="1" Text="Windows Firewall stays in charge. OTS inspects status and TCP connections without changing rules, starting a second firewall, or disabling Defender." TextWrapping="Wrap" Foreground="#B9D1BD" Margin="0,0,0,14"/>
-          <WrapPanel Grid.Row="2" Margin="0,0,0,10"><Button Content="REFRESH NETWORK STATUS" Click="RefreshNetworkClick"/><Button Content="OPEN WINDOWS SECURITY" Click="OpenWindowsSecurityClick"/></WrapPanel>
+          <WrapPanel Grid.Row="2" Margin="0,0,0,10"><Button Content="REFRESH NETWORK STATUS" Click="RefreshNetworkClick"/><Button Content="ANALYZE FIREWALL RULES" Click="AnalyzeFirewallRulesClick"/><Button Content="OPEN WINDOWS SECURITY" Click="OpenWindowsSecurityClick"/></WrapPanel>
           <StackPanel Grid.Row="3">
             <TextBlock Name="NetworkStatus" Text="Select Refresh to inspect Windows Firewall and active TCP connections." Foreground="#A9CCA9" TextWrapping="Wrap" Margin="0,0,0,8"/>
+            <TextBlock Name="FirewallRuleSummary" Text="Rule analysis has not been requested. No rules are changed automatically." Foreground="#A9CCA9" TextWrapping="Wrap" Margin="0,0,0,8"/>
             <ItemsControl Name="NetworkProfiles">
               <ItemsControl.ItemTemplate><DataTemplate><TextBlock Foreground="#B9D1BD" Text="{Binding}" Margin="0,0,0,2"/></DataTemplate></ItemsControl.ItemTemplate>
             </ItemsControl>
