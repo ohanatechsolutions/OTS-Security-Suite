@@ -30,6 +30,7 @@ var cases = new (string Name, Func<Task> Action)[]
     ("WHITE import rejects malformed, invalid UTF-8 and oversized files", WhiteImportRejectsUnsafe),
     ("network profile status fails closed when providers are incomplete", NetworkStatusFailsClosed),
     ("network profile status distinguishes default-allow from disabled", NetworkStatusPolicyWarnings),
+    ("firewall rule hints identify duplicate and opposite rules without precedence claims", FirewallRuleOverlapHints),
 };
 int passed = 0;
 foreach (var (name, action) in cases)
@@ -79,6 +80,23 @@ static Task NetworkStatusPolicyWarnings()
     permissive[2] = permissive[2] with { InboundDefaultBlock = false };
     Assert(NetworkProtectionAudit.OverallStatus(permissive).Contains("does not block inbound", StringComparison.Ordinal),
         "Permissive default inbound action not disclosed");
+    return Task.CompletedTask;
+}
+
+static Task FirewallRuleOverlapHints()
+{
+    var allow = new FirewallRuleView("Allow A", "1", "1", "6", "*", "*", "7", "", true);
+    var duplicate = allow with { Name = "Allow B" };
+    var opposing = allow with { Name = "Block C", Action = "0" };
+    var result = FirewallOverlap.Analyze(new[] { allow, duplicate, opposing });
+    Assert(result.Examined == 3, "Not all synthetic rules were analyzed");
+    Assert(result.DuplicateRules == 1, "Duplicate rules were not identified");
+    Assert(result.OpposingExactMatches == 1, "Opposing action overlap was not identified");
+    Assert(result.BroadInboundAllows == 2, "Broad enabled inbound allow rules were not identified");
+    Assert(result.Limitations.Contains("NOT modeled", StringComparison.Ordinal),
+        "Engine must disclose that effective Windows rule precedence is not modeled");
+    Assert(!FirewallOverlap.PortsOverlap("invalid", "80"),
+        "Invalid port syntax must not be assumed overlapping");
     return Task.CompletedTask;
 }
 
