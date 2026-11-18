@@ -216,6 +216,25 @@ public partial class MainWindow : Window
         finally { _networkRefreshing = false; }
     }
 
+    private async void AnalyzeFirewallRulesClick(object sender, RoutedEventArgs e)
+    {
+        if (_isClosing || _networkRefreshing) return;
+        _networkRefreshing = true;
+        FirewallRuleSummary.Text = "Reading Windows Firewall rules for advisory overlap hints…";
+        try
+        {
+            var summary = await Task.Run(NetworkProtectionAudit.AnalyzeRules);
+            if (!_isClosing) FirewallRuleSummary.Text = summary;
+        }
+        catch (Exception ex)
+        {
+            if (!_isClosing)
+                FirewallRuleSummary.Text = "Rule analysis unavailable: " + ex.GetType().Name +
+                    ". Windows Firewall was not modified.";
+        }
+        finally { _networkRefreshing = false; }
+    }
+
     private void OpenWindowsSecurityClick(object sender, RoutedEventArgs e)
     {
         try { Process.Start(new ProcessStartInfo("windowsdefender:") { UseShellExecute = true }); }
