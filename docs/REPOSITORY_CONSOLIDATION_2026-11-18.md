@@ -46,3 +46,7 @@ Before deleting `OTS_System_Santizer`, verify **all** of the following:
 - Record human owner sign-off in the project evidence log, then **the owner** may manually delete the old repository. No AI deletion is authorized by this task.
 
 **Recommendation:** Keep the old repository intact during migration. After the source integration is verified, prefer archiving it before permanent deletion; if deletion remains desired, retain the verified offline Git mirror and release/evidence archive.
+
+## 2026-11-18 retirement readiness update
+
+Sanitizer's upstream `main` and Suite's embedded directory have the same source-tree SHA. The live upstream has one branch, no open PRs and a security-held draft release; archival of its full Git history and draft assets is still **NOT VERIFIED**, so deletion is **BLOCKED**. A fail-closed owner-side archive and restore tool and detailed acceptance ledger are in [SANITIZER_REPO_RETIREMENT_2026-11-18.md](SANITIZER_REPO_RETIREMENT_2026-11-18.md). Do not mistake successful CI or a Git tree match for verified release-asset backup, historical secret review, real Windows QA or owner signoff.

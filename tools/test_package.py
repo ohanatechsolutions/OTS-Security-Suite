@@ -55,6 +55,18 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertNotIn('bundle/engines/OTSWhiteAudit.exe', ci)
         self.assertIn('dist/OTSWhiteAudit.exe', ci)
 
+    def test_sanitizer_retirement_tool_is_fail_closed(self):
+        text = (ROOT/'tools/backup-retiring-sanitizer.ps1').read_text(encoding='utf-8')
+        required = ('git clone --mirror', 'bundle create', 'bundle verify',
+                    'restore-test.git', 'fsck --full', 'gh release download',
+                    'Get-FileHash', 'repository_deletion_authorized = $false',
+                    'original_tree', 'suite_vendored_tree',
+                    'original_main', 'expectedSetupHash')
+        for needle in required:
+            self.assertIn(needle, text, needle)
+        self.assertNotIn('gh repo delete', text)
+        self.assertNotIn('git push --mirror', text)
+
     def test_vendored_sanitizer_source_integrity(self):
         self.assertFalse((ROOT/'.gitmodules').exists(), "A clean clone must not depend on removed upstream repos")
         self.assertTrue((ROOT/'white_engine/ots_white/cli.py').is_file())
