@@ -1,3 +1,11 @@
+## Unreleased — 2026-11-18 source consolidation
+
+- Vendored the exact System Sanitizer `main` source tree into the suite; dropped dependency on its standalone Git repository.
+- Preserved specialist WPF UI, logo/icon, quarantining core, smoke tests, MIT license and third-party notices.
+- Added a Git-tree integrity check and updated Windows build provenance for the vendored source.
+- Standalone W.H.I.T.E. legacy source is unavailable; current in-repo replacement remains subject to known parity and offline-SCA gaps.
+- No installer release or repository deletion is authorized by this migration.
+
 ## [Unreleased] — 2026-11-15 test preview
 ### Changed
 - Replaced the unavailable, owner-deleted OTS W.H.I.T.E. Git submodule with new in-repository Python preview source audit engine.

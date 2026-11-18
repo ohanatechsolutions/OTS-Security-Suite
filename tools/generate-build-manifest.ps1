@@ -16,9 +16,9 @@ try {
     $webviewVersion=[string]$webview[0].Version
 
     $checkout=([string](& git rev-parse HEAD)).Trim()
-    $sanitizer=([string](& git -C modules/OTS_System_Sanitizer rev-parse HEAD)).Trim()
+    $sanitizer=([string](& git rev-parse 'HEAD:modules/OTS_System_Sanitizer')).Trim()
     foreach($sha in @($checkout,$sanitizer)){
-        if($sha -notmatch '^[a-fA-F0-9]{40}$'){throw 'Invalid source or submodule commit.'}
+        if($sha -notmatch '^[a-fA-F0-9]{40}$'){throw 'Invalid source commit or vendored Sanitizer tree hash.'}
     }
     $go=([string](& go version)).Trim()
     $net=([string](& dotnet --version)).Trim()
@@ -45,7 +45,7 @@ try {
             source='scanner/'; external_go_dependencies='none in go.mod' },
         [ordered]@{ name='OTS W.H.I.T.E.'; type='self-contained Python CLI preview';
             source='white_engine/ots_white'; parity='heuristic secrets/SAST/reachable Git history; offline SCA unavailable' },
-        [ordered]@{ name='OTS System Sanitizer'; type='.NET submodule'; commit=$sanitizer;
+        [ordered]@{ name='OTS System Sanitizer'; type='.NET vendored source'; source_tree_sha=$sanitizer; upstream_commit='823ad825dc1358009d3404f54604465c86747eba';
             source='modules/OTS_System_Sanitizer' },
         [ordered]@{ name='PyInstaller'; type='build-only packaging'; version=$installerVersion },
         [ordered]@{ name='Inno Setup'; type='build-only Windows compiler'; version=$innoVersion; binary_sha256=$innoSha256 }
@@ -58,7 +58,8 @@ try {
             repo='ohanatechsolutions/OTS_Security_Suite'
             checked_out_commit=$checkout
             white_source='white_engine/ots_white'
-            sanitizer_submodule_commit=$sanitizer
+            sanitizer_source_tree_sha=$sanitizer
+            sanitizer_original_upstream_commit='823ad825dc1358009d3404f54604465c86747eba'
         }
         product=[ordered]@{name='OTS Security Suite'; version=$suiteVersion;
             target='win-x64'; stage='unsigned integration preview'}

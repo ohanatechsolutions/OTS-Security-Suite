@@ -8,3 +8,7 @@
 - No module is permitted to automatically destroy or quarantine repository files based merely on a Go risk score. Windows remediation is always a separate explicit user command.
 - The extension uses a registered `ots-security://scan?url=` protocol and does not need a browser-accessible localhost port or persistent background engine.
 - The first native installer is a separate product with its own AppId so it cannot automatically overwrite existing standalone Sanitizer/White installations or delete user data.
+
+## 2026-11-18 source ownership / retirement plan
+
+The System Sanitizer .NET Core, original WPF specialist UI, its PNG/ICO branding, tests, installer source, notices and engineering documentation are copied byte-for-byte into `modules/OTS_System_Sanitizer/` at upstream commit `823ad825dc1358009d3404f54604465c86747eba` (Git tree `c56ef135da8b509c88d4175feba1e6055fd4b6f7`). The suite no longer uses `.gitmodules` or a Git dependency on the standalone repository. The original quarantine data location and encryption implementation remain unchanged. This is source consolidation, **not** verified Windows release parity or a permission to delete unbacked-up release history. See `REPOSITORY_CONSOLIDATION_2026-11-18.md`.

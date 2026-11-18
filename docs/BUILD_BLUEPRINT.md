@@ -95,7 +95,7 @@ Windows user (untrusted files / URLs)
 Chrome MV3 extension → allowlisted custom URL → installed WPF shell
 ```
 
-**Actual directories:** `src/OTSSecuritySuite.Desktop` (WPF), `scanner/internal/engine` and `scanner/internal/desktop` (Go), `modules/OTS_WHITE` and `modules/OTS_System_Sanitizer` (pinned submodules), `extension`, `installer`, `tools`, and `.github/workflows`. Do not rewrite the original apps or move vault paths without a reversible migration. Existing framework compatibility must be inspected before redesign.
+**Actual directories:** `src/OTSSecuritySuite.Desktop` (WPF), `scanner/internal/engine` and `scanner/internal/desktop` (Go), `white_engine/ots_white` (new preview implementation) and `modules/OTS_System_Sanitizer` (vendored full source tree), `extension`, `installer`, `tools`, and `.github/workflows`. Do not rewrite the original apps or move vault paths without a reversible migration. Existing framework compatibility must be inspected before redesign.
 
 **Current contract examples:** Go process invoked with `--no-browser --ephemeral --print-url`, emits a one-time `OTS_SCAN_URL=http://127.0.0.1:port/?t=...` to parent stdout, then authenticates local UI using HttpOnly SameSite cookie. Never log that token. W.H.I.T.E. receives folder path and `--format json`, optional `--history`, `--no-sca` when offline CVE scan not requested; observed contract exit codes 0=no threshold findings, 1=findings, 2=incomplete. Any other exit is failure; timeout/cancel are not success. Sanitizer uses existing interfaces and DPAPI vault. Persist scan reports as JSON with explicit schema version for future migration (versioning is future work, not currently verified).
 
@@ -136,3 +136,7 @@ Chrome MV3 extension → allowlisted custom URL → installed WPF shell
 **N/A for this V1:** mobile app store, payment gateway/recurring billing, cloud SaaS/tenant separation, AI agent/LLM task execution, IoT/firmware, server fleet backup, cloud production deploy. Justification: local-first Windows security utility with optional browser companion. Windows desktop, browser extension, offline, and security-system addenda **do apply**.
 
 **Known unresolved design risks:** W.H.I.T.E. audit stdout memory bound and stderr redaction; Windows hardware/OS runtime QA; scanner partial coverage; user-scope permissions; legacy vault restore; signing and SmartScreen; external tooling/source licenses. Do not present these as solved by this document.
+
+## 2026-11-18 architecture change — standalone-repository retirement
+
+The previous Git submodule arrangement depended on `OTS_System_Santizer`. The fully copied and cryptographically identical source tree now lives directly in `modules/OTS_System_Sanitizer/`, so new clones require no submodule access. Previous Windows CI and UAT are historical, not evidence for this migration. The standalone WHITE source repository is already unavailable; no claim of legacy WHITE feature parity is made. Refer to `REPOSITORY_CONSOLIDATION_2026-11-18.md` before any repository deletion.

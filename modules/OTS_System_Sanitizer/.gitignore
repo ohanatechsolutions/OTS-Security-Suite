@@ -1,0 +1,34 @@
+**/bin/
+**/obj/
+.vs/
+.vscode/
+artifacts/
+installer/output/
+# Distribute compiled installers through GitHub Releases, not source commits
+installer/*.exe
+installer/*.sha256
+*.user
+*.suo
+*.pdb
+*.log
+*.tmp
+
+# Open-source publication security baseline
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.keystore
+id_rsa
+id_ed25519
+credentials.json
+secrets.json
+*.sqlite
+*.sqlite3
+*.db
