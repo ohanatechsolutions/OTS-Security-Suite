@@ -1,6 +1,6 @@
 # AV-001 — Windows antivirus coexistence and protection-status integration
 
-Date: 2026-11-18 (HST). State: **Implementation in review; independent device acceptance NOT VERIFIED.**
+Date: 2026-11-18 (HST). State: **MERGED to main via PR #7; Windows CI #44406324294 SUCCESS; independent device acceptance NOT VERIFIED.**
 
 ## Requirements and decisions
 
@@ -25,3 +25,10 @@ Scope exclusion: automatic installation, force-enabling protection, switching de
 - No standalone Windows 10/11 physical-machine verification claimed; no installer/release published for this slice.
 
 Reference: Microsoft IWSCProductList, IWscProduct, WSC_SECURITY_PRODUCT_STATE and Microsoft Support Defender built-in Windows 10/11 guidance.
+
+## Implemented verification record
+
+- Merged PR: https://github.com/ohanatechsolutions/OTS_Security_Suite/pull/7
+- Windows runner: https://github.com/ohanatechsolutions/OTS_Security_Suite/actions/runs/44406324294 — **windows-build SUCCESS** on `8b2e9f6e11df0c103779d759a3a9d4684a1b6fae`; publishing job SKIPPED.
+- 16 state-matrix assertions passed. Preceding initial run failed on an expected-guidance string; corrected by `8b2e9f6` and green rerun.
+- Native Windows WPF host and installer created in CI, installed-app smoke passed. Real-device AV coexistence tests and independent release approval pending.
