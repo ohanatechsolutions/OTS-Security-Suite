@@ -13,6 +13,8 @@ The requested product direction is to **retire the standalone Firewall79X produc
 - Security Suite has other **open antivirus-coexistence PRs (#6 and #7)**. Reconcile them before making this network view the authoritative whole-device Defender health display. Do not merge duplicated health services.
 - Both repositories remain accessible during migration. **No repo/branch deletion, no history rewrite, no automatic new signed/public release, and no transfer of old users' protected logs or keys**.
 
+The [source blob inventory](FIREWALL79X_SOURCE_MANIFEST.tsv) lists all 157 original tracked source files, file modes, byte sizes and Git blob hashes. It is a traceability aid **not a complete Git mirror or restore-ready archive**.
+
 ## Unique value found in Firewall79X source
 
 1. Windows Firewall profile audit, default inbound action and rule-overlap analysis (`WindowsSettings.cs`, `FirewallOverlap.cs`, `LayerChecks.cs`).
