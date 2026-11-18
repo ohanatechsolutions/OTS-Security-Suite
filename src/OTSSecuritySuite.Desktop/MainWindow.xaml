@@ -80,7 +80,7 @@
           </Grid.RowDefinitions>
           <TextBlock Grid.Row="0" Text="NETWORK DEFENSE · READ-ONLY" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,14"/>
           <TextBlock Grid.Row="1" Text="Windows Firewall stays in charge. OTS inspects status and TCP connections without changing rules, starting a second firewall, or disabling Defender." TextWrapping="Wrap" Foreground="#B9D1BD" Margin="0,0,0,14"/>
-          <WrapPanel Grid.Row="2" Margin="0,0,0,10"><Button Content="REFRESH NETWORK STATUS" Click="RefreshNetworkClick"/><Button Content="ANALYZE FIREWALL RULES" Click="AnalyzeFirewallRulesClick"/><Button Content="OPEN WINDOWS SECURITY" Click="OpenWindowsSecurityClick"/></WrapPanel>
+          <WrapPanel Grid.Row="2" Margin="0,0,0,10"><Button Content="REFRESH NETWORK STATUS" Click="RefreshNetworkClick"/><Button Content="ANALYZE FIREWALL RULES" Click="AnalyzeFirewallRulesClick"/><Button Content="VIEW SECURITY EVENTS" Click="RefreshThreatActivityClick"/><Button Content="OPEN WINDOWS SECURITY" Click="OpenWindowsSecurityClick"/></WrapPanel>
           <StackPanel Grid.Row="3">
             <TextBlock Name="NetworkStatus" Text="Select Refresh to inspect Windows Firewall and active TCP connections." Foreground="#A9CCA9" TextWrapping="Wrap" Margin="0,0,0,8"/>
             <TextBlock Name="FirewallRuleSummary" Text="Rule analysis has not been requested. No rules are changed automatically." Foreground="#A9CCA9" TextWrapping="Wrap" Margin="0,0,0,8"/>
@@ -89,13 +89,31 @@
             </ItemsControl>
             <TextBlock Name="NetworkCount" Foreground="#90B59B" Margin="0,10,0,10" Text="Connections have not been queried."/>
           </StackPanel>
-          <ListView Grid.Row="4" Name="NetworkConnections" Margin="0,0,0,5">
-            <ListView.View><GridView>
-              <GridViewColumn Header="Local endpoint" DisplayMemberBinding="{Binding Local}" Width="265"/>
-              <GridViewColumn Header="Remote endpoint" DisplayMemberBinding="{Binding Remote}" Width="265"/>
-              <GridViewColumn Header="TCP state" DisplayMemberBinding="{Binding State}" Width="120"/>
-            </GridView></ListView.View>
-          </ListView>
+          <TabControl Grid.Row="4" Margin="0,0,0,5">
+            <TabItem Header="TCP CONNECTIONS">
+              <ListView Name="NetworkConnections">
+                <ListView.View><GridView>
+                  <GridViewColumn Header="Local endpoint" DisplayMemberBinding="{Binding Local}" Width="265"/>
+                  <GridViewColumn Header="Remote endpoint" DisplayMemberBinding="{Binding Remote}" Width="265"/>
+                  <GridViewColumn Header="TCP state" DisplayMemberBinding="{Binding State}" Width="120"/>
+                </GridView></ListView.View>
+              </ListView>
+            </TabItem>
+            <TabItem Header="SECURITY ACTIVITY">
+              <DockPanel>
+                <TextBlock Name="ThreatActivityStatus" DockPanel.Dock="Top" Foreground="#B9D1BD" TextWrapping="Wrap"
+                           Text="Select VIEW SECURITY EVENTS to read supported Windows Defender and Windows Firewall events. An event is not necessarily an attack." Margin="4,8,4,10"/>
+                <ListView Name="ThreatActivityItems">
+                  <ListView.View><GridView>
+                    <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Time}" Width="145"/>
+                    <GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="125"/>
+                    <GridViewColumn Header="Event" DisplayMemberBinding="{Binding EventId}" Width="55"/>
+                    <GridViewColumn Header="Observation" DisplayMemberBinding="{Binding Summary}" Width="280"/>
+                    <GridViewColumn Header="Outcome" DisplayMemberBinding="{Binding Outcome}" Width="230"/>
+                  </GridView></ListView.View></ListView>
+              </DockPanel>
+            </TabItem>
+          </TabControl>
         </Grid>
         <Grid Name="CleanupPanel" Visibility="Collapsed">
           <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>

@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     private string? _launchRepository;
     private bool _isClosing;
     private bool _networkRefreshing;
+    private bool _threatActivityRefreshing;
     private AntivirusAssessment? _antivirusAssessment;
 
     public MainWindow()
@@ -233,6 +234,36 @@ public partial class MainWindow : Window
                     ". Windows Firewall was not modified.";
         }
         finally { _networkRefreshing = false; }
+    }
+
+    private async void RefreshThreatActivityClick(object sender, RoutedEventArgs e)
+    {
+        if (_isClosing || _threatActivityRefreshing) return;
+        _threatActivityRefreshing = true;
+        ThreatActivityStatus.Text = "Reading recent Windows security events…";
+        try
+        {
+            var report = await Task.Run(WindowsThreatActivity.Read);
+            if (_isClosing) return;
+            ThreatActivityItems.ItemsSource = report.Entries;
+            var blocked = report.Entries.Count(x => x.IsWindowsBlocked);
+            var notice = report.Warnings.Count == 0 ? "" :
+                " Some logs could not be read: " + string.Join(" ", report.Warnings);
+            ThreatActivityStatus.Text =
+                $"Showing {report.Entries.Count:N0} recent Windows records (up to 200 in the last 7 days). " +
+                $"{blocked:N0} report Windows-owned blocks. These are not confirmed hacking attempts or OTS blocks." +
+                notice;
+        }
+        catch (Exception ex)
+        {
+            if (!_isClosing)
+            {
+                ThreatActivityItems.ItemsSource = null;
+                ThreatActivityStatus.Text = "Security event history could not be read (" +
+                    ex.GetType().Name + "). No Windows security settings were changed.";
+            }
+        }
+        finally { _threatActivityRefreshing = false; }
     }
 
     private void OpenWindowsSecurityClick(object sender, RoutedEventArgs e)

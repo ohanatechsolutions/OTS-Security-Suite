@@ -38,6 +38,15 @@ The [source blob inventory](FIREWALL79X_SOURCE_MANIFEST.tsv) lists all 157 origi
 
 Migrated the original MIT-licensed `FirewallOverlap.cs` analyzer into the Suite as a bounded **advisory-only** utility. An explicit user button reads up to 801 enabled Windows Firewall rules and reports duplicate, opposing and potentially overlapping conditions with all the limitations of the original heuristic. The UI never changes firewall policies and never claims computed Windows Filtering Platform / Group Policy effective precedence. Synthetic regression tests exercise duplicates, contradictory action, broad inbound allow rules and malformed ports. Independent Windows 10/11 usability and rule-provider compatibility remain NOT RUN; source/CI evidence must be attached after verification.
 
+## Third migration slice: Windows-owned security event history
+
+Added `WindowsThreatActivity.cs` and a Security Activity view in Network Defense. The viewer reads up to 100 recent matching Windows Security Filtering Platform events (5152/5157) and 100 Defender Operational events (1116/1117/1125/1126), limited to seven days, with explicit source attribution. Missing, restricted or unconfigured logs are disclosed. No audit policy, Defender configuration, firewall policy, log setting or privilege is changed.
+
+- Observed event **does not mean a confirmed attack**. Blocked Windows events are not OTS blocks.
+- No raw event messages, command lines, personal file paths, remote IPs or credentials are serialized or sent to third parties by the viewer.
+- No background collection, protected history, custom intrusion detection, rule engine, alert notifications, or autonomous remediation is claimed. This is an on-demand bounded Windows event viewer, not full layer 14/60/61 acceptance.
+- A smoke regression verifies event provider IDs and detection-versus-block attribution. OS event access varies by audit settings and user permission; independent Windows 10/11 acceptance is pending.
+
 ## Requirements crosswalk (79 of 79)
 
 `Existing Suite module` means *related functionality exists*, **not** original requirement parity. All full-spec certifications remain unverified.
