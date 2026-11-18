@@ -31,6 +31,7 @@ var cases = new (string Name, Func<Task> Action)[]
     ("network profile status fails closed when providers are incomplete", NetworkStatusFailsClosed),
     ("network profile status distinguishes default-allow from disabled", NetworkStatusPolicyWarnings),
     ("firewall rule hints identify duplicate and opposite rules without precedence claims", FirewallRuleOverlapHints),
+    ("event history keeps Windows-owned actions distinct from detection", WindowsActivityClassification),
 };
 int passed = 0;
 foreach (var (name, action) in cases)
@@ -97,6 +98,35 @@ static Task FirewallRuleOverlapHints()
         "Engine must disclose that effective Windows rule precedence is not modeled");
     Assert(!FirewallOverlap.PortsOverlap("invalid", "80"),
         "Invalid port syntax must not be assumed overlapping");
+    return Task.CompletedTask;
+}
+
+static Task WindowsActivityClassification()
+{
+    var t = DateTimeOffset.UtcNow;
+    var firewall = WindowsThreatActivity.Classify(5157, t, "Windows Firewall");
+    Assert(firewall is { IsWindowsBlocked: true } && firewall.Outcome == "Blocked by Windows",
+        "Windows Firewall block must be attributed to Windows");
+    var detected = WindowsThreatActivity.Classify(1116, t, "Microsoft Defender");
+    Assert(detected is { IsWindowsBlocked: false } &&
+           detected.Outcome.Contains("not established", StringComparison.Ordinal),
+        "Malware detection must not be mislabeled as successful remediation");
+    var remediation = WindowsThreatActivity.Classify(1117, t, "Microsoft Defender");
+    Assert(remediation is { IsWindowsBlocked: false } &&
+           remediation.Outcome.Contains("verify result", StringComparison.Ordinal),
+        "Remediation event cannot assert successful blocking");
+    var audit = WindowsThreatActivity.Classify(1125, t, "Microsoft Defender");
+    Assert(audit is { IsWindowsBlocked: false } &&
+           audit.Outcome.Contains("not blocked", StringComparison.Ordinal),
+        "Defender audit-only event cannot be called a block");
+    var networkBlock = WindowsThreatActivity.Classify(1126, t, "Microsoft Defender");
+    Assert(networkBlock is { IsWindowsBlocked: true } &&
+           networkBlock.Outcome == "Blocked by Windows",
+        "Defender network block requires Windows attribution");
+    Assert(WindowsThreatActivity.Classify(9999, t, "Microsoft Defender") == null,
+        "Unsupported events must not be interpreted as suspicious activity");
+    Assert(WindowsThreatActivity.Classify(5157, t, "Microsoft Defender") == null,
+        "Event IDs from wrong providers must not be classified");
     return Task.CompletedTask;
 }
 
