@@ -21,6 +21,8 @@ public partial class MainWindow : Window
     private string? _lastWhiteOutput;
     private string? _launchRepository;
     private bool _isClosing;
+    private bool _protectionPromptShown;
+    private AntivirusSnapshot? _protectionSnapshot;
 
     public MainWindow()
     {
@@ -35,6 +37,7 @@ public partial class MainWindow : Window
     private async void OnWindowLoaded(object sender, RoutedEventArgs e)
     {
         FitInitialWindowToWorkArea();
+        await RefreshProtectionAsync(promptIfUnprotected: true);
         await StartRepositoryEngineAsync();
     }
 
@@ -170,7 +173,7 @@ public partial class MainWindow : Window
     }
     private void ShowRepository(object sender, RoutedEventArgs e) => SetPanel(RepositoryPanel);
     private void ShowWhite(object sender, RoutedEventArgs e) => SetPanel(WhitePanel);
-    private void ShowSystem(object sender, RoutedEventArgs e) => SetPanel(SystemPanel);
+    private void ShowSystem(object sender, RoutedEventArgs e) { SetPanel(SystemPanel); _ = RefreshProtectionAsync(promptIfUnprotected: false); }
     private void ShowCleanup(object sender, RoutedEventArgs e) { RefreshVault(); SetPanel(CleanupPanel); }
 
     private void BrowseWhiteFolder(object sender, RoutedEventArgs e)
@@ -343,8 +346,63 @@ public partial class MainWindow : Window
             }
         }
     }
+    private async void RefreshProtection(object sender, RoutedEventArgs e) =>
+        await RefreshProtectionAsync(promptIfUnprotected: false);
+
+    private async Task RefreshProtectionAsync(bool promptIfUnprotected)
+    {
+        if (_isClosing) return;
+        RefreshProtectionButton.IsEnabled = false;
+        ProtectionSummary.Text = "CHECKING ANTIVIRUS STATUS...";
+        DefenderScanButton.IsEnabled = false;
+        AntivirusSnapshot result;
+        try { result = await AntivirusStatus.ReadAsync(); }
+        catch (Exception) { result = new AntivirusSnapshot(AntivirusProtection.Unknown, [], false, false, "Status query failed."); }
+        if (_isClosing) return;
+        _protectionSnapshot = result;
+        RefreshProtectionButton.IsEnabled = true;
+        ProtectionSummary.Text = result.Summary;
+        string products = result.Products.Count == 0
+            ? "No registered products returned."
+            : string.Join(" | ", result.Products.Select(p =>
+                p.Name + ": " + (p.RealTimeOn == true ? "ON" : p.RealTimeOn == false ? "OFF" : "UNKNOWN") +
+                (p.SignaturesCurrent == false ? " (definitions outdated)" : "")));
+        ProtectionDetails.Text = products + "\n" + result.Guidance + "\n" + result.Detail;
+        DefenderScanButton.IsEnabled = result.DefenderActive;
+        if (promptIfUnprotected && result.NeedsAttention && !_protectionPromptShown)
+        {
+            _protectionPromptShown = true;
+            var choice = MessageBox.Show(this,
+                result.Guidance + "\n\nMicrosoft Defender Antivirus is included with Windows 10 and 11; no separate download is needed.\n\nOpen Windows Security now to enable or troubleshoot antivirus protection? OTS will not install or change antivirus settings.",
+                "Antivirus protection needs attention",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (choice == MessageBoxResult.Yes) LaunchWindowsSecurity();
+            SetPanel(SystemPanel);
+        }
+    }
+
+    private void OpenWindowsSecurity(object sender, RoutedEventArgs e) => LaunchWindowsSecurity();
+
+    private void LaunchWindowsSecurity()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("windowsdefender:") { UseShellExecute = true });
+        }
+        catch (Exception)
+        {
+            try { Process.Start(new ProcessStartInfo("ms-settings:windowsdefender") { UseShellExecute = true }); }
+            catch (Exception) { MessageBox.Show(this, "Open Start > Windows Security > Virus & threat protection to review installed antivirus software.", "Windows Security", MessageBoxButton.OK, MessageBoxImage.Information); }
+        }
+    }
+
     private async void RunDefender(object sender, RoutedEventArgs e)
     {
+        if (_protectionSnapshot?.DefenderActive != true)
+        {
+            SystemStatus.Text = "Microsoft Defender is not confirmed active. Review antivirus protection in Windows Security.";
+            return;
+        }
         SystemStatus.Text = "Requesting Microsoft Defender Quick Scan...";
         try { SystemStatus.Text = await DefenderIntegration.RunScanAsync(ScanMode.Quick, CancellationToken.None); }
         catch (Exception ex) { SystemStatus.Text = "Defender request failed: " + ex.Message; }

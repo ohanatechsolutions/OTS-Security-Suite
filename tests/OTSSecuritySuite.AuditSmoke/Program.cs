@@ -7,6 +7,7 @@ using OTSSystemSanitizer.Core;
 var cases = new (string Name, Func<Task> Action)[]
 {
     ("bounded valid stdout and private stderr", ValidOutput),
+    ("antivirus provider classifications and unknown safety", AntivirusClassifications),
     ("nonzero exit code is faithfully returned", NonzeroExit),
     ("user cancellation reaps process", Cancellation),
     ("timeout reaps process", Timeout),
@@ -476,4 +477,40 @@ static async Task Expect<T>(Task action) where T : Exception
 static void Assert(bool condition, string message)
 {
     if (!condition) throw new Exception(message);
+}
+
+
+static Task AntivirusClassifications()
+{
+    const string activeThirdParty = """{"SecurityCenterAvailable":true,"Providers":[{"Name":"Example Antivirus","State":397568}],"Defender":{"Available":true,"AntivirusEnabled":false,"RealTimeProtectionEnabled":false,"RunningMode":"Passive Mode"}}""";
+    var active = AntivirusStatus.Parse(activeThirdParty);
+    Assert(active.State == AntivirusProtection.Active, "Active third-party antivirus not recognized");
+    Assert(!active.DefenderActive, "Passive Defender incorrectly reported active");
+
+    const string disabled = """{"SecurityCenterAvailable":true,"Providers":[{"Name":"Example Antivirus","State":393472}],"Defender":null}""";
+    var off = AntivirusStatus.Parse(disabled);
+    Assert(off.State == AntivirusProtection.Inactive && off.NeedsAttention, "Disabled registered product must require attention");
+
+    const string absent = """{"SecurityCenterAvailable":true,"Providers":[],"Defender":null}""";
+    Assert(AntivirusStatus.Parse(absent).State == AntivirusProtection.NotDetected,
+        "Empty Security Center inventory must be reported as not detected");
+
+    const string unavailable = """{"SecurityCenterAvailable":false,"Providers":[],"Defender":null}""";
+    Assert(AntivirusStatus.Parse(unavailable).State == AntivirusProtection.Unknown,
+        "Unavailable status must never mean unprotected");
+
+    const string activeDefender = """{"SecurityCenterAvailable":true,"Providers":[],"Defender":{"Available":true,"AntivirusEnabled":true,"RealTimeProtectionEnabled":true,"RunningMode":"Normal"}}""";
+    Assert(AntivirusStatus.Parse(activeDefender).DefenderActive &&
+        AntivirusStatus.Parse(activeDefender).State == AntivirusProtection.Active,
+        "Active Defender not recognized");
+
+    const string unknownVendor = """{"SecurityCenterAvailable":true,"Providers":[{"Name":"New Vendor","State":396288}],"Defender":null}""";
+    Assert(AntivirusStatus.Parse(unknownVendor).State == AntivirusProtection.Unknown,
+        "Unknown provider state must not be guessed as disabled");
+
+    const string defenderPassive = """{"SecurityCenterAvailable":true,"Providers":[{"Name":"Microsoft Defender Antivirus","State":397568}],"Defender":{"Available":true,"AntivirusEnabled":true,"RealTimeProtectionEnabled":true,"RunningMode":"Passive Mode"}}""";
+    Assert(AntivirusStatus.Parse(defenderPassive).State == AntivirusProtection.Inactive,
+        "Defender passive state must override potentially stale Security Center registration");
+
+    return Task.CompletedTask;
 }
