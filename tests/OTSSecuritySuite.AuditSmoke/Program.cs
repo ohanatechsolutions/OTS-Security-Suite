@@ -28,6 +28,8 @@ var cases = new (string Name, Func<Task> Action)[]
     ("cleanup rejects non-allowlisted locations and cache opt-in spoof", CleanupRejectsOutsideRoots),
     ("WHITE import accepts bounded valid JSON but does not authenticate its origin", WhiteImportValid),
     ("WHITE import rejects malformed, invalid UTF-8 and oversized files", WhiteImportRejectsUnsafe),
+    ("network profile status fails closed when providers are incomplete", NetworkStatusFailsClosed),
+    ("network profile status distinguishes default-allow from disabled", NetworkStatusPolicyWarnings),
 };
 int passed = 0;
 foreach (var (name, action) in cases)
@@ -45,6 +47,40 @@ foreach (var (name, action) in cases)
 }
 Console.WriteLine($"Audit runner tests: {passed}/{cases.Length} PASS");
 return passed == cases.Length ? 0 : 1;
+
+static Task NetworkStatusFailsClosed()
+{
+    var missing = new[] {
+        new NetworkProtectionAudit.FirewallProfile("Domain", true, true, "On"),
+        new NetworkProtectionAudit.FirewallProfile("Private", null, null, "Unknown"),
+        new NetworkProtectionAudit.FirewallProfile("Public", true, true, "On")
+    };
+    Assert(NetworkProtectionAudit.OverallStatus(missing).Contains("could not be verified", StringComparison.Ordinal),
+        "Missing profile state was incorrectly reported safe");
+    Assert(NetworkProtectionAudit.OverallStatus(missing.Take(2).ToArray()).Contains("could not be verified", StringComparison.Ordinal),
+        "Missing profile was incorrectly reported safe");
+    return Task.CompletedTask;
+}
+
+static Task NetworkStatusPolicyWarnings()
+{
+    var healthy = new[] {
+        new NetworkProtectionAudit.FirewallProfile("Domain", true, true, "On"),
+        new NetworkProtectionAudit.FirewallProfile("Private", true, true, "On"),
+        new NetworkProtectionAudit.FirewallProfile("Public", true, true, "On")
+    };
+    Assert(NetworkProtectionAudit.OverallStatus(healthy).Contains("enabled with default inbound blocking", StringComparison.Ordinal),
+        "Healthy status incorrectly reported");
+    var disabled = healthy.ToArray();
+    disabled[1] = disabled[1] with { Enabled = false };
+    Assert(NetworkProtectionAudit.OverallStatus(disabled).Contains("disabled", StringComparison.Ordinal),
+        "Disabled firewall profile not disclosed");
+    var permissive = healthy.ToArray();
+    permissive[2] = permissive[2] with { InboundDefaultBlock = false };
+    Assert(NetworkProtectionAudit.OverallStatus(permissive).Contains("does not block inbound", StringComparison.Ordinal),
+        "Permissive default inbound action not disclosed");
+    return Task.CompletedTask;
+}
 
 static ProcessStartInfo Powershell(string command)
 {

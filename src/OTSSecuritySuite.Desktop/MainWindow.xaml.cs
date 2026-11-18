@@ -21,6 +21,7 @@ public partial class MainWindow : Window
     private string? _lastWhiteOutput;
     private string? _launchRepository;
     private bool _isClosing;
+    private bool _networkRefreshing;
     private AntivirusAssessment? _antivirusAssessment;
 
     public MainWindow()
@@ -167,13 +168,65 @@ public partial class MainWindow : Window
     }
     private void SetPanel(Grid selected)
     {
-        foreach (var p in new[] { RepositoryPanel, WhitePanel, SystemPanel, CleanupPanel })
+        foreach (var p in new[] { RepositoryPanel, WhitePanel, SystemPanel, NetworkPanel, CleanupPanel })
             p.Visibility = p == selected ? Visibility.Visible : Visibility.Collapsed;
     }
     private void ShowRepository(object sender, RoutedEventArgs e) => SetPanel(RepositoryPanel);
     private void ShowWhite(object sender, RoutedEventArgs e) => SetPanel(WhitePanel);
     private void ShowSystem(object sender, RoutedEventArgs e) { SetPanel(SystemPanel); UpdateAntivirusDisplay(); }
     private void ShowCleanup(object sender, RoutedEventArgs e) { RefreshVault(); SetPanel(CleanupPanel); }
+
+    private async void ShowNetwork(object sender, RoutedEventArgs e)
+    {
+        SetPanel(NetworkPanel);
+        await RefreshNetworkAsync();
+    }
+
+    private async void RefreshNetworkClick(object sender, RoutedEventArgs e)
+    {
+        await RefreshNetworkAsync();
+    }
+
+    private async Task RefreshNetworkAsync()
+    {
+        if (_isClosing || _networkRefreshing) return;
+        _networkRefreshing = true;
+        NetworkStatus.Text = "Checking Windows Firewall and local TCP connections…";
+        try
+        {
+            var result = await Task.Run(NetworkProtectionAudit.Read);
+            if (_isClosing) return;
+            NetworkStatus.Text = NetworkProtectionAudit.OverallStatus(result.Profiles);
+            NetworkProfiles.ItemsSource = result.Profiles.Select(p => p.Name + ": " + p.Detail).ToArray();
+            NetworkConnections.ItemsSource = result.Connections;
+            NetworkCount.Text = result.NetworkError ??
+                $"Showing {result.Connections.Count:N0} of {result.TotalConnections:N0} observed TCP connections. " +
+                "This is an inventory, not proof an attack was blocked. Nothing was changed.";
+        }
+        catch (Exception ex)
+        {
+            if (!_isClosing)
+            {
+                NetworkStatus.Text = "Network status could not be verified. Windows protection was not modified.";
+                NetworkCount.Text = ex.GetType().Name;
+                NetworkProfiles.ItemsSource = null;
+                NetworkConnections.ItemsSource = null;
+            }
+        }
+        finally { _networkRefreshing = false; }
+    }
+
+    private void OpenWindowsSecurityClick(object sender, RoutedEventArgs e)
+    {
+        try { Process.Start(new ProcessStartInfo("windowsdefender:") { UseShellExecute = true }); }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, "Windows Security could not be opened: " + ex.Message,
+                "Windows Security", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+
 
     private void BrowseWhiteFolder(object sender, RoutedEventArgs e)
     {
