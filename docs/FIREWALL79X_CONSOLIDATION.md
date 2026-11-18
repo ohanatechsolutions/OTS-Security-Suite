@@ -32,6 +32,10 @@ The requested product direction is to **retire the standalone Firewall79X produc
 - Initial regression cases verify healthy, disabled, default-allow and unavailable states. Windows build/installed GUI smoke and physical Windows 10/11 acceptance **must still run**.
 - No claim of complete layer 1, 16 or 19 protection: these are **small observation slices**, not the original full layer specifications.
 
+## Additional safe consolidation slice: firewall rule overlap hints
+
+Migrated the original MIT-licensed `FirewallOverlap.cs` analyzer into the Suite as a bounded **advisory-only** utility. An explicit user button reads up to 801 enabled Windows Firewall rules and reports duplicate, opposing and potentially overlapping conditions with all the limitations of the original heuristic. The UI never changes firewall policies and never claims computed Windows Filtering Platform / Group Policy effective precedence. Synthetic regression tests exercise duplicates, contradictory action, broad inbound allow rules and malformed ports. Independent Windows 10/11 usability and rule-provider compatibility remain NOT RUN; source/CI evidence must be attached after verification.
+
 ## Requirements crosswalk (79 of 79)
 
 `Existing Suite module` means *related functionality exists*, **not** original requirement parity. All full-spec certifications remain unverified.
@@ -110,7 +114,7 @@ The requested product direction is to **retire the standalone Firewall79X produc
 | 70 | Resilient Log Export | Suite shared security/services | Not migrated / original requirement not certified |
 | 71 | Automated Regression Tests | Suite shared security/services | Not migrated / original requirement not certified |
 | 72 | Quarterly Security Reports | Suite shared security/services | Not migrated / original requirement not certified |
-| 73 | Firewall Conflict and Shadowing Analysis | Network Defense module | Not migrated / original requirement not certified |
+| 73 | Firewall Conflict and Shadowing Analysis | Network Defense module | Advisory analyzer migrated; full effective Windows policy precedence NOT certified |
 | 74 | Security Documentation Generator | Suite shared security/services | Not migrated / original requirement not certified |
 | 75 | Known-Malicious Domain Blocking | Network Defense module | Not migrated / original requirement not certified |
 | 76 | Download and Temporary File Malware Scanning | Existing Suite module (parity audit) | Not migrated / original requirement not certified |
