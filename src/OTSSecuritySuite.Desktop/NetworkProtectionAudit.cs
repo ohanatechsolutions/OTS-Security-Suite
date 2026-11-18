@@ -62,6 +62,61 @@ public static class NetworkProtectionAudit
             : endpoint.Address + ":" + endpoint.Port;
     }
 
+    /// <summary>
+    /// Analyze at most 801 enabled Windows Firewall rules for conservative overlap hints.
+    /// Advisory only: this never changes rule state and does not model effective WFP/GPO precedence.
+    /// </summary>
+    public static string AnalyzeRules()
+    {
+        object? policy = null;
+        try
+        {
+            var type = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+            if (type == null) return "Windows Firewall rule provider unavailable.";
+            policy = Activator.CreateInstance(type);
+            if (policy == null) return "Windows Firewall rule provider unavailable.";
+            dynamic firewall = policy;
+            var selected = new List<FirewallRuleView>(801);
+            foreach (object comRule in firewall.Rules)
+            {
+                try
+                {
+                    dynamic rule = comRule;
+                    if (!(bool)rule.Enabled) continue;
+                    selected.Add(new FirewallRuleView(
+                        (string?)rule.Name ?? "",
+                        ((int)rule.Direction).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        ((int)rule.Action).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        ((int)rule.Protocol).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        (string?)rule.LocalPorts ?? "",
+                        (string?)rule.RemoteAddresses ?? "",
+                        ((int)rule.Profiles).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        (string?)rule.ApplicationName ?? "",
+                        true));
+                    if (selected.Count >= 801) break;
+                }
+                finally
+                {
+                    if (Marshal.IsComObject(comRule)) Marshal.ReleaseComObject(comRule);
+                }
+            }
+            var result = FirewallOverlap.Analyze(selected);
+            return "Read-only firewall rule hints: " + result;
+        }
+        catch (Exception ex) when (ex is COMException or UnauthorizedAccessException
+            or InvalidCastException or InvalidOperationException or System.Security.SecurityException
+            or Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+        {
+            return "Firewall rule analysis unavailable: " + ex.GetType().Name +
+                ". No firewall settings were changed.";
+        }
+        finally
+        {
+            if (policy != null && Marshal.IsComObject(policy))
+                Marshal.ReleaseComObject(policy);
+        }
+    }
+
     private static IReadOnlyList<FirewallProfile> ReadFirewallProfiles()
     {
         object? policy = null;

@@ -23,6 +23,7 @@ RestartApplications=no
 
 [Files]
 Source: "..\bundle\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
+Source: "..\licenses\OTS-Firewall79X-MIT.txt"; DestDir: "{app}\licenses"; Flags: ignoreversion
 
 [Icons]
 Name: "{userdesktop}\OTS Security Suite"; Filename: "{app}\OTSSecuritySuite.exe"; WorkingDir: "{app}"; IconFilename: "{app}\OTSSecuritySuite.exe"; Tasks: desktopicon; AppUserModelID: "OhanaTechSolutions.OTSSecuritySuite"
