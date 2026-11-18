@@ -184,6 +184,11 @@ jobs:
         run: |
           dotnet run --project tests/OTSSecuritySuite.AuditSmoke/OTSSecuritySuite.AuditSmoke.csproj -c Release
           if ($LASTEXITCODE -ne 0) { throw 'W.H.I.T.E. process security smoke failed' }
+      - name: Verify Windows antivirus status evaluation
+        shell: pwsh
+        run: |
+          dotnet run --project tests/OTSSecuritySuite.AntivirusSmoke/OTSSecuritySuite.AntivirusSmoke.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Windows antivirus status regression tests failed' }
       - name: Build native WPF suite host
         shell: pwsh
         run: |

@@ -30,6 +30,19 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertNotIn('host_permissions', m, "Popup URL lookup requires no permanent host privileges")
         self.assertNotIn('tabs', m['permissions'], "Avoid access to unrelated browser tabs")
         self.assertNotIn('http://127.0.0.1:48728', (ROOT/'extension/popup.js').read_text(encoding="utf-8"))
+    def test_antivirus_warning_and_windows_security_action_present(self):
+        xaml = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml').read_text(encoding='utf-8')
+        host = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml.cs').read_text(encoding='utf-8')
+        model = (ROOT/'src/OTSSecuritySuite.Desktop/AntivirusProtection.cs').read_text(encoding='utf-8')
+        self.assertIn('Name="ProtectionHeader"', xaml)
+        self.assertIn('Click="OpenProtectionFromHeader"', xaml)
+        self.assertIn('UNPROTECTED · OPEN WINDOWS SECURITY', host)
+        self.assertIn('new ProcessStartInfo("windowsdefender:")', host)
+        self.assertIn('WindowsAntivirusInventory.Read()', host)
+        self.assertIn('AntivirusCoverage.Unknown', model)
+        self.assertNotIn('Start-Service', model)
+        self.assertNotIn('Set-MpPreference', model)
+
     def test_vendored_sanitizer_source_integrity(self):
         self.assertFalse((ROOT/'.gitmodules').exists(), "A clean clone must not depend on removed upstream repos")
         self.assertTrue((ROOT/'white_engine/ots_white/cli.py').is_file())

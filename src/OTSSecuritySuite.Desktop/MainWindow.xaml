@@ -14,7 +14,7 @@
           <TextBlock Text="OTS SECURITY SUITE" FontSize="24" FontWeight="Bold" Foreground="#F2FFF0"/>
           <TextBlock Text="OHANA TECH SOLUTIONS · LOCAL SECURITY TOOLS" Foreground="#9BC5A3" FontSize="11" Margin="0,3,0,0"/>
         </StackPanel>
-        <TextBlock Text="●  LOCAL-FIRST" Foreground="#39FF14" FontSize="13" FontWeight="Bold" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <Button Name="ProtectionHeader" Click="OpenProtectionFromHeader" Content="CHECKING ANTIVIRUS..." Foreground="#C7EACA" Background="#14271A" BorderBrush="#426C49" FontSize="12" FontWeight="Bold" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10,7" ToolTip="View Windows antivirus protection status"/>
       </DockPanel>
     </Border>
     <Grid Grid.Row="1">
@@ -55,14 +55,22 @@
           <TextBox Grid.Row="3" Name="WhiteOutput" TextWrapping="Wrap" FontFamily="Consolas" IsReadOnly="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
         </Grid>
         <Grid Name="SystemPanel" Visibility="Collapsed">
-          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
           <TextBlock Grid.Row="0" Text="WINDOWS THREAT &amp; PERSISTENCE INSPECTION" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,16"/>
-          <WrapPanel Grid.Row="1"><Button Name="QuickButton" Click="RunQuick" Content="QUICK SCAN"/><Button Name="DeepButton" Click="RunDeep" Content="DEEP SCAN"/><Button Name="SystemCancel" Click="CancelSystemScan" Content="CANCEL SCAN" IsEnabled="False"/><Button Click="RunDefender" Content="REQUEST DEFENDER SCAN"/><Button Click="OpenSanitizer" Content="OPEN FULL SANITIZER"/></WrapPanel>
-          <TextBlock Grid.Row="2" Name="SystemStatus" Foreground="#A9CCA9" Text="System inspection is read-only. Destructive actions require confirmation." Margin="0,14,0,12" TextWrapping="Wrap"/>
-          <ListView Grid.Row="3" Name="SystemFindings" SelectionMode="Single" >
+          <Border Grid.Row="1" Background="#14271A" BorderBrush="#3E6849" BorderThickness="1" CornerRadius="7" Padding="12" Margin="0,0,0,12">
+            <StackPanel>
+              <TextBlock Name="AntivirusSummary" Text="CHECKING · Registered antivirus status..." FontWeight="Bold" FontSize="15" Foreground="#E4F8E7" TextWrapping="Wrap"/>
+              <TextBlock Name="AntivirusProducts" Text="Reading Windows Security Center..." Foreground="#B8D2BF" Margin="0,6,0,0" TextWrapping="Wrap"/>
+              <TextBlock Name="AntivirusGuidance" Text="Antivirus status is read-only. OTS does not disable or replace installed antivirus." Foreground="#C6D9C8" Margin="0,5,0,0" TextWrapping="Wrap"/>
+              <WrapPanel Margin="0,9,0,0"><Button Click="RefreshAntivirus" Content="REFRESH PROTECTION STATUS"/><Button Click="OpenWindowsSecurity" Content="OPEN WINDOWS SECURITY"/></WrapPanel>
+            </StackPanel>
+          </Border>
+          <WrapPanel Grid.Row="2"><Button Name="QuickButton" Click="RunQuick" Content="QUICK SCAN"/><Button Name="DeepButton" Click="RunDeep" Content="DEEP SCAN"/><Button Name="SystemCancel" Click="CancelSystemScan" Content="CANCEL SCAN" IsEnabled="False"/><Button Click="RunDefender" Content="REQUEST DEFENDER SCAN"/><Button Click="OpenSanitizer" Content="OPEN FULL SANITIZER"/></WrapPanel>
+          <TextBlock Grid.Row="3" Name="SystemStatus" Foreground="#A9CCA9" Text="System inspection is read-only. Destructive actions require confirmation." Margin="0,14,0,12" TextWrapping="Wrap"/>
+          <ListView Grid.Row="4" Name="SystemFindings" SelectionMode="Single" >
             <ListView.View><GridView><GridViewColumn Header="Severity" DisplayMemberBinding="{Binding Severity}" Width="90"/><GridViewColumn Header="Finding" DisplayMemberBinding="{Binding Title}" Width="220"/><GridViewColumn Header="Location" DisplayMemberBinding="{Binding Path}" Width="430"/></GridView></ListView.View>
           </ListView>
-          <WrapPanel Grid.Row="4" Margin="0,12,0,0"><Button Click="InvestigateFinding" Content="INVESTIGATE SELECTED"/><Button Click="QuarantineFinding" Content="QUARANTINE SELECTED"/></WrapPanel>
+          <WrapPanel Grid.Row="5" Margin="0,12,0,0"><Button Click="InvestigateFinding" Content="INVESTIGATE SELECTED"/><Button Click="QuarantineFinding" Content="QUARANTINE SELECTED"/></WrapPanel>
         </Grid>
         <Grid Name="CleanupPanel" Visibility="Collapsed">
           <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
