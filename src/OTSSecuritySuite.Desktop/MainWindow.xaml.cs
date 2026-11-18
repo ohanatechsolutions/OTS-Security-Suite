@@ -14,11 +14,9 @@ public partial class MainWindow : Window
 {
     private Process? _engine;
     private CancellationTokenSource? _scanCancellation;
-    private readonly WhiteAuditRunner _whiteAuditRunner = new();
     private readonly QuarantineVaultRegistry _quarantine = new();
     private readonly HashSet<string> _reviewed = new(StringComparer.Ordinal);
     private readonly string _engineDirectory = Path.Combine(AppContext.BaseDirectory, "engines");
-    private string? _lastWhiteOutput;
     private string? _launchRepository;
     private bool _isClosing;
     private bool _networkRefreshing;
@@ -164,16 +162,14 @@ public partial class MainWindow : Window
     {
         _isClosing = true;
         _scanCancellation?.Cancel();
-        _whiteAuditRunner.Cancel();
         StopEngine();
     }
     private void SetPanel(Grid selected)
     {
-        foreach (var p in new[] { RepositoryPanel, WhitePanel, SystemPanel, NetworkPanel, CleanupPanel })
+        foreach (var p in new[] { RepositoryPanel, SystemPanel, NetworkPanel, CleanupPanel })
             p.Visibility = p == selected ? Visibility.Visible : Visibility.Collapsed;
     }
     private void ShowRepository(object sender, RoutedEventArgs e) => SetPanel(RepositoryPanel);
-    private void ShowWhite(object sender, RoutedEventArgs e) => SetPanel(WhitePanel);
     private void ShowSystem(object sender, RoutedEventArgs e) { SetPanel(SystemPanel); UpdateAntivirusDisplay(); }
     private void ShowCleanup(object sender, RoutedEventArgs e) { RefreshVault(); SetPanel(CleanupPanel); }
 
@@ -277,131 +273,6 @@ public partial class MainWindow : Window
     }
 
 
-
-    private void BrowseWhiteFolder(object sender, RoutedEventArgs e)
-    {
-        var d = new OpenFolderDialog { Title = "Choose a local repository for W.H.I.T.E." };
-        if (d.ShowDialog(this) == true) WhiteFolder.Text = d.FolderName;
-    }
-    private void CancelWhiteAudit(object sender, RoutedEventArgs e)
-    {
-        if (!_whiteAuditRunner.IsRunning) return;
-        WhiteStatus.Text = "Cancelling audit...";
-        _whiteAuditRunner.Cancel();
-    }
-
-    private async void RunWhiteAudit(object sender, RoutedEventArgs e)
-    {
-        if (_whiteAuditRunner.IsRunning) return;
-        var target = WhiteFolder.Text.Trim();
-        if (!Directory.Exists(target)) { WhiteStatus.Text = "Choose an existing local repository folder."; return; }
-        string binary = Path.Combine(_engineDirectory, "OTSWhiteAudit.exe");
-        if (!File.Exists(binary)) { WhiteStatus.Text = "W.H.I.T.E. audit engine missing from installation."; return; }
-
-        _lastWhiteOutput = null;
-        WhiteOutput.Clear();
-        WhiteRun.IsEnabled = false;
-        WhiteCancel.IsEnabled = true;
-        WhiteStatus.Text = "Auditing source and configuration...";
-        try
-        {
-            var psi = new ProcessStartInfo(binary) {
-                UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true,
-                RedirectStandardError = true, WorkingDirectory = AppContext.BaseDirectory
-            };
-            psi.Environment["GIT_TERMINAL_PROMPT"] = "0";
-            psi.ArgumentList.Add(target);
-            psi.ArgumentList.Add("--format"); psi.ArgumentList.Add("json");
-            if (HistoryScan.IsChecked == true) psi.ArgumentList.Add("--history");
-            if (DependencyScan.IsChecked != true) psi.ArgumentList.Add("--no-sca");
-
-            var execution = await _whiteAuditRunner.RunAsync(psi, TimeSpan.FromMinutes(12));
-            if (_isClosing) return;
-            if (execution.ExitCode is not (0 or 1 or 2))
-            {
-                WhiteStatus.Text = "Audit engine failed (exit " + execution.ExitCode + "); no report is exportable.";
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(execution.StandardOutput))
-            {
-                WhiteStatus.Text = "Audit returned no JSON report. Check the audit configuration and retry.";
-                return;
-            }
-            var assessment = WhiteAuditReportValidator.Assess(execution.StandardOutput, execution.ExitCode);
-            _lastWhiteOutput = execution.StandardOutput;
-            WhiteOutput.Text = execution.StandardOutput;
-            WhiteStatus.Text = !assessment.Complete
-                ? "Audit incomplete · review failed checks/errors before trusting any findings"
-                : execution.ExitCode == 1
-                    ? $"Audit completed · {assessment.FindingCount} findings require review"
-                    : assessment.FindingCount > 0
-                        ? $"Audit completed · {assessment.FindingCount} findings below the configured failure threshold"
-                        : "Audit completed · no findings in inspected supported files; review excluded and skipped items in the report";
-        }
-        catch (TimeoutException) { if (!_isClosing) WhiteStatus.Text = "Audit timed out after 12 minutes; termination requested."; }
-        catch (OperationCanceledException) { if (!_isClosing) WhiteStatus.Text = "Audit cancelled; termination requested."; }
-        catch (Exception ex) { if (!_isClosing) WhiteStatus.Text = "Audit could not finish: " + ex.Message; }
-        finally
-        {
-            if (!_isClosing)
-            {
-                WhiteRun.IsEnabled = true;
-                WhiteCancel.IsEnabled = false;
-            }
-        }
-    }
-
-    private void ImportWhiteReport(object sender, RoutedEventArgs e)
-    {
-        if (!WhiteRun.IsEnabled)
-        {
-            WhiteStatus.Text = "Cancel or finish the active audit before importing a report.";
-            return;
-        }
-        var dialog = new OpenFileDialog {
-            Filter = "OTS W.H.I.T.E. JSON reports|*.json",
-            CheckFileExists = true,
-            Multiselect = false
-        };
-        if (dialog.ShowDialog(this) != true) return; // Keep previous report on cancel.
-        try
-        {
-            var imported = WhiteReportReader.Read(dialog.FileName);
-            // Commit UI state only after bounded UTF-8 and strict schema checks.
-            _lastWhiteOutput = imported.Json;
-            WhiteOutput.Text = imported.Json;
-            WhiteStatus.Text = $"IMPORTED / UNVERIFIED · {imported.Assessment.FindingCount} reported findings. " +
-                "This file was not freshly audited. Inspect its origin before trusting it.";
-        }
-        catch (Exception ex)
-        {
-            WhiteStatus.Text = "Report import refused: " + ex.Message;
-            // Preserve previous exportable report and its displayed JSON.
-        }
-    }
-
-    private void ExportWhiteReport(object sender, RoutedEventArgs e)
-    {
-        if (string.IsNullOrEmpty(_lastWhiteOutput))
-        {
-            WhiteStatus.Text = "Run an audit before exporting.";
-            return;
-        }
-        var dialog = new SaveFileDialog {
-            Filter = "JSON report|*.json", DefaultExt = ".json",
-            FileName = "OTS-White-Audit.json", OverwritePrompt = true
-        };
-        if (dialog.ShowDialog(this) != true) return;
-        try
-        {
-            WhiteReportWriter.Save(dialog.FileName, _lastWhiteOutput);
-            WhiteStatus.Text = "Report saved to the selected file.";
-        }
-        catch (Exception ex)
-        {
-            WhiteStatus.Text = "Could not save report: " + ex.Message;
-        }
-    }
 
     private async void RunQuick(object sender, RoutedEventArgs e) => await RunSystemScan(ScanMode.Quick);
     private async void RunDeep(object sender, RoutedEventArgs e) => await RunSystemScan(ScanMode.Deep);

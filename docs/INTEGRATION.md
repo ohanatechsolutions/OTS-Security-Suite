@@ -12,3 +12,7 @@
 ## 2026-11-18 source ownership / retirement plan
 
 The System Sanitizer .NET Core, original WPF specialist UI, its PNG/ICO branding, tests, installer source, notices and engineering documentation are copied byte-for-byte into `modules/OTS_System_Sanitizer/` at upstream commit `823ad825dc1358009d3404f54604465c86747eba` (Git tree `c56ef135da8b509c88d4175feba1e6055fd4b6f7`). The suite no longer uses `.gitmodules` or a Git dependency on the standalone repository. The original quarantine data location and encryption implementation remain unchanged. This is source consolidation, **not** verified Windows release parity or a permission to delete unbacked-up release history. See `REPOSITORY_CONSOLIDATION_2026-11-18.md`.
+
+## 2026-11-18 superseding product decision
+
+RepoScan is the sole installed repository scanner. The W.H.I.T.E. tab and separate executable are retired from distribution; legacy audit source/tests remain as a temporary **CI-only** security gate (not a product feature). Missing RepoScan parity in deep history, dedicated SAST and offline dependency CVE scanning is explicitly documented in `REPOSCAN_RETIREMENT_2026-11-18.md`.

@@ -43,6 +43,18 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertNotIn('Start-Service', model)
         self.assertNotIn('Set-MpPreference', model)
 
+    def test_reposcan_replaces_distributed_white(self):
+        xaml = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml').read_text(encoding='utf-8')
+        host = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml.cs').read_text(encoding='utf-8')
+        ci = (ROOT/'.github/workflows/windows-build.yml').read_text(encoding='utf-8')
+        self.assertIn('Name="RepoTab"', xaml)
+        self.assertNotIn('WhiteTab', xaml)
+        self.assertNotIn('WhitePanel', xaml)
+        self.assertNotIn('WhiteAuditRunner', host)
+        self.assertNotIn('OTSWhiteAudit.exe', host)
+        self.assertNotIn('bundle/engines/OTSWhiteAudit.exe', ci)
+        self.assertIn('dist/OTSWhiteAudit.exe', ci)
+
     def test_vendored_sanitizer_source_integrity(self):
         self.assertFalse((ROOT/'.gitmodules').exists(), "A clean clone must not depend on removed upstream repos")
         self.assertTrue((ROOT/'white_engine/ots_white/cli.py').is_file())
