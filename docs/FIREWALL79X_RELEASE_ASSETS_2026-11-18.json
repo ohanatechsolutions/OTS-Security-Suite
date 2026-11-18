@@ -1,0 +1,1704 @@
+{
+  "source_repo": "ohanatechsolutions/OTS_Firewall79X",
+  "collected_on": "2026-11-18",
+  "purpose": "Pre-retirement release inventory only; does not contain any release asset bytes",
+  "release_count": 15,
+  "asset_count": 193,
+  "total_asset_bytes": 3558587784,
+  "releases": [
+    {
+      "release_id": 426399408,
+      "tag": "v0.1.0-preview.99",
+      "published_at": "2026-10-28T08:09:14Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.99",
+      "assets": [
+        {
+          "asset_id": 684297356,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:e51a3b216efb1515e8524ea68b8555bc245119a65de43498781a7bfbdd334f42",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297418,
+          "name": "core-test-results.json",
+          "size_bytes": 6373,
+          "sha256_digest": "sha256:ce9df007664a77438d8419b706cc85ced1049a82e38b5884b3402d7b343ce4a7",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297349,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 8970,
+          "sha256_digest": "sha256:de2a31020aca6481875c4bbdd757a9dced50a736fb6ab2433d0795c43e3fec68",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297353,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1063710,
+          "sha256_digest": "sha256:4602e0ca83f7c6c6c95c358df0d9881e488668ff9a98c92e2688d9ad47ff3823",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297350,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 121241,
+          "sha256_digest": "sha256:1eba106dc486cd9cbeb45fd76ede5826821d66f9d2b121d98cc63a826b678659",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297352,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117981286,
+          "sha256_digest": "sha256:19fcaa47556bde8bc1cb151e39f57bd5acca838fa0d783a6682756f13cc884f4",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297379,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:596d6548897db9504df211730bb08fe18f57091aa14fd45f868ed58f3aafa1e2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297384,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118585386,
+          "sha256_digest": "sha256:4fde6fbbf634508eb006c18194355077eadce15673081c6f0dc2b09a8c8639b2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297387,
+          "name": "PROVENANCE_REPORT.json",
+          "size_bytes": 410,
+          "sha256_digest": "sha256:58eb6e9a173bb987a0e75df1343e54d93d2dd0798b4eb4cf498642a19520fc3c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/PROVENANCE_REPORT.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297386,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 2444,
+          "sha256_digest": "sha256:c4b6e35c5540bd7d1d8c20d4df6bf2b3fb2b3dd0163ad98b32e38e593d200bbb",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297412,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:a15d7e47ac8d41377210f334fb437c9fdd0e1b68ca4c718cd04d8a1b1dbd70e5",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297411,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1187,
+          "sha256_digest": "sha256:b1430c9af23cb9f54cb8330be945e9dadb2b890a83f54021062cf1cc54275ef9",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297442,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684297455,
+          "name": "windows-test-results.json",
+          "size_bytes": 1635,
+          "sha256_digest": "sha256:a51009804107c300bfedc02ee919b5543b368a235b921e87173616c4bdf4af33",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.99/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426362713,
+      "tag": "v0.1.0-preview.33",
+      "published_at": "2026-10-28T07:20:59Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.33",
+      "assets": [
+        {
+          "asset_id": 684180814,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:7cd833b95af1d6193b92b6ec2be510bc1044ccf2a00bc377ccdd034f71705b71",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180864,
+          "name": "core-test-results.json",
+          "size_bytes": 4078,
+          "sha256_digest": "sha256:c513556481865a45815e1fcd39d7ef8f0094f628448a22cdbc87a1e9a8afa90c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180813,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 6727,
+          "sha256_digest": "sha256:41f0a53eec68802d9bd0f864406ba1b3ba0c9e64756d5c19ad68e6c0a2d259a5",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180818,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1062126,
+          "sha256_digest": "sha256:87b8636965a6cea12a4cfc8aeb1901c2dec710f5e68220c0482d4b05613d636d",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180817,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 121429,
+          "sha256_digest": "sha256:7cb1fc52f7593cf047e8472ae28f548d98310e4cbff19735ccd81f8e2aabf91b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180816,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117880368,
+          "sha256_digest": "sha256:5902ec415bf34ae35ec6281d45e9004a440f24f32d2db160d77a085c8bbdd1da",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180840,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:5b7203778443b674a405fc98c25ed151f2635135347723598079d147d278ee63",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180842,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118481487,
+          "sha256_digest": "sha256:507ce286d1d9a81d6879e07747382b40022159fc4001b2e12b544d65aa3ca8e2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180841,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1261,
+          "sha256_digest": "sha256:8fd040246a28681c9f5e98f3073315ed6672cb6d7e2b5cca8f0445e76c15ce57",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180845,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:ac61354caf1c425ba651b2afc49b974eb96d8bbe63159c0f8bae6d905fdd8fa1",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180862,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:e5bd170cfe06daf2dd4ecdd0dc6d43540b45263e8137ecd1903c3fbe1bc4bde6",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180869,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684180880,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:85fe3ccc9b8757f46c75c5d800ae82498255c8e8218086d2c6135fc902742870",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.33/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426357354,
+      "tag": "v0.1.0-preview.32",
+      "published_at": "2026-10-28T07:13:13Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.32",
+      "assets": [
+        {
+          "asset_id": 684163532,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:b30c71b9f87acfdf2601c8ed86a26386de279d3bb65cffef43453d688ac3344f",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163603,
+          "name": "core-test-results.json",
+          "size_bytes": 3988,
+          "sha256_digest": "sha256:69188c93eb6fe8eac64c9b6c5ac3d9b3294898f85931607211768ced4b46ca76",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163537,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 6727,
+          "sha256_digest": "sha256:41f0a53eec68802d9bd0f864406ba1b3ba0c9e64756d5c19ad68e6c0a2d259a5",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163538,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1061941,
+          "sha256_digest": "sha256:db1265709fdee544bca33ac42626ac0d9df58185bdc57cccbb30e65344dae11f",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163529,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 121517,
+          "sha256_digest": "sha256:f97cc075398b6edff7e858f0cff45ce75e6b03e16bf0cb164c17af96a218f529",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163535,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117846847,
+          "sha256_digest": "sha256:58b7b5552b5f526f2b77a035fec725f50ef17037000bc845145a5b27414a6a5b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163565,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:1022c4ea13beee674b8438ed8e10a38468874422a56d90398e14fc664383da5e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163566,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118448005,
+          "sha256_digest": "sha256:94af1700ec75fa75519a75b4afa9716bf1e1d9632fcdef76957b2ec312c3567e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163571,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1261,
+          "sha256_digest": "sha256:8fd040246a28681c9f5e98f3073315ed6672cb6d7e2b5cca8f0445e76c15ce57",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163576,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:b1a13dbf2be6be7df6ff3718d26122c2fb2deac1ceba62051201036d9b31c744",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163598,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:0f2ce714671a962b15b6abccb85c1dfdee8a9265d0c2dabc8babb5cfa86af96f",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163609,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684163618,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:85fe3ccc9b8757f46c75c5d800ae82498255c8e8218086d2c6135fc902742870",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.32/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426346598,
+      "tag": "v0.1.0-preview.31",
+      "published_at": "2026-10-28T06:56:40Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.31",
+      "assets": [
+        {
+          "asset_id": 684126604,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:2d25a926e4b9fdd3efd3bbcd3981556df970a89a3cf9f3dda9182610a2e17cbb",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126657,
+          "name": "core-test-results.json",
+          "size_bytes": 3707,
+          "sha256_digest": "sha256:f3126a65074a53278dc0dc20bf6dbd77c9203822bf2884dc9b02bcfa5a351d2b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126600,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 6125,
+          "sha256_digest": "sha256:ec1cdccd2d607f548745a66b05f5136e3b749850355b0233d905a6a205570e4c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126599,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1063536,
+          "sha256_digest": "sha256:89e2df9bbdbfd0ce6dadfd83c20a3514b88442b4757cbcb6d19c5b6edc21cf4a",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126605,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 121774,
+          "sha256_digest": "sha256:d4b6161f98270c25402a50cf3f120939b00d795f72a0f33e3c09bf359b85d224",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126603,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117834580,
+          "sha256_digest": "sha256:c656438c911a80e13800fd4684c45399a183d7c079f71fafb78e6f26f89721fb",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126629,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:3f613fa289a1aa7f30a2bf4a6a762e58ca38712a3518214d0b5dcac84665714e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126631,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118436866,
+          "sha256_digest": "sha256:598f2493bff1306511e83d898ddedfab904a8b2611281942d515970122462652",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126635,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1261,
+          "sha256_digest": "sha256:8fd040246a28681c9f5e98f3073315ed6672cb6d7e2b5cca8f0445e76c15ce57",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126637,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:4367c348c5656058197b83c304154de8e0b97abfebe14ec73591d4232a1b8583",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126650,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:12669b85433b6c4828486cf17c9fab8f968c9467d15bd8b3b017a674029b2495",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126658,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684126686,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:85fe3ccc9b8757f46c75c5d800ae82498255c8e8218086d2c6135fc902742870",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.31/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426340130,
+      "tag": "v0.1.0-preview.30",
+      "published_at": "2026-10-28T06:48:47Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.30",
+      "assets": [
+        {
+          "asset_id": 684107685,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:4f2e352cadb87b78ffb83bc2b2b335dff613a421e07635621ce0e517026224d1",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107745,
+          "name": "core-test-results.json",
+          "size_bytes": 3576,
+          "sha256_digest": "sha256:74b943bce8c15197278adddfc99f6d2830ea76f58b7465fdb33c536341d64e1c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107687,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 5596,
+          "sha256_digest": "sha256:cbd02b8d935ce537341912aa416c42baf480b3875f53de44b92cd130e55ccbfa",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107681,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1064819,
+          "sha256_digest": "sha256:37bdc2cf047e1267239ffc420ec50765f0b6d28e635173f78c8bd247eb206a46",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107688,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 121859,
+          "sha256_digest": "sha256:bb1055b450d23aa26474582891400178c02e59ce37c56359383737432ef53545",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107680,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117845415,
+          "sha256_digest": "sha256:fd33fefe3009070737e2936dde7c2e174a31d40e4fa5175d0ad6bab1d2263f0c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107709,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:a99ad6684204b7f1b6b604f2d11da82714fdce53a75432117925c6e0b302162e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107712,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118449799,
+          "sha256_digest": "sha256:7dac6dca842b92be7bdd40dfcb381fbffb925cfa85a2f8ae4bac98c3ec5d8fd0",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107714,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1261,
+          "sha256_digest": "sha256:8fd040246a28681c9f5e98f3073315ed6672cb6d7e2b5cca8f0445e76c15ce57",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107720,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:f286a714fff53d33253b8871d9535d6029cfd5129f21b0bb6ecbf513494e2c70",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107743,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:3279a70cb6213b3d42485ada1209e1eb6d0dba72c2f1e823b09b8153608d7c30",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107742,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684107759,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:85fe3ccc9b8757f46c75c5d800ae82498255c8e8218086d2c6135fc902742870",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.30/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426328426,
+      "tag": "v0.1.0-preview.28",
+      "published_at": "2026-10-28T06:29:39Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.28",
+      "assets": [
+        {
+          "asset_id": 684069289,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:b68a9b5bf9de0d3e1bfe7697a4eb25084cdb68dbfa951e0bdd9e3d0b8d856ee8",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069351,
+          "name": "core-test-results.json",
+          "size_bytes": 3204,
+          "sha256_digest": "sha256:844baaa9dd2ce93fea05e7c856748cc6e50b64487d59dcc6e323a621c63e1b7e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069284,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 4489,
+          "sha256_digest": "sha256:f11f686155871c990901e0aeea6df451dd9bcdd53aadc0a8815512ccbbddc1b0",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069290,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1061215,
+          "sha256_digest": "sha256:8d999f8b3b31bc7c257fab7ac92af640ec438a8ad9a80df907dda9b0cf140d59",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069291,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 121068,
+          "sha256_digest": "sha256:03abb6782a61231025734b9d8fabcc3f91a964739608cd0841b3efd5e580f7f7",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069297,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117822246,
+          "sha256_digest": "sha256:d7963938ace8f16f5c3e94114c57ea42ba36b3f976454bb90f37582eec7c0da9",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069315,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:af15acb6d8c0813e3796830e12d321dfff4e1851d42a7ae090d902ea3cc21615",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069321,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118420611,
+          "sha256_digest": "sha256:e3b423acd20ed50f6efecd1d2ba49049feea8cd7d6f80a79cf52f15ccee710e0",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069320,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1261,
+          "sha256_digest": "sha256:8fd040246a28681c9f5e98f3073315ed6672cb6d7e2b5cca8f0445e76c15ce57",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069341,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:2aa3c9c2dbea891b18bddeab122ff91286d84d5bbed0efb0a5c9b17f8f359829",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069344,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:8214eca70e0b92e1d6c4f3073730353cb304d57b1d455251ae8d3e310ff18760",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069356,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684069359,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:56f36882655b58d3842d28bf974e19d0831cfcf54d967a8e6b4080f66062d701",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.28/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426296291,
+      "tag": "v0.1.0-preview.26",
+      "published_at": "2026-10-28T05:33:17Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.26",
+      "assets": [
+        {
+          "asset_id": 683952472,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:efff3b7deea3403353b86804bfc5999d3e37006183350b00994d6a50c5d7df0d",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952518,
+          "name": "core-test-results.json",
+          "size_bytes": 3081,
+          "sha256_digest": "sha256:c7577e0d3c2f683655ab66d4365d1424e544f4ad046ea36689c2a0f47a117d6e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952471,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 3821,
+          "sha256_digest": "sha256:c3b8d1724c4623b7e610ee0d67c0a345ca95f3d2deb406e77a7b84aa425f649f",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952473,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1058258,
+          "sha256_digest": "sha256:558f2e107005901a341b4b0e00028bf374adaaad343c3430b50636652be17e16",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952474,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 120314,
+          "sha256_digest": "sha256:df06960b4d34c8a358b45d932913cf1a33f755860a9d2379c08f9b18e3cd8f9b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952470,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117791924,
+          "sha256_digest": "sha256:be3fdc038c647450e5f504d012e2cb7626f7ad9e6fe59ce30b29e7d5e596e225",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952489,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:9f5c39d561096fde79bb082ae2a6a36e4ecfebcb181e1d7673624605f759e367",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952493,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118386296,
+          "sha256_digest": "sha256:d8732fdc6a104f06f624980c9e729dfa71e6458ac3b39c38c3e00cbd59eb720a",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952496,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1261,
+          "sha256_digest": "sha256:8fd040246a28681c9f5e98f3073315ed6672cb6d7e2b5cca8f0445e76c15ce57",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952512,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:a1747452af1d7e350614240e32f6ae1320fce47774ac1942b6223f5ede486903",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952513,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:116bc9d33f9e6fffa47a69a7c12b7b88de51c35be2961f8892bc13f2fd72b9de",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952523,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683952530,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:56f36882655b58d3842d28bf974e19d0831cfcf54d967a8e6b4080f66062d701",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.26/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426287112,
+      "tag": "v0.1.0-preview.25",
+      "published_at": "2026-10-28T05:16:52Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.25",
+      "assets": [
+        {
+          "asset_id": 683917431,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:de1d2796b2e22b364f311d1536eb431fa607b2f3b39a5d1edbcfe414584e3176",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917484,
+          "name": "core-test-results.json",
+          "size_bytes": 3081,
+          "sha256_digest": "sha256:c7577e0d3c2f683655ab66d4365d1424e544f4ad046ea36689c2a0f47a117d6e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917432,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 3395,
+          "sha256_digest": "sha256:408c6fa6dc0ae20693a6efb2cefbb3acf2e001a8e5175f5f65f6616d8fb77e92",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917430,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1058724,
+          "sha256_digest": "sha256:60ad6da8aadfaaef4cff06475eafa031e1abd35936d32a7b13a3148312ee7bce",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917434,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 120680,
+          "sha256_digest": "sha256:d62f663eab131658dd14846b03dc95c6895b0da21d22bbadcc95e3d2859ca6e0",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917433,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117795317,
+          "sha256_digest": "sha256:6cf1041de3ddb92566ac117d931661fb99afea61b4ddd7eac23c6076322c98fd",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917453,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:f7892ee28831c382a4529288a65333331ece76f89faf18536a9b7938ca22f76d",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917455,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118389702,
+          "sha256_digest": "sha256:5d7d1aa996bec2b315131ee5d92d4a74645c796d398417a2992be4ae345e4d1a",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917451,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1002,
+          "sha256_digest": "sha256:7b6d5f2edfcbb2b3adf7d805804337aa7cc3817cb98a78600c1a0805b65ac6f6",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917463,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:747e39252a32818f2b5a5fca244ee2a774720a7df2f63475620f6ddd55c45ed4",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917481,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1097,
+          "sha256_digest": "sha256:a27bdab4d54567b4f6cc06627face119690cb02a4d8e46a5afbb67083d684818",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917494,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683917500,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:85fe3ccc9b8757f46c75c5d800ae82498255c8e8218086d2c6135fc902742870",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.25/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426276469,
+      "tag": "v0.1.0-preview.22",
+      "published_at": "2026-10-28T04:56:13Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.22",
+      "assets": [
+        {
+          "asset_id": 683871638,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:e7d90b73be3ac1d7b694ec85bf12a03ce31a3f41c7de36c9398cc7c8aa1859dc",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871676,
+          "name": "core-test-results.json",
+          "size_bytes": 3081,
+          "sha256_digest": "sha256:c7577e0d3c2f683655ab66d4365d1424e544f4ad046ea36689c2a0f47a117d6e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871632,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 3395,
+          "sha256_digest": "sha256:408c6fa6dc0ae20693a6efb2cefbb3acf2e001a8e5175f5f65f6616d8fb77e92",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871634,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1056654,
+          "sha256_digest": "sha256:6bfd2c9821ffb69fdad45e657e8eccada5b17f67c4cfceb850fe80dac5982d2b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871636,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 120567,
+          "sha256_digest": "sha256:2f5031c383c25e17c7d0068bd333d94320cea8333472fa606454debe19085a22",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871629,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 117802535,
+          "sha256_digest": "sha256:cdf4e2ecf28c2fa81c0e32280965ffcb7352f5bd2805105df5ac5507573b7fd0",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871653,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118393544,
+          "sha256_digest": "sha256:9bc7469d251ccbfcfc4635d542cf93999ad682b5810bbc2cb4870941aa94b17f",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871654,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1002,
+          "sha256_digest": "sha256:7b6d5f2edfcbb2b3adf7d805804337aa7cc3817cb98a78600c1a0805b65ac6f6",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871664,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:f51f5ebd977eeca92c3b2175d2657527d73820566ef3f31b51275249e78f872b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871667,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 997,
+          "sha256_digest": "sha256:cb014b251e281d46b52bd4a61f8322551924e82b1bb98b8f2605a479f0e21cc7",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871681,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683871682,
+          "name": "windows-test-results.json",
+          "size_bytes": 1518,
+          "sha256_digest": "sha256:85fe3ccc9b8757f46c75c5d800ae82498255c8e8218086d2c6135fc902742870",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.22/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426266143,
+      "tag": "v0.1.0-preview.19",
+      "published_at": "2026-10-28T04:36:01Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.19",
+      "assets": [
+        {
+          "asset_id": 683829521,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159508,
+          "sha256_digest": "sha256:f94a4be02f1d85b30018c3fdbb8cd7fcc688e25ecf4b6b877e516811450d3c05",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829550,
+          "name": "core-test-results.json",
+          "size_bytes": 3081,
+          "sha256_digest": "sha256:c7577e0d3c2f683655ab66d4365d1424e544f4ad046ea36689c2a0f47a117d6e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829530,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 3395,
+          "sha256_digest": "sha256:408c6fa6dc0ae20693a6efb2cefbb3acf2e001a8e5175f5f65f6616d8fb77e92",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829527,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 116902331,
+          "sha256_digest": "sha256:31ca735a401e8b3860d0048da70966074200b26e6be3cf87623dd2ec62912c19",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829529,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 116484156,
+          "sha256_digest": "sha256:e402e85aca7aabde56b2834d27195d37f79ff76a0e5114c7b5eda11aa6149ac1",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829531,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1002,
+          "sha256_digest": "sha256:7b6d5f2edfcbb2b3adf7d805804337aa7cc3817cb98a78600c1a0805b65ac6f6",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829539,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:5b654a3d491be7a55c510f3ccb783523b7c7899fb9dd14d927c03c84a21c77ef",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829548,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 804,
+          "sha256_digest": "sha256:d62d6463f7c60e7d62a6169c8af4909a5a93d2cd3b46638871a27de76b10e0ae",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829560,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1057,
+          "sha256_digest": "sha256:ff606229b8f4193f8728e18272a85cd2fc9fa00cade02d5a839bfa05e0ae7a10",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683829566,
+          "name": "windows-test-results.json",
+          "size_bytes": 1425,
+          "sha256_digest": "sha256:2448425cc41a68b5870bc48f69438bc4381cef3b959151ae7841a8dcca65b6a7",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.19/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426475983,
+      "tag": "v0.1.0-preview.163",
+      "published_at": "2026-10-28T09:36:58Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.163",
+      "assets": [
+        {
+          "asset_id": 684499439,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:6ac1f282be06668e7740af38e3c78be42cc1848ec44129ab663f9c2ccf6eed9c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499512,
+          "name": "core-test-results.json",
+          "size_bytes": 11540,
+          "sha256_digest": "sha256:4ac8334b9f40a2b4a94c541b01da648fdfe3527b8d2c65b0410733a8accab461",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499440,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 13078,
+          "sha256_digest": "sha256:606e0a880b10816908e70c93ef2d0442dc06fb2b49787783e262214289282712",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499433,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 958683,
+          "sha256_digest": "sha256:cf70f454aa523bb3350696cd2812698aedd66bc9654b98ff20d84c101e737930",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499438,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 108410,
+          "sha256_digest": "sha256:c9d9040124e0c50a96be786eda1908d3c2439625a1c4612ee01b61201569e122",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499435,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 118220119,
+          "sha256_digest": "sha256:26c26f2beac6d22e8e3c5ff9b7e4ccbb64385fbf7ecde3e9de951194daad7ff8",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499468,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:992dda985110f8422e24b19b0ea5ffb1fc15fe92fa38e95eca8a38c8dafbe343",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499467,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118718692,
+          "sha256_digest": "sha256:8203c996d310189fbfefb19297dd571765a87289b79ee46acb6088401249e558",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499476,
+          "name": "PROVENANCE_REPORT.json",
+          "size_bytes": 410,
+          "sha256_digest": "sha256:e3440bdb7510b3149735718e00dbc6d4deb9c3387915d6c1064c7340312d874a",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/PROVENANCE_REPORT.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499488,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 3505,
+          "sha256_digest": "sha256:c5db4c2ed665a8d3013e28178221bb2713f69e225b77cce3934b05be1ea251f2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499490,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:70fe41fea2f660109f6b3bbc542bf01438d75a9cef2ed87e1bfe5d370d80f552",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499496,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1187,
+          "sha256_digest": "sha256:aae87abf93a3e93e32f630e3cfe324fcca7f95316e4000fade9bd03af95a3677",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499522,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684499520,
+          "name": "windows-test-results.json",
+          "size_bytes": 1663,
+          "sha256_digest": "sha256:ce59b52e0e844811b67ac2c5d23fe02fd17d3fa51a044606cc0df4f45cc2e07d",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.163/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426458566,
+      "tag": "v0.1.0-preview.160",
+      "published_at": "2026-10-28T09:18:17Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.160",
+      "assets": [
+        {
+          "asset_id": 684455190,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:c465bdd41252ff246f6177eb12a15f9b5396e732d5e64e8b0745ab777a1229d3",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455239,
+          "name": "core-test-results.json",
+          "size_bytes": 11540,
+          "sha256_digest": "sha256:4ac8334b9f40a2b4a94c541b01da648fdfe3527b8d2c65b0410733a8accab461",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455191,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 13078,
+          "sha256_digest": "sha256:606e0a880b10816908e70c93ef2d0442dc06fb2b49787783e262214289282712",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455194,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1056913,
+          "sha256_digest": "sha256:cfd352365ddbe89d165cb28aacd30989626ff40c6d23ff2c50536e16f5a98875",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455193,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 119069,
+          "sha256_digest": "sha256:3f9d02d7ce41f882469b3173d88834c05b0ab3acb5dd9ebaa37f6802aaa6abb8",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455192,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 118197093,
+          "sha256_digest": "sha256:23bf9e1db1fbc44ef8bf727a456b0413c3edaddb7ead31f854f870d3dfaa8462",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455216,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:b06c2b611c867a7635f0ce9fc4c4a79343ba4de381526835146aa2eb00087869",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455217,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118796908,
+          "sha256_digest": "sha256:6ee1acb6ac77534cce3cb11663b18fcef89f3fe3604e6a8751f9c1b18259e5d8",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455220,
+          "name": "PROVENANCE_REPORT.json",
+          "size_bytes": 410,
+          "sha256_digest": "sha256:abba026a1979452811e5c04c8a2a7a94cfeefeedc1ef6cf25435cc307800769f",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/PROVENANCE_REPORT.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455225,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 3505,
+          "sha256_digest": "sha256:c5db4c2ed665a8d3013e28178221bb2713f69e225b77cce3934b05be1ea251f2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455238,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:3a76f89c3b3dcdc8548b303cc056315ed5a949be5739aa52d52e83ad2cacb45b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455240,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1187,
+          "sha256_digest": "sha256:cb7cc539df1199632a26c1957bba2e3b78041380aa61942b024f11749014b531",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455256,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684455262,
+          "name": "windows-test-results.json",
+          "size_bytes": 1663,
+          "sha256_digest": "sha256:ce59b52e0e844811b67ac2c5d23fe02fd17d3fa51a044606cc0df4f45cc2e07d",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.160/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426423337,
+      "tag": "v0.1.0-preview.137",
+      "published_at": "2026-10-28T08:38:25Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.137",
+      "assets": [
+        {
+          "asset_id": 684362459,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:abbc6a45a8dff5bc316145e347fef7c77a47e49b67821942e5a05c34631d5584",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362538,
+          "name": "core-test-results.json",
+          "size_bytes": 7791,
+          "sha256_digest": "sha256:637c8da51ff856761f7e5f95c099c7b97bc9ac462eb065efb4a58cf096d8c4c5",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362463,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 12039,
+          "sha256_digest": "sha256:fedcd11108c35e7898d2fc49a0742434d02151abf0f93f5f7c8daf7d07356452",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362466,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1058639,
+          "sha256_digest": "sha256:9f1cd9ce2c3b4e496bba4e6f97bd3a091f0146621cf07157bbccc9819fb4ef25",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362460,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 119293,
+          "sha256_digest": "sha256:656a473a7db75d5c32ea2d50783fd7db0ab7a1fc15c5c6fbae1b946a98954932",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362462,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 118035278,
+          "sha256_digest": "sha256:bd1d688a785033b455dbe1b581ebe195126fa3955bea736032873b23d6726bce",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362478,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:3bf72c3afb0ce754913634f1c84effeeae7fa6b0ec827905d7ac2c32a52ee51a",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362479,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118635671,
+          "sha256_digest": "sha256:a7f66dea3d927709f08322459d38f05769b45a9347664c2ed3b574c005e80515",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362484,
+          "name": "PROVENANCE_REPORT.json",
+          "size_bytes": 410,
+          "sha256_digest": "sha256:a18eabf60d791edfa9f55865232791e0f4a3dfd67a5b905f2f7a4fcdeae420b8",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/PROVENANCE_REPORT.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362489,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 3505,
+          "sha256_digest": "sha256:c5db4c2ed665a8d3013e28178221bb2713f69e225b77cce3934b05be1ea251f2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362501,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:bf2d350c831e9751f19d9f5300290ff71b4a455b2af3dae1aa500bf82ca7aa9c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362518,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1187,
+          "sha256_digest": "sha256:00686db59aeaa23073b99487b3699e7f51f8c303ea24768f5cdac4769098d05e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362550,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684362547,
+          "name": "windows-test-results.json",
+          "size_bytes": 1635,
+          "sha256_digest": "sha256:97be4c022a7b7d5dbc518ce72e658b62c34b7e785335f474b778e1f7540fd7a9",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.137/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426415236,
+      "tag": "v0.1.0-preview.130",
+      "published_at": "2026-10-28T08:28:52Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.130",
+      "assets": [
+        {
+          "asset_id": 684339773,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159648,
+          "sha256_digest": "sha256:1d85c20aed87b306d31f90e7800e17751c8c1ac509c35c71569a4a69763a464e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339837,
+          "name": "core-test-results.json",
+          "size_bytes": 7277,
+          "sha256_digest": "sha256:d79dd32c367a3fbded50a87121598f8c837d244e4fd098b2ddbb8a361c7cadd3",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339772,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 12039,
+          "sha256_digest": "sha256:fedcd11108c35e7898d2fc49a0742434d02151abf0f93f5f7c8daf7d07356452",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339775,
+          "name": "OTS-Firewall79X-Preview-8K.png",
+          "size_bytes": 1058862,
+          "sha256_digest": "sha256:4033cbad1259400c2dc2a75426b14b81176446600a24675c7a28da45e4ea64bc",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/OTS-Firewall79X-Preview-8K.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339774,
+          "name": "OTS-Firewall79X-Preview.png",
+          "size_bytes": 119212,
+          "sha256_digest": "sha256:7009b8196cb24d14979795fc8b308191386c3d91e2b8b5086180494b410e4c5d",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/OTS-Firewall79X-Preview.png",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339776,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 118034721,
+          "sha256_digest": "sha256:5851584cf61d90b215216b393124b16ba40657b5dcaf23957af0bea65e417704",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339801,
+          "name": "OTS-Firewall79X-Setup.exe.sha256",
+          "size_bytes": 93,
+          "sha256_digest": "sha256:4610d35af7196e7cb19b96f9198e5a34a81613a03fe5952c7719e0c31190fcbc",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/OTS-Firewall79X-Setup.exe.sha256",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339804,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 118635388,
+          "sha256_digest": "sha256:65e667f99b5d6e6f2e13e21a153ddab6d9b6b422dd472294b30ccda6a729ed7e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339808,
+          "name": "PROVENANCE_REPORT.json",
+          "size_bytes": 410,
+          "sha256_digest": "sha256:19570269930c7d1a6d9e3c4dec8bf488d78dc8b40bd89290f4eae3775dca94cd",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/PROVENANCE_REPORT.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339813,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 3505,
+          "sha256_digest": "sha256:c5db4c2ed665a8d3013e28178221bb2713f69e225b77cce3934b05be1ea251f2",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339823,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:05e36f083e5d39a189383f3e5e6f79a2e9e1bf82de0a8913a73abfa8f6f78c9a",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339826,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 1187,
+          "sha256_digest": "sha256:c43656eede843847ebb607dc78150f18dd3b37f7eefc8a57b949ddb8c841de50",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339850,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1191,
+          "sha256_digest": "sha256:be601203dd750924b93ecc94b0e15ae12a3eca5fa5c5cc8f47f5695ac437acbe",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 684339854,
+          "name": "windows-test-results.json",
+          "size_bytes": 1635,
+          "sha256_digest": "sha256:a51009804107c300bfedc02ee919b5543b368a235b921e87173616c4bdf4af33",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.130/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    },
+    {
+      "release_id": 426135465,
+      "tag": "v0.1.0-preview.11",
+      "published_at": "2026-10-28T00:30:58Z",
+      "draft": false,
+      "prerelease": true,
+      "html_url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/tag/v0.1.0-preview.11",
+      "assets": [
+        {
+          "asset_id": 683320974,
+          "name": "BUILD_MANIFEST.json",
+          "size_bytes": 159508,
+          "sha256_digest": "sha256:a6b8aad187d3121350ebadcf6559308753052b109510e8f543724e37a9f5dcba",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/BUILD_MANIFEST.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320995,
+          "name": "core-test-results.json",
+          "size_bytes": 3081,
+          "sha256_digest": "sha256:c7577e0d3c2f683655ab66d4365d1424e544f4ad046ea36689c2a0f47a117d6e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/core-test-results.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320976,
+          "name": "KNOWN_LIMITATIONS.md",
+          "size_bytes": 3395,
+          "sha256_digest": "sha256:408c6fa6dc0ae20693a6efb2cefbb3acf2e001a8e5175f5f65f6616d8fb77e92",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/KNOWN_LIMITATIONS.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320971,
+          "name": "OTS-Firewall79X-Setup.exe",
+          "size_bytes": 116937380,
+          "sha256_digest": "sha256:15f6d21b974e70d7ca682abc6173db70361410b27b3b8403ff4db141f49ce900",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/OTS-Firewall79X-Setup.exe",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320975,
+          "name": "OTS-Firewall79X-Windows-x64.zip",
+          "size_bytes": 116471992,
+          "sha256_digest": "sha256:293e92ee1c6e12f757dd5bcdab9bdbb5939323b1f5fd8d57d2ca09ede72aad2c",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/OTS-Firewall79X-Windows-x64.zip",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320973,
+          "name": "RELEASE_NOTES.md",
+          "size_bytes": 1002,
+          "sha256_digest": "sha256:7b6d5f2edfcbb2b3adf7d805804337aa7cc3817cb98a78600c1a0805b65ac6f6",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/RELEASE_NOTES.md",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320984,
+          "name": "SBOM.json",
+          "size_bytes": 1193,
+          "sha256_digest": "sha256:5219c5df06c6699917d471d1edba8708ebf889f34862c12ab07c52415bd1653e",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/SBOM.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683320989,
+          "name": "SHA256SUMS.txt",
+          "size_bytes": 804,
+          "sha256_digest": "sha256:7b6291b7703c2487933997ff8a0740d1cd71df4bb1cb0f9b1391a8121117009b",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/SHA256SUMS.txt",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683321002,
+          "name": "vulnerability-report.json",
+          "size_bytes": 1057,
+          "sha256_digest": "sha256:ff606229b8f4193f8728e18272a85cd2fc9fa00cade02d5a839bfa05e0ae7a10",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/vulnerability-report.json",
+          "state": "uploaded"
+        },
+        {
+          "asset_id": 683321010,
+          "name": "windows-test-results.json",
+          "size_bytes": 1425,
+          "sha256_digest": "sha256:2448425cc41a68b5870bc48f69438bc4381cef3b959151ae7841a8dcca65b6a7",
+          "url": "https://github.com/ohanatechsolutions/OTS_Firewall79X/releases/download/v0.1.0-preview.11/windows-test-results.json",
+          "state": "uploaded"
+        }
+      ]
+    }
+  ]
+}
