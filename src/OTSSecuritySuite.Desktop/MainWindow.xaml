@@ -25,6 +25,7 @@
           <Button Name="RepoTab" Click="ShowRepository" Content="▣  REPOSITORY SECURITY" Foreground="#39FF14"/>
           <Button Name="WhiteTab" Click="ShowWhite" Content="⌘  CODE &amp; SECRETS AUDIT"/>
           <Button Name="SystemTab" Click="ShowSystem" Content="▤  WINDOWS SECURITY"/>
+          <Button Name="NetworkTab" Click="ShowNetwork" Content="⌁  NETWORK DEFENSE"/>
           <Button Name="CleanupTab" Click="ShowCleanup" Content="⊞  QUARANTINE &amp; CLEANUP"/>
           <Border Background="#1C3020" CornerRadius="6" Margin="4,22,8,0" Padding="11">
             <TextBlock Text="SCAN READ-ONLY BY DEFAULT&#10;&#10;Review findings before quarantining or removing anything." Foreground="#B9D1BD" TextWrapping="Wrap" FontSize="12"/>
@@ -63,6 +64,29 @@
             <ListView.View><GridView><GridViewColumn Header="Severity" DisplayMemberBinding="{Binding Severity}" Width="90"/><GridViewColumn Header="Finding" DisplayMemberBinding="{Binding Title}" Width="220"/><GridViewColumn Header="Location" DisplayMemberBinding="{Binding Path}" Width="430"/></GridView></ListView.View>
           </ListView>
           <WrapPanel Grid.Row="4" Margin="0,12,0,0"><Button Click="InvestigateFinding" Content="INVESTIGATE SELECTED"/><Button Click="QuarantineFinding" Content="QUARANTINE SELECTED"/></WrapPanel>
+        </Grid>
+        <Grid Name="NetworkPanel" Visibility="Collapsed">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <TextBlock Grid.Row="0" Text="NETWORK DEFENSE · READ-ONLY" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,14"/>
+          <TextBlock Grid.Row="1" Text="Windows Firewall stays in charge. OTS inspects status and TCP connections without changing rules, starting a second firewall, or disabling Defender." TextWrapping="Wrap" Foreground="#B9D1BD" Margin="0,0,0,14"/>
+          <WrapPanel Grid.Row="2" Margin="0,0,0,10"><Button Content="REFRESH NETWORK STATUS" Click="RefreshNetworkClick"/><Button Content="OPEN WINDOWS SECURITY" Click="OpenWindowsSecurityClick"/></WrapPanel>
+          <StackPanel Grid.Row="3">
+            <TextBlock Name="NetworkStatus" Text="Select Refresh to inspect Windows Firewall and active TCP connections." Foreground="#A9CCA9" TextWrapping="Wrap" Margin="0,0,0,8"/>
+            <ItemsControl Name="NetworkProfiles">
+              <ItemsControl.ItemTemplate><DataTemplate><TextBlock Foreground="#B9D1BD" Text="{Binding}" Margin="0,0,0,2"/></DataTemplate></ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Name="NetworkCount" Foreground="#90B59B" Margin="0,10,0,10" Text="Connections have not been queried."/>
+          </StackPanel>
+          <ListView Grid.Row="4" Name="NetworkConnections" Margin="0,0,0,5">
+            <ListView.View><GridView>
+              <GridViewColumn Header="Local endpoint" DisplayMemberBinding="{Binding Local}" Width="265"/>
+              <GridViewColumn Header="Remote endpoint" DisplayMemberBinding="{Binding Remote}" Width="265"/>
+              <GridViewColumn Header="TCP state" DisplayMemberBinding="{Binding State}" Width="120"/>
+            </GridView></ListView.View>
+          </ListView>
         </Grid>
         <Grid Name="CleanupPanel" Visibility="Collapsed">
           <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
