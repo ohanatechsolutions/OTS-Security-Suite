@@ -11,6 +11,7 @@
     <!-- Exercise the exact production runner without starting WPF or bringing in a test framework. -->
     <Compile Include="../../src/OTSSecuritySuite.Desktop/WhiteAuditRunner.cs" Link="WhiteAuditRunner.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/NetworkProtectionAudit.cs" Link="NetworkProtectionAudit.cs" />
+    <Compile Include="../../src/OTSSecuritySuite.Desktop/WindowsThreatActivity.cs" Link="WindowsThreatActivity.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/FirewallOverlap.cs" Link="FirewallOverlap.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/ProtocolActivation.cs" Link="ProtocolActivation.cs" />
     <Compile Include="../../src/OTSSecuritySuite.Desktop/WhiteReportWriter.cs" Link="WhiteReportWriter.cs" />
