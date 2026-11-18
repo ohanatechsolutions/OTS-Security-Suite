@@ -2,6 +2,8 @@
 
 **Task:** CONSOL-F79X-001 · **Date:** 2026-11-18 · **Source:** `ohanatechsolutions/OTS_Firewall79X@8b0996b22fe53b3cb820a3b76492941070619a87` · **Target baseline:** `ohanatechsolutions/OTS_Security_Suite@49f088550f6983c63969622accc1da1932321689`
 
+> **Retirement follow-up (2026-11-18):** [evidence-based decision](FIREWALL79X_RETIREMENT_DECISION_2026-11-18.md): **GitHub Archive recommended** for preserved, read-only legacy source; **GitHub Delete is NOT CLEARED**. Live inventory found **15 published releases, 193 assets totaling 3,558,587,784 bytes**. Only metadata is retained in [release inventory](FIREWALL79X_RELEASE_ASSETS_2026-11-18.json), not those files. The [current source inventory](FIREWALL79X_SOURCE_MANIFEST_CURRENT.tsv) covers 159 tracked files on the stated original main commit, but is not a full history backup. Track remaining work in [Suite issue #12](https://github.com/ohanatechsolutions/OTS_Security_Suite/issues/12).
+
 ## Owner decision and safe destination
 
 The requested product direction is to **retire the standalone Firewall79X product only after its genuinely useful functionality has been migrated and verified in OTS Security Suite**. The original 79 numbered items are *requirements*, not proven active firewall mechanisms; their unchanged names are retained below for traceability.
