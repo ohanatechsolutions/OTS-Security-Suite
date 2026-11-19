@@ -141,7 +141,6 @@ public sealed class StrixIntegration
         try { if (_activeProcess is { HasExited: false } p) p.Kill(entireProcessTree: true); }
         catch (InvalidOperationException) { }
         catch (System.ComponentModel.Win32Exception) { }
-        catch (ObjectDisposedException) { }
     }
 
     public async Task<StrixRunResult> RunAsync(StrixRunOptions options, CancellationToken cancellation)
