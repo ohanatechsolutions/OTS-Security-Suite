@@ -1,5 +1,5 @@
 #define ProductName "OTS Security Suite"
-#define ProductVersion "0.10.0"
+#define ProductVersion "0.10.1"
 #define PublisherName "Ohana Tech Solutions"
 
 [Setup]

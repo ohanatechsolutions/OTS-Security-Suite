@@ -53,14 +53,35 @@ class UpstreamOnlyHubContractTests(unittest.TestCase):
         self.assertIn('ToolCatalog.ValidExecutable', source)
         self.assertIn('File.Move(temp, _settingsPath, overwrite: true)', source)
 
+    def test_async_help_is_bound_to_selected_tool(self):
+        code = (HUB / "MainWindow.xaml.cs").read_text(encoding="utf8")
+        self.assertIn("_selected?.Id != tool.Id", code)
+        self.assertIn("_selected?.Id == tool.Id", code)
+        self.assertIn("_helpProcess is null && tool.Mode", code)
+        self.assertIn("else RenderTool();", code)
+
+    def test_settings_fail_safely_on_invalid_paths(self):
+        code = (HUB / "MainWindow.xaml.cs").read_text(encoding="utf8")
+        self.assertIn("or ArgumentException or NotSupportedException", code)
+        self.assertIn("or System.Security.SecurityException", code)
+        self.assertIn("File.Move(temp, _settingsPath, overwrite: true)", code)
+
+    def test_resources_and_version_checked_before_installer(self):
+        ci = (ROOT / ".github" / "workflows" / "windows-build.yml").read_text(encoding="utf8")
+        self.assertIn("Verify packaged UI icons, product metadata and runtime", ci)
+        self.assertIn("OhanaLogo.png", ci)
+        self.assertIn("AppIcon.ico", ci)
+        self.assertIn("coreclr.dll", ci)
+        self.assertIn("ProductVersion", ci)
+
     def test_pre_release_fail_closed(self):
         workflow = (ROOT / ".github" / "workflows" / "windows-build.yml").read_text(encoding="utf8")
-        self.assertIn("publish-v0-10-test1:", workflow)
+        self.assertIn("publish-v0-10-1-test1:", workflow)
         self.assertIn("needs: windows-build", workflow)
         self.assertIn("OTS Universal Security", workflow)
         self.assertIn("gh release create", workflow)
         self.assertIn("--prerelease", workflow)
-        self.assertIn("[ots-hub-release-v0.10.0-test.1]", workflow)
+        self.assertIn("[ots-hub-release-v0.10.1-test.1]", workflow)
         self.assertIn("gh release download v0.9.0-test.5", workflow)
         self.assertIn("D5AA9EDB57D63E5B31B14F8FD8E130CAE696A9011087D2EF9229C15C49722A46", workflow)
         self.assertIn("preserve-legacy-vault-v0.9", workflow)

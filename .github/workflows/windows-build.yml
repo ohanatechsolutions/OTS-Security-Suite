@@ -58,6 +58,23 @@ jobs:
             if ($stream.ReadByte() -ne 77 -or $stream.ReadByte() -ne 90) { throw 'Hub EXE is not PE/MZ' }
           } finally { $stream.Dispose() }
           Write-Host 'Native hub PE and no-OTS-engines packaging verified'
+      - name: Verify packaged UI icons, product metadata and runtime
+        shell: pwsh
+        run: |
+          $bundle = (Resolve-Path bundle).Path
+          $required = @('OTSSecuritySuite.exe', 'OhanaLogo.png', 'AppIcon.ico')
+          foreach ($name in $required) {
+            if (-not (Test-Path (Join-Path $bundle $name))) {
+              throw "Required hub resource missing: $name"
+            }
+          }
+          $exe = Join-Path $bundle 'OTSSecuritySuite.exe'
+          $version = (Get-Item $exe).VersionInfo.ProductVersion
+          if (-not $version.StartsWith('0.10.1')) { throw "Unexpected packaged version: $version" }
+          if (-not (Test-Path (Join-Path $bundle 'coreclr.dll'))) {
+            throw 'Self-contained .NET runtime DLL missing from packaged hub'
+          }
+          Write-Host 'Hub branding resources, version and self-contained .NET runtime verified'
       - name: Build Windows per-user upgrade installer
         shell: pwsh
         run: |
@@ -121,7 +138,7 @@ jobs:
           if ((Get-Content -LiteralPath $vaultCanary -Raw) -ne 'preserve-legacy-vault-v0.9') {
             throw 'Real 0.9.0 upgrade damaged the legacy vault canary'
           }
-          Write-Host 'PASS: actual v0.9.0 to 0.10.0 upgrade removed obsolete scanner and preserved user-data canaries'
+          Write-Host 'PASS: actual v0.9.0 to 0.10.1 upgrade removed obsolete scanner and preserved user-data canaries'
           $process = Start-Process -FilePath $app -PassThru
           try {
             Start-Sleep -Seconds 5
@@ -179,7 +196,7 @@ jobs:
           (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
           (github.event_name == 'push' && github.ref == 'refs/heads/main' &&
             (contains(github.event.head_commit.message, '[ots-hub-owner-qa-artifact]') ||
-             contains(github.event.head_commit.message, '[ots-hub-release-v0.10.0-test.1]')))
+             contains(github.event.head_commit.message, '[ots-hub-release-v0.10.1-test.1]')))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Upstream-Hub-Windows
@@ -189,13 +206,13 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  publish-v0-10-test1:
+  publish-v0-10-1-test1:
     # A single, explicit, owner-authorized marker is required on the main merge commit.
     # Pull requests and routine main pushes never publish a release.
     if: >
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
-      contains(github.event.head_commit.message, '[ots-hub-release-v0.10.0-test.1]')
+      contains(github.event.head_commit.message, '[ots-hub-release-v0.10.1-test.1]')
     needs: windows-build
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -250,14 +267,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          tag='v0.10.0-test.1'
+          tag='v0.10.1-test.1'
           if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/$tag" >/dev/null 2>&1; then
             echo "Tag already exists; refusing to overwrite or republish"
             exit 1
           fi
           gh release create "$tag"             release-assets/OTS-Security-Suite-Setup-x64.exe             release-assets/SHA256SUMS.txt             --repo "${GITHUB_REPOSITORY}"             --target "${GITHUB_SHA}"             --title "OTS Security Suite v0.10.0 Test 1 — Third-Party Hub (UNSIGNED)"             --notes-file docs/RELEASE_NOTES_V0_10_TEST1.md             --prerelease
           gh api "repos/${GITHUB_REPOSITORY}/releases/tags/$tag" |
-            jq -e --arg sha "${GITHUB_SHA}" '.tag_name == "v0.10.0-test.1" and .prerelease == true and .draft == false and .target_commitish == $sha and ([.assets[].name] | sort) == ["OTS-Security-Suite-Setup-x64.exe","SHA256SUMS.txt"]'
+            jq -e --arg sha "${GITHUB_SHA}" '.tag_name == "v0.10.1-test.1" and .prerelease == true and .draft == false and .target_commitish == $sha and ([.assets[].name] | sort) == ["OTS-Security-Suite-Setup-x64.exe","SHA256SUMS.txt"]'
           mkdir downloaded-release
           gh release download "$tag" --repo "${GITHUB_REPOSITORY}" --dir downloaded-release             --pattern 'OTS-Security-Suite-Setup-x64.exe' --pattern 'SHA256SUMS.txt'
           (cd downloaded-release && sha256sum -c SHA256SUMS.txt)

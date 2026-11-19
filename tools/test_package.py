@@ -59,7 +59,7 @@ class HubReleaseManifestTests(unittest.TestCase):
         self.assertIn("--prerelease", ci)
         self.assertIn("needs: windows-build", ci)
         self.assertIn("OTS Universal Security", ci)
-        self.assertIn("[ots-hub-release-v0.10.0-test.1]", ci)
+        self.assertIn("[ots-hub-release-v0.10.1-test.1]", ci)
         self.assertIn("Upload unsigned hub preview", ci)
         self.assertIn("no-OTS-engines", ci)
 
@@ -89,7 +89,7 @@ class HubReleaseManifestTests(unittest.TestCase):
 
     def test_hub_publisher_version_and_per_user_install(self):
         installer = INSTALLER.read_text(encoding="utf-8")
-        self.assertIn('#define ProductVersion "0.10.0"', installer)
+        self.assertIn('#define ProductVersion "0.10.1"', installer)
         self.assertIn("PrivilegesRequired=lowest", installer)
         self.assertIn("AppVersion={#ProductVersion}", installer)
         self.assertIn("CloseApplications=yes", installer)
