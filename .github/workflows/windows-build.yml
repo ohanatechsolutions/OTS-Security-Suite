@@ -133,7 +133,12 @@ jobs:
           gh attestation verify 'artifacts/OTS-Security-Suite-Setup-x64.exe' --repo $env:GITHUB_REPOSITORY
           if ($LASTEXITCODE -ne 0) { throw 'Hub installer provenance could not be verified' }
       - name: Upload unsigned hub preview for owner testing
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        # One-time owner-approved QA artifact on main; no public GitHub Release is created.
+        # The GitHub attestation and installer smoke run before artifact upload.
+        if: >
+          github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+          (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-hub-owner-qa-artifact]'))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Upstream-Hub-Windows
