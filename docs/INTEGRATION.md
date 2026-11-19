@@ -1,3 +1,5 @@
+> **HISTORICAL PREVIEW PROCEDURE — current scope superseded:** The owner-approved target now uses reviewed free external security engines instead of old OTS RepoScan/W.H.I.T.E./Sanitizer/Firewall79X implementations. See [TOOLING_DECISIONS.md](TOOLING_DECISIONS.md) and [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md). Old source/test/release statements below are dated evidence, not current product scope or proof these replacement engines are integrated. The existing main-branch app still launches RepoScan; Strix is adapter-tested only; independent real Docker/Windows acceptance and new-product release remain NO-GO. Preserve historical source and original vault/backup data. Re-baseline this guide for each upstream external integration before reuse.
+
 # Cross-module integration decisions
 
 - Keep the three source languages while the suite is new. A full Python rewrite is not required for Windows window icons, and rebuilding the quarantine implementation creates unnecessary migration risk.
