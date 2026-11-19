@@ -72,7 +72,7 @@ Windows Security Center integration can display registered antivirus protection 
 
 ### Architecture
 
-\`\`\`text
+```text
 OTS Security Suite — native Windows WPF / WebView2 host
 ├── RepoScan → Go scanner · ephemeral 127.0.0.1 child service
 ├── Windows Security → built-in Windows Security Center status
@@ -82,7 +82,7 @@ OTS Security Suite — native Windows WPF / WebView2 host
 │   ├── bounded disposable copy of owned local source
 │   └── external Docker-based agent; local run reports
 └── Chrome MV3 extension → ots-security://
-\`\`\`
+```
 
 Additional design details are maintained in the [build blueprint](docs/BUILD_BLUEPRINT.md).
 
