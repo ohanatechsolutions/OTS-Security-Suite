@@ -172,13 +172,6 @@ jobs:
             Write-Host 'Packaged W.H.I.T.E. successful and incomplete JSON contracts verified'
           }
           finally { Remove-Item -Path $sample -Recurse -Force -ErrorAction SilentlyContinue }
-      - name: Build System Sanitizer and smoke tests
-        shell: pwsh
-        run: |
-          dotnet run --project modules/OTS_System_Sanitizer/tests/OTSSystemSanitizer.SmokeTests/OTSSystemSanitizer.SmokeTests.csproj -c Release
-          if ($LASTEXITCODE -ne 0) { throw 'Sanitizer smoke tests failed' }
-          dotnet publish modules/OTS_System_Sanitizer/src/OTSSystemSanitizer.Desktop/OTSSystemSanitizer.Desktop.csproj -c Release -r win-x64 --self-contained true -o bundle/engines
-          if ($LASTEXITCODE -ne 0) { throw 'Sanitizer build failed' }
       - name: Legacy source-audit cancellation and privacy checks (CI-only)
         shell: pwsh
         run: |
@@ -196,7 +189,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Suite host build failed' }
           Copy-Item -Path extension -Destination bundle/extension -Recurse -Force
           if ($LASTEXITCODE -ne 0) { throw 'Suite host build failed' }
-          foreach ($path in @('bundle/OTSSecuritySuite.exe','bundle/engines/OTSScannerEngine.exe','bundle/engines/OTSSystemSanitizer.exe')) {
+          foreach ($path in @('bundle/OTSSecuritySuite.exe','bundle/engines/OTSScannerEngine.exe')) {
             if (-not (Test-Path $path)) { throw "Missing output $path" }
           }
       - name: Preserve upstream MIT license and third-party attribution in installer
@@ -204,26 +197,24 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Force bundle/licenses | Out-Null
-          $required = @(
-            @('modules/OTS_System_Sanitizer/LICENSE', 'bundle/licenses/OTS_System_Sanitizer_LICENSE.txt'),
-            @('modules/OTS_System_Sanitizer/THIRD_PARTY_NOTICES.md', 'bundle/licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md'),
-            @('scanner/NOTICE.md', 'bundle/licenses/RepoScan_NOTICE.md')
-          )
-          foreach ($pair in $required) {
-            if (-not (Test-Path -LiteralPath $pair[0])) { throw "Missing legal attribution: $($pair[0])" }
-            Copy-Item -LiteralPath $pair[0] -Destination $pair[1] -Force
-            if ((Get-Item -LiteralPath $pair[1]).Length -eq 0) { throw "Empty legal attribution: $($pair[1])" }
+          $noticeSource = 'scanner/NOTICE.md'
+          $noticeDestination = 'bundle/licenses/RepoScan_NOTICE.md'
+          if (-not (Test-Path -LiteralPath $noticeSource)) {
+            throw "Missing legal attribution: $noticeSource"
           }
-          Write-Host 'All vendored module licenses and notices staged for installer'
+          Copy-Item -LiteralPath $noticeSource -Destination $noticeDestination -Force
+          if ((Get-Item -LiteralPath $noticeDestination).Length -eq 0) {
+            throw "Empty legal attribution: $noticeDestination"
+          }
+          Write-Host 'RepoScan license notices staged for installer'
           & pwsh -NoProfile -File tools/generate-build-manifest.ps1 -OutputPath bundle/licenses/BUILD-MANIFEST.json
           if ($LASTEXITCODE -ne 0) { throw 'Build manifest generation failed' }
           $manifest = Get-Content -LiteralPath bundle/licenses/BUILD-MANIFEST.json -Raw | ConvertFrom-Json
           $checkedOut = (git rev-parse HEAD).Trim()
           if ($manifest.source.checked_out_commit -ne $checkedOut -or
               $manifest.source.legacy_audit_ci_only -ne 'white_engine/ots_white' -or
-              $manifest.source.sanitizer_source_tree_sha -ne (git rev-parse 'HEAD:modules/OTS_System_Sanitizer').Trim() -or
-              $manifest.source.sanitizer_original_upstream_commit -ne '823ad825dc1358009d3404f54604465c86747eba' -or
-              $manifest.direct_components.Count -lt 6 -or
+              $manifest.source.archived_sanitizer_source_tree_sha -ne (git rev-parse 'HEAD:modules/OTS_System_Sanitizer').Trim() -or
+              $manifest.direct_components.Count -lt 5 -or
               $manifest.toolchains.go -notmatch 'go1\.27\.4' -or
               $manifest.toolchains.inno_setup_sha256 -notmatch '^[a-fA-F0-9]{64}$') {
             throw 'Bundle manifest does not match the actual pinned source and toolchain'
@@ -291,7 +282,7 @@ jobs:
           $setup = Start-Process -FilePath $installer -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-') -Wait -PassThru
           if ($setup.ExitCode -ne 0) { throw "Silent setup failed: exit $($setup.ExitCode)" }
           $installPath = Join-Path $env:LOCALAPPDATA 'Programs/Ohana Tech Solutions/Security Suite'
-          foreach ($required in @('OTSSecuritySuite.exe','engines/OTSScannerEngine.exe','engines/OTSSystemSanitizer.exe','extension/manifest.json','extension/popup.js','licenses/OTS_System_Sanitizer_LICENSE.txt','licenses/OTS_System_Sanitizer_THIRD_PARTY_NOTICES.md','licenses/RepoScan_NOTICE.md','licenses/BUILD-MANIFEST.json')) {
+          foreach ($required in @('OTSSecuritySuite.exe','engines/OTSScannerEngine.exe','extension/manifest.json','extension/popup.js','licenses/RepoScan_NOTICE.md','licenses/BUILD-MANIFEST.json')) {
             if (-not (Test-Path (Join-Path $installPath $required))) { throw "Installer missing $required" }
           }
           Add-Type -AssemblyName System.Drawing
@@ -365,8 +356,13 @@ jobs:
           Write-Host 'Synthetic user-vault preservation through install/uninstall verified'
           Write-Host 'Installer, bundled modules, icon, URI registration and uninstaller smoke checks passed'
       - name: Upload Windows installer (unsigned test build)
-        # Owner-approved one-time test merge only; PR builds cannot upload assets.
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.4]'))
+        # Owner-authorized PR #15 can retain a short-lived unsigned, test-only artifact.
+        # This does NOT publish a release or grant PR code a write token.
+        # The upload is downstream of the complete Windows installation smoke test.
+        if: >
+          github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'pull_request' && github.event.pull_request.number == 15 && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feature/strix-local-opt-in-no-sanitizer') ||
+          (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.4]'))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Windows-Beta
@@ -439,14 +435,16 @@ jobs:
           **UNSIGNED TEST PREVIEW ONLY — NOT A PRODUCTION SECURITY PRODUCT.**
 
           This preview bundles the native Windows desktop host, RepoScan engine,
-          new in-repository OTS W.H.I.T.E. preview auditor, OTS System Sanitizer,
-          and unpacked Chrome MV3 extension. The deleted standalone W.H.I.T.E.
+          local antivirus/network status tooling and an unpacked Chrome MV3 extension.
+          The optional Strix tab requires a separately installed CLI and a local model;
+          Strix is NOT bundled or run automatically. The retired System Sanitizer is
+          NOT included in this installer. The deleted standalone W.H.I.T.E.
           engine is not present; full parity is not claimed. Offline SCA/CVE
           checks are unavailable and disabled in the test-preview UI.
 
           The installer was built on GitHub's Windows runner after Go tests/vet,
-          Python/WHITE and Sanitizer tests, WPF UI automation, per-user install,
-          repair/uninstall, quarantine-retention canary, and source audit passed.
+          Python/WHITE and archived-source tests, WPF UI automation, per-user install,
+          repair/uninstall, historical data-retention canary, and source audit passed.
           The binary and SHA256SUMS.txt are taken from the same successful run.
 
           **Target:** Windows 10/11 x64. **Version:** 0.9.0 test preview.

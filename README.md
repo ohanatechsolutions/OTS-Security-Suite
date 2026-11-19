@@ -8,9 +8,9 @@
 
 # OTS Security Suite
 
-<p align="center"><strong>One workspace for repository inspection, Windows security, and controlled system cleanup.</strong></p>
+<p align="center"><strong>One workspace for repository inspection, Windows security, and authorized threat assessment.</strong></p>
 
-<p align="center">An integrated Windows desktop security utility by <strong>Ohana Tech Solutions</strong>, combining a repository scanner, a local code-and-secrets audit preview, and System Sanitizer functionality.</p>
+<p align="center">An integrated Windows desktop security utility by <strong>Ohana Tech Solutions</strong>, combining RepoScan, read-only Windows protection visibility, and an optional local Strix autonomous testing adapter. System Sanitizer is excluded from the current product.</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-INTEGRATION_PREVIEW-025E91?style=for-the-badge" alt="Status: integration preview" />
@@ -24,24 +24,24 @@
 
 ## <img src="art/readme-icons/why.svg" width="24" height="24" alt="" /> Why This Exists
 
-Repository inspection, code auditing and Windows cleanup are easier to oversee when their results and safety controls are accessible from one desktop workspace. OTS Security Suite brings together existing Ohana Tech Solutions security utilities without pretending that different inspection techniques are interchangeable. Its design emphasizes local processing, transparent scan limitations and deliberate approval before destructive actions, while maintaining the original component source and specialist capabilities.
+Repository inspection, source auditing, Windows protection checks and authorized penetration testing are easier to oversee from one workspace. OTS Security Suite keeps detection methods distinct: the routine repository scanner is read-only, while the optional Strix agent can execute code and therefore requires an explicit, separate authorization. System Sanitizer and general cleanup are no longer included in the application.
 
 <table>
   <tr>
     <td align="center" width="33%">
       <img src="art/readme-icons/problem.svg" width="20" height="20" alt="" />
       <p><strong>The Problem</strong></p>
-      <p>Separate repository, source-audit and Windows maintenance tools require different workflows. Users can lose sight of scan coverage, incomplete checks or the consequences of acting on a suspicious finding.</p>
+      <p>Repository scanners, endpoint status checks and dynamic penetration testing use different interfaces. Users need clear boundaries between a heuristic report and an autonomous security assessment.</p>
     </td>
     <td align="center" width="34%">
       <img src="art/readme-icons/purpose.svg" width="20" height="20" alt="" />
       <p><strong>The Purpose</strong></p>
-      <p>Provide one Windows entry point for inspecting repositories and local system conditions, keeping specialist functions available while separating detection and investigation from actions that change or delete files.</p>
+      <p>Provide one Windows entry point for authorized security inspection while making incomplete results, tool availability and execution risks clear.</p>
     </td>
     <td align="center" width="33%">
       <img src="art/readme-icons/solution.svg" width="20" height="20" alt="" />
       <p><strong>The Solution</strong></p>
-      <p>A native WPF host coordinates a Go repository scanner, a Python audit preview and vendored System Sanitizer functionality. It presents findings and supports review-led quarantine, restoration and selected cleanup.</p>
+      <p>A native WPF host embeds RepoScan, displays Windows antivirus and network posture, and offers an optional locally hosted Strix assessment against a disposable copy of an authorized code directory.</p>
     </td>
   </tr>
 </table>
@@ -50,22 +50,23 @@ Repository inspection, code auditing and Windows cleanup are easier to oversee w
 
 ## <img src="art/readme-icons/workflow.svg" width="24" height="24" alt="" /> How It Works
 
-1. **Select a module.** Choose Repository Security, Code & Secrets Audit, Windows Security or Space Recovery in the native desktop interface.
-2. **Supply an authorized target.** Enter a public repository URL or select a local folder/file for supported scanning; Windows security and cleanup operations work on the local machine.
-3. **Run bounded analysis.** The Go repository engine operates as a locally hosted child process; the Python auditor produces redacted results, and the Sanitizer .NET core handles supported Windows inspections.
-4. **Review the outcome.** Inspect findings and incomplete states. A heuristic warning does not establish that a file is infected; not all files receive the same depth of analysis.
-5. **Choose an action explicitly.** Review any quarantine, restore, destruction or cleanup selection before changing files. Scanning alone is not authorization to delete.
-6. **Exit cleanly.** The desktop host is designed to stop its launched scanner/audit processes on cancellation or shutdown; final real-device acceptance remains part of the release gate.
+1. **Select a module.** Choose RepoScan, Windows Security, Network Defense or the optional Strix tab.
+2. **Supply an authorized target.** Routine RepoScan scans supported repository URLs or local source files without running their code.
+3. **Review coverage.** RepoScan returns heuristic findings and clear incomplete states; Windows status is read-only.
+4. **Opt in to Strix separately.** Select an installed Strix Windows CLI, an owned local folder and a numeric-loopback local model endpoint. Explicitly confirm ownership and execution risks.
+5. **Run inside a disposable source copy.** The adapter limits copy size, launches headless quick mode with a zero external API budget, and offers cancellation. Docker network isolation is not guaranteed.
+6. **Inspect local results.** Strix reports may contain sensitive data. The copied source directory is removed after the run; no automatic remediation, cloud uploads, or broad internet testing is offered.
 
 ### Integrated modules
 
 | Module | Present capability | Important boundary |
 | :--- | :--- | :--- |
-| **Repository Security** | Go-based scanner for supported local inputs and public GitHub/Bitbucket source snapshots; 95 heuristic detection rules with 12 reported categories | Heuristics and inventory coverage do not prove complete malware detection |
-| **Code & Secrets Audit** | In-repository Python W.H.I.T.E. replacement with selected credential/SAST heuristics, optional reachable local Git history and metadata-only/redacted JSON | **Offline CVE/SCA is unavailable**; complete legacy W.H.I.T.E. parity is unverified |
-| **Windows Security** | System Sanitizer's local inspection, Defender integration, reviewed quarantine/restore and the original specialist GUI | Not a kernel antivirus replacement; existing antivirus software is not switched off |
-| **Space Recovery** | Discover and select cleanup candidates, with confirmation before deletion | Cleanup is user-reviewed, not an automatic destructive scan |
-| **Chrome Extension** | Manifest V3 popup to open supported repository targets in the installed local suite | Requires the desktop app and its registered `ots-security://` handler |
+| **RepoScan · Repository Security** | Go scanner for supported local inputs and public GitHub/Bitbucket source snapshots; 95 heuristic detection rules across 12 reported categories | Heuristics and inventory coverage are not proof of complete malware detection |
+| **Windows Security** | Read-only antivirus protection status and direct Windows Security access | Does not replace Defender or include the former System Sanitizer |
+| **Network Defense** | Read-only Windows Firewall inspection, TCP connection inventory and selected security-event analysis | Never silently changes firewall rules |
+| **Strix · optional** | Explicitly installed external Strix CLI, scoped local-source copy, loopback self-hosted LLM, headless assessment, cancellation and local reports | Not bundled, not auto-run, Docker network isolation not assured; Windows/CLI acceptance pending |
+| **Legacy W.H.I.T.E. code audit** | Replacement Python command-line auditor used internally in CI | Not shipped as a user-facing module; offline CVE/SCA unavailable |
+| **Chrome extension** | Manifest V3 popup for passing supported repository targets to the local app | Requires registered `ots-security://` protocol |
 
 Windows Security Center integration can display registered antivirus protection status, including unavailable or inactive states, without installing or modifying antivirus products. See [AV-001 implementation evidence](docs/AV_001_ANTIVIRUS_COVERAGE.md).
 
@@ -73,21 +74,14 @@ Windows Security Center integration can display registered antivirus protection 
 
 ```text
 OTS Security Suite — native Windows WPF / WebView2 host
-│
-├── Repository Security
-│   └── Go scanner · ephemeral 127.0.0.1 child service
-│
-├── Code & Secrets Audit
-│   └── Python audit CLI · redacted JSON reports
-│
-├── Windows Security / Space Recovery
-│   └── Vendored System Sanitizer .NET core
-│       ├── Windows/Defender inspection
-│       ├── User-scoped encrypted quarantine and restore
-│       └── Explicitly confirmed cleanup
-│
-├── Optional original Sanitizer specialist window
-└── Optional Chrome MV3 extension → ots-security://
+├── RepoScan → Go scanner · ephemeral 127.0.0.1 child service
+├── Windows Security → built-in Windows Security Center status
+├── Network Defense → read-only firewall/events/TCP inventory
+├── Strix (optional, user-installed CLI)
+│   ├── explicit authorization + numeric loopback local model
+│   ├── bounded disposable copy of owned local source
+│   └── external Docker-based agent; local run reports
+└── Chrome MV3 extension → ots-security://
 ```
 
 Additional design details are maintained in the [build blueprint](docs/BUILD_BLUEPRINT.md).
@@ -102,7 +96,7 @@ Additional design details are maintained in the [build blueprint](docs/BUILD_BLU
 | Embedded scanner view | **Microsoft WebView2** | Displays the loopback-only repository scanner interface |
 | Repository analysis | <img src="https://skillicons.dev/icons?i=go" height="22" alt="Go" /> **Go 1.27.4+** | Local scanning engine, rule evaluation and bounded inspection |
 | Code auditing | <img src="https://skillicons.dev/icons?i=python" height="22" alt="Python" /> **Python 3.12** | Local audit CLI and structured redacted results |
-| Windows security & cleanup | **Vendored System Sanitizer / .NET** | Existing Windows scanning, quarantine, restoration and cleanup implementation |
+| Optional pentest adapter | **Strix CLI (external) / Docker / local LLM** | User-installed, opt-in integration with a capped source snapshot; not bundled |
 | Browser integration | <img src="https://skillicons.dev/icons?i=js,chrome" height="22" alt="JavaScript and Chrome" /> **Chrome Manifest V3 / JavaScript** | Optional local suite launcher |
 | Packaging | **Inno Setup 6 / PyInstaller** | Windows installer and bundled Python executable |
 | Engineering validation | <img src="https://skillicons.dev/icons?i=githubactions" height="22" alt="GitHub Actions" /> **GitHub Actions** | Recorded Windows integration builds and smoke checks |
@@ -117,7 +111,7 @@ Additional design details are maintained in the [build blueprint](docs/BUILD_BLU
 
 - **OS target:** Windows 10/11 x64; independent clean-device compatibility acceptance is still pending.
 - **Build prerequisites:** .NET 10 SDK, Go 1.27.4 or newer compatible toolchain, Python 3.12, PyInstaller, Inno Setup 6 and Microsoft WebView2 Runtime.
-- **Source:** The full System Sanitizer source is vendored in this repository, so a recursive Git submodule checkout is not required.
+- **Historical source:** System Sanitizer files remain in the repository temporarily for provenance and recovery, but are not referenced by the shipped desktop application or installer. No Git submodules are required.
 - **Distribution:** An older unsigned draft test installer exists for the owner. There is **no signed, publicly approved production release**.
 
 ### Get the source
@@ -129,7 +123,7 @@ cd OTS_Security_Suite
 
 ### Build the Windows integration preview
 
-From the repository on GitHub, use **Actions → Windows build and integration checks → Run workflow** where available and permitted. That workflow compiles the WPF host, Go engine, Python audit executable and bundled Sanitizer before producing an Inno Setup test installer.
+From the repository on GitHub, use **Actions → Windows build and integration checks → Run workflow** where available and permitted. That workflow compiles the WPF host and Go engine, validates CI-only Python audit logic, and produces an Inno Setup test installer. The Strix executable and System Sanitizer are not bundled.
 
 For detailed environment, provenance, verification and packaging requirements, consult the [build blueprint](docs/BUILD_BLUEPRINT.md), [test evidence](docs/TEST_EVIDENCE.md) and [release gates](docs/RELEASE-GATES.md). Do not assume an older draft installer corresponds to the latest `main` commit.
 
@@ -145,9 +139,9 @@ These are **component checks**, not a substitute for a Windows desktop build, cl
 
 ### First use and safety
 
-Choose the relevant module, select a target you own or are authorized to inspect, run an inspection and review the findings before requesting any changes. Remote repository scans require network access; supported local analysis does not need an external scanning service.
+Routine RepoScan analysis is non-executing. The optional Strix adapter instead runs an autonomous security agent against a temporary copy of a local source directory and requires an explicit per-run confirmation. Strix needs Docker and a local AI model; a local AI endpoint does not prevent the Docker sandbox from making other network requests. Use only an owned test project on a disposable, unprivileged machine. No Strix software or model is downloaded by the Suite.
 
-The suite does not execute downloaded repository code as part of routine scanning. Never treat a clean heuristic result as proof of safety. Existing antivirus protection should remain enabled. User-scoped quarantine is not equivalent to kernel-level malware isolation, and destructive actions require deliberate review and confirmation.
+Never treat a clean heuristic result or a Strix run without validated findings as proof of safety. Keep the existing Windows antivirus enabled. The old Sanitizer vault and its data are not migrated or deleted; use the separate historical recovery procedures if you have prior quarantined files.
 
 Unsigned development builds may produce Microsoft SmartScreen or antivirus reputation warnings; signing and reputation verification remain open release work.
 
@@ -160,11 +154,13 @@ Checked items refer to **implemented functionality with the repository's recorde
 - [x] **Native integration shell:** WPF desktop host and WebView2 scanner integration built and exercised in recorded Windows CI.
 - [x] **Repository inspection:** Go scanner and 95-rule inventory covered by recorded automated tests.
 - [x] **Local audit preview:** Redacted Python report workflow with explicit incomplete result states.
-- [x] **Sanitizer source consolidation:** Original 42-file source snapshot vendored into the suite without a Git submodule; verified in [consolidation audit](docs/REPOSITORY_CONSOLIDATION_2026-11-18.md).
+- [x] **Legacy source preservation:** Original Sanitizer 42-file source tree remains archived in this repository, but is no longer a product module on the feature branch.
 - [x] **Antivirus coexistence indicator:** Windows Security Center status handling covered by recorded [AV-001 CI](docs/AV_001_ANTIVIRUS_COVERAGE.md).
-- [x] **Windows packaging in CI:** Unsigned Inno test installer and synthetic installed-app checks recorded in the engineering evidence.
+- [x] **Historical Windows packaging evidence:** Previous unsigned Inno test installer and synthetic checks passed on older code, not this feature branch.
+- [ ] **Strix integration:** New opt-in code and regression tests pending Windows CI, installed-CLI verification, and independent sandbox review.
+- [ ] **Sanitizer removal regression:** New installer must be checked to contain neither the Sanitizer executable nor its navigation.
 - [ ] **Independent Windows acceptance:** Clean Windows 10/11 installation, actual DPI, taskbar/icon and accessibility checks.
-- [ ] **Historical data validation:** Verify recovery of genuine legacy encrypted quarantine/vault data.
+- [ ] **Historical data safeguard:** Preserve legacy quarantine/vault data outside the new installation; no deletion or migration is authorized.
 - [ ] **Browser acceptance:** Clean-profile Chrome extension testing and normal install/uninstall behavior.
 - [ ] **W.H.I.T.E. capability parity:** Reconcile unrecovered historical detection behavior and missing offline dependency CVE/SCA.
 - [ ] **Repository retirement clearance:** Independently archive the legacy Sanitizer Git history and security-held draft release before the owner considers deletion.
@@ -178,7 +174,7 @@ Checked items refer to **implemented functionality with the repository's recorde
 
 ## <img src="art/readme-icons/acknowledgements.svg" width="24" height="24" alt="" /> Acknowledgements
 
-This suite incorporates the Ohana Tech Solutions repository scanning codebase and the original OTS System Sanitizer source, with its own documentation, notices and component-specific licensing. The replacement W.H.I.T.E. auditor is new in-repository code, **not** a restored copy of the deleted historical codebase. Third-party components, including those packaged with the scanner and Windows tooling, retain their respective legal notices; review the repository's component notices and [source provenance](docs/REPOSITORY_CONSOLIDATION_2026-11-18.md) before redistribution.
+This suite ships Ohana Tech Solutions repository scanning code; historical System Sanitizer source remains preserved but is not part of the current application distribution. The optional Strix integration uses a separately installed, user-maintained third-party CLI under its own Apache-2.0 license. The replacement W.H.I.T.E. auditor is new in-repository code, **not** a restored copy of the deleted historical codebase. Third-party components, including those packaged with the scanner and Windows tooling, retain their respective legal notices; review the repository's component notices and [source provenance](docs/REPOSITORY_CONSOLIDATION_2026-11-18.md) before redistribution.
 
 ---
 

@@ -32,6 +32,9 @@ var cases = new (string Name, Func<Task> Action)[]
     ("network profile status distinguishes default-allow from disabled", NetworkStatusPolicyWarnings),
     ("firewall rule hints identify duplicate and opposite rules without precedence claims", FirewallRuleOverlapHints),
     ("event history keeps Windows-owned actions distinct from detection", WindowsActivityClassification),
+    ("Strix rejects nonlocal model endpoints and missing executable", StrixLocalPolicyRejectsRemote),
+    ("Strix forces local model routing and removes paid keys", StrixCommandHasLocalBudget),
+    ("Strix copies bounded local source without modifying originals", StrixSnapshotIsDisposable),
 };
 int passed = 0;
 foreach (var (name, action) in cases)
@@ -522,6 +525,113 @@ static Task WhiteImportRejectsUnsafe()
         catch (InvalidDataException) { }
     }
     finally { File.Delete(path); }
+    return Task.CompletedTask;
+}
+
+static Task StrixLocalPolicyRejectsRemote()
+{
+    var root = Path.Combine(Path.GetTempPath(), "ots-strix-qa-" + Guid.NewGuid().ToString("N"));
+    Directory.CreateDirectory(root);
+    try
+    {
+        string cli = Path.Combine(root, "strix.exe");
+        string src = Path.Combine(root, "sample");
+        Directory.CreateDirectory(src);
+        File.WriteAllText(cli, "SYNTHETIC TEST EXECUTABLE; NEVER RUN");
+        var valid = StrixSafety.Validate(cli, src, "openai/local-test-model", "http://127.0.0.1:11434/v1");
+        Assert(valid.SourceDirectory == src, "Validated source path must be unchanged");
+        foreach (var endpoint in new[] {
+            "https://api.openai.com/v1", "http://example.com/v1",
+            "http://localhost:11434/v1", "http://127.0.0.1:11434/v1?token=x",
+            "http://user:pass@127.0.0.1:11434/v1", "file:///tmp/host"
+        })
+        {
+            try { StrixSafety.Validate(cli, src, "openai/local-test-model", endpoint);
+                throw new Exception("Accepted nonlocal or credential-bearing model endpoint: " + endpoint); }
+            catch (ArgumentException) { }
+        }
+        try { StrixSafety.Validate(cli, src, "openrouter/cloud-model", valid.LocalEndpoint);
+            throw new Exception("Accepted a nonlocal model-provider prefix"); }
+        catch (ArgumentException) { }
+        try { StrixSafety.Validate(Path.Combine(root, "not-present.exe"), src, "openai/local", valid.LocalEndpoint);
+            throw new Exception("Accepted a missing Strix CLI"); }
+        catch (ArgumentException) { }
+    }
+    finally { Directory.Delete(root, recursive: true); }
+    return Task.CompletedTask;
+}
+
+static Task StrixCommandHasLocalBudget()
+{
+    var root = Path.Combine(Path.GetTempPath(), "ots-strix-qa-" + Guid.NewGuid().ToString("N"));
+    Directory.CreateDirectory(root);
+    string? oldKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+    try
+    {
+        string cli = Path.Combine(root, "strix.exe");
+        string src = Path.Combine(root, "sample");
+        Directory.CreateDirectory(src);
+        File.WriteAllText(cli, "SYNTHETIC; NEVER EXECUTE");
+        Environment.SetEnvironmentVariable("OPENAI_API_KEY", "SYNTHETIC_PAID_KEY");
+        var validated = StrixSafety.Validate(cli, src, "openai/local", "http://127.0.0.1:11434/v1");
+        var info = StrixSafety.CreateStartInfo(validated, root, src, Path.Combine(root, "config.json"));
+        var args = info.ArgumentList.ToArray();
+        Assert(!info.UseShellExecute && info.RedirectStandardOutput && info.RedirectStandardError,
+            "Strix subprocess must not go through a shell or expose stdout/stderr to the UI");
+        Assert(args.Contains("-n") && args.Contains("--config") && args.Contains("--scan-mode") &&
+            args.Contains("quick"), "Expected bounded, configured non-interactive run");
+        int budget = Array.IndexOf(args, "--max-budget");
+        Assert(budget >= 0 && args[budget + 1] == "1", "Local-only scan must have a bounded internal budget");
+        Assert(!info.Environment.ContainsKey("OPENAI_API_KEY"),
+            "Inherited paid-model credentials were passed to Strix");
+        Assert(info.Environment["LLM_API_KEY"] == "local-only" &&
+            info.Environment["LLM_API_BASE"] == validated.LocalEndpoint,
+            "Strix must only receive local model connection information");
+        Assert(info.Environment["STRIX_TELEMETRY"] == "0", "Telemetry must be disabled");
+        Assert(info.Environment["DEDUPE_LLM_API_BASE"] == validated.LocalEndpoint, "Dedupe model must be local");
+        Assert(info.Environment["STRIX_LLM_INPUT_COST_PER_MTOK"] == "0", "Local model must have zero monetary unit price");
+    }
+    finally
+    {
+        Environment.SetEnvironmentVariable("OPENAI_API_KEY", oldKey);
+        Directory.Delete(root, recursive: true);
+    }
+    return Task.CompletedTask;
+}
+
+static Task StrixSnapshotIsDisposable()
+{
+    var root = Path.Combine(Path.GetTempPath(), "ots-strix-qa-" + Guid.NewGuid().ToString("N"));
+    string source = Path.Combine(root, "owned");
+    string copy = Path.Combine(root, "run", "source-copy");
+    Directory.CreateDirectory(source);
+    try
+    {
+        Directory.CreateDirectory(Path.Combine(source, ".git"));
+        Directory.CreateDirectory(Path.Combine(source, "subdir"));
+        File.WriteAllText(Path.Combine(source, ".git", "config"), "DO NOT COPY");
+        File.WriteAllText(Path.Combine(source, "subdir", "app.cs"), "OWNED FIXTURE");
+        File.WriteAllText(Path.Combine(source, ".env"), "SYNTHETIC_SECRET=SHOULD_NOT_COPY");
+        File.WriteAllText(Path.Combine(source, "subdir", "id_rsa"), "SYNTHETIC_SSH_KEY");
+        try { StrixSafety.CopySnapshot(source, Path.Combine(source, "inside"), CancellationToken.None);
+            throw new Exception("Accepted an overlapping Strix workspace"); }
+        catch (IOException) { }
+        StrixSafety.CopySnapshot(source, copy, CancellationToken.None);
+        Assert(File.ReadAllText(Path.Combine(copy, "subdir", "app.cs")) == "OWNED FIXTURE",
+            "Source fixture was not copied");
+        Assert(!Directory.Exists(Path.Combine(copy, ".git")), "Git history/secrets were copied to Strix");
+        Assert(!File.Exists(Path.Combine(copy, ".env")), "Environment credentials were copied");
+        Assert(!File.Exists(Path.Combine(copy, "subdir", "id_rsa")), "SSH credentials were copied");
+        File.WriteAllText(Path.Combine(copy, "subdir", "app.cs"), "SANDBOX MODIFICATION");
+        Assert(File.ReadAllText(Path.Combine(source, "subdir", "app.cs")) == "OWNED FIXTURE",
+            "Changing the Strix workspace modified the original source");
+        using (var file = File.Create(Path.Combine(source, "too-large.bin")))
+            file.SetLength(21L * 1024 * 1024);
+        try { StrixSafety.CopySnapshot(source, Path.Combine(root, "second-copy"), CancellationToken.None);
+            throw new Exception("Accepted a file over the snapshot size limit"); }
+        catch (IOException) { }
+    }
+    finally { Directory.Delete(root, recursive: true); }
     return Task.CompletedTask;
 }
 

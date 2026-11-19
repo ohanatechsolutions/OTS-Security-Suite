@@ -55,6 +55,34 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertNotIn('bundle/engines/OTSWhiteAudit.exe', ci)
         self.assertIn('dist/OTSWhiteAudit.exe', ci)
 
+    def test_sanitizer_is_no_longer_in_the_shipped_host(self):
+        xaml = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml').read_text(encoding='utf-8')
+        code = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml.cs').read_text(encoding='utf-8')
+        project = (ROOT/'src/OTSSecuritySuite.Desktop/OTSSecuritySuite.Desktop.csproj').read_text(encoding='utf-8')
+        ci = (ROOT/'.github/workflows/windows-build.yml').read_text(encoding='utf-8')
+        for forbidden in ('CleanupPanel', 'CleanupTab', 'OpenSanitizer', 'QuarantineItems'):
+            self.assertNotIn(forbidden, xaml)
+        for forbidden in ('OTSSystemSanitizer.Core', 'CleanupService', 'ThreatScanner', 'QuarantineVaultRegistry'):
+            self.assertNotIn(forbidden, code)
+        self.assertNotIn('ProjectReference Include="..\\..\\modules\\OTS_System_Sanitizer', project)
+        self.assertIn('Compile Remove="QuarantineVaultRegistry.cs"', project)
+        self.assertNotIn('bundle/engines/OTSSystemSanitizer.exe', ci)
+        self.assertNotIn('dotnet publish modules/OTS_System_Sanitizer/src/OTSSystemSanitizer.Desktop', ci)
+
+    def test_strix_requires_explicit_local_configuration(self):
+        xaml = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml').read_text(encoding='utf-8')
+        code = (ROOT/'src/OTSSecuritySuite.Desktop/MainWindow.xaml.cs').read_text(encoding='utf-8')
+        runner = (ROOT/'src/OTSSecuritySuite.Desktop/StrixIntegration.cs').read_text(encoding='utf-8')
+        self.assertIn('Name="StrixPanel"', xaml)
+        self.assertIn('Name="StrixAuthorization"', xaml)
+        self.assertIn('Click="RunStrix"', xaml)
+        self.assertIn('StrixSafety.Validate', code)
+        self.assertIn('MessageBoxButton.YesNo', code)
+        for control in ('IPAddress.IsLoopback', 'CopySnapshot', 'ProcessStartInfo', 'UseShellExecute = false',
+                        'STRIX_TELEMETRY', '--max-budget", "1"', 'CancelAfter(TimeSpan.FromMinutes(30))'):
+            self.assertIn(control, runner)
+        self.assertNotIn('curl -sSL', runner, 'The installer must never download or execute a remote install script')
+
     def test_sanitizer_retirement_tool_is_fail_closed(self):
         text = (ROOT/'tools/backup-retiring-sanitizer.ps1').read_text(encoding='utf-8')
         required = ('git clone --mirror', 'bundle create', 'bundle verify',
