@@ -2,7 +2,7 @@ import json
 import subprocess
 import unittest
 from pathlib import Path
-from xml.etree import ElementTree
+from xml.etree import ElementTree  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml -- only trusted, committed XAML fixture files are parsed by this test
 ROOT = Path(__file__).resolve().parents[1]
 class ReleaseManifestTests(unittest.TestCase):
     def test_windows_icon_is_source_configured(self):
