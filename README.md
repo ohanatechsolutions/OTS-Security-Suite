@@ -1,3 +1,7 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
+  <img alt="OTS Security Suite" src="art/header-light.png">
+</picture>
 > **2026-11-18 repository retirement clearance:** The original W.H.I.T.E. repo is already inaccessible (404). The old System Sanitizer repo is **NOT YET SAFE TO DELETE** despite an exact source snapshot in the Suite. Its historical Git refs and unpublished security-held draft release still require a local encrypted backup, independent restore/asset verification, historical secret review and owner acceptance. Use the [retirement runbook and fail-closed PowerShell archive tool](docs/SANITIZER_REPO_RETIREMENT_2026-11-18.md). Do not commit the backup or draft installer here.
 
 > **2026-11-18 RepoScan consolidation candidate (REQ-REPOSCAN-001):** RepoScan replaces the separate W.H.I.T.E. UI and packaged executable. The legacy source/history auditing code remains **internal CI-only** until RepoScan parity is demonstrated. Dedicated SAST, deep Git history and offline CVE/SCA are not yet fully replaced. This is a development branch, not a new published installer. See [retirement plan](docs/REPOSCAN_RETIREMENT_2026-11-18.md).
