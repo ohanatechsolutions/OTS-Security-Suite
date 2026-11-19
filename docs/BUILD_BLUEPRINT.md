@@ -1,3 +1,4 @@
+> **2026-11-18 approved scope supersession, feature branch (NOT VERIFIED):** The older specification below is a historical baseline. Current target removes OTS System Sanitizer from the shipped Windows application and adds separately installed, opt-in local Strix for authorized autonomous testing. The updated product scope, security boundaries and test gates are documented in [STRIX-001](STRIX_INTEGRATION.md) and [PROJECT_STATUS](PROJECT_STATUS.md). Historical Sanitizer source remains preserved, not bundled. Do not treat the retired cleanup/quarantine requirements below as current product requirements; all legacy data-preservation requirements remain applicable. Windows build and runtime tests for this branch have NOT RUN.
 # OTS Security Suite — Build Blueprint (working specification)
 
 **Project:** OTS Security Suite (Ohana Tech Solutions)  
