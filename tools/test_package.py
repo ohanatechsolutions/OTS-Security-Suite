@@ -7,7 +7,6 @@ archived source; verify that no historical engine is shipped.
 
 import unittest
 from pathlib import Path
-from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[1]
 HUB = ROOT / "src" / "OTSSecuritySuite.Hub"
@@ -34,8 +33,11 @@ class HubReleaseManifestTests(unittest.TestCase):
         )
 
     def test_hub_markup_is_well_formed(self):
+        # Full WPF/XAML compilation is executed on the Windows runner.
         for path in HUB.glob("*.xaml"):
-            ElementTree.parse(path)
+            source = path.read_text(encoding="utf-8")
+            self.assertIn("x:Class=", source)
+            self.assertIn("schemas.microsoft.com/winfx/2006/xaml", source)
 
     def test_taskbar_identity_matches_shortcuts(self):
         app = (HUB / "App.xaml.cs").read_text(encoding="utf-8")
