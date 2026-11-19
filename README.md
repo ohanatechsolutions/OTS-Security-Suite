@@ -40,8 +40,8 @@ Security practitioners already use reliable open-source cybersecurity tools. The
 | Code & Supply Chain | **TruffleHog** | Connects to installed `trufflehog.exe`, displays official CLI help |
 | Code & Supply Chain | **OSV-Scanner** | Connects to installed `osv-scanner.exe`, displays official CLI help |
 | Code & Supply Chain | **Semgrep Community Edition** | Connects to installed `semgrep.exe`, displays official CLI help |
-| AI & Agent Security | **NVIDIA SkillSpector** | Official upstream docs; runtime/platform checks still required |
-| Authorized Penetration Testing | **Strix** | Official upstream docs; no automatic autonomous execution |
+| AI & Agent Security | **NVIDIA SkillSpector** | Connects to installed `skillspector.exe` for local CLI help; runtime/platform checks still required |
+| Authorized Penetration Testing | **Strix** | Connects to installed `strix.exe` for local CLI help; no automatic autonomous execution |
 
 Each tool has an independent project link in the actual interface; source references and licensing/feasibility caveats are documented in [the hub decision log](docs/THIRD_PARTY_HUB_DECISION.md).
 
