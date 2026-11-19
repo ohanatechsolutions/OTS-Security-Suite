@@ -26,8 +26,8 @@
 | TruffleHog | Secret scanning | https://github.com/trufflesecurity/trufflehog | Local CLI --help |
 | OSV-Scanner | Dependency vulnerabilities | https://github.com/google/osv-scanner | Local CLI --help |
 | Semgrep CE | SAST | https://semgrep.dev/products/community-edition/ | Local CLI --help; verify license/rule terms |
-| NVIDIA SkillSpector | AI skill security | https://github.com/NVIDIA/SkillSpector | Docs only pending Windows/provider validation |
-| Strix | Opt-in penetration testing | https://github.com/usestrix/strix | Docs only; no autonomous agent runtime shipped |
+| NVIDIA SkillSpector | AI skill security | https://github.com/NVIDIA/SkillSpector | CLI help only, pending Windows/provider validation |
+| Strix | Opt-in penetration testing | https://github.com/usestrix/strix | Local CLI help only; no autonomous agent runtime shipped |
 
 **Deferred/not installed:** LOKI-RS (the later selection excluded it), separate OpenShell/CC Safety Net, general cloud tools and paid/freemium SaaS vendors. Reassess on an independent license, security, and overlap review. Do not infer that a project being open-source guarantees an unchanged free distribution arrangement in the future.
 
