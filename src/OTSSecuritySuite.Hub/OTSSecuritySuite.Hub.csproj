@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>OTSSecuritySuite</AssemblyName>
+    <RootNamespace>OTSSecuritySuite.Hub</RootNamespace>
+    <ApplicationIcon>../OTSSecuritySuite.Desktop/AppIcon.ico</ApplicationIcon>
+    <Company>Ohana Tech Solutions</Company>
+    <Product>OTS Security Suite — Third-Party Tool Hub</Product>
+    <Version>0.10.0</Version>
+    <Description>Local launchpad for independently installed cybersecurity tools.</Description>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="../OTSSecuritySuite.Desktop/AppIcon.ico" Link="AppIcon.ico" />
+    <Resource Include="../OTSSecuritySuite.Desktop/OhanaLogo.png" Link="OhanaLogo.png" />
+  </ItemGroup>
+</Project>
