@@ -1,3 +1,10 @@
+## Unreleased — 2026-11-18 Strix optional module and product scope revision (feature branch)
+
+- Added an explicitly authorized Strix tab and local-only CLI adapter with a bounded, disposable source-code snapshot; external Strix CLI, Docker and model server are user-installed, not shipped.
+- Configured loopback-only LLM endpoints, isolated child environment without paid API keys, 30-minute runtime limit, cancellation and local report handling. Docker network isolation and Strix version compatibility are not yet validated.
+- Removed OTS System Sanitizer from the shipped WPF interface, production project reference and Windows installer packaging; preserved historical vendored source and any existing quarantined data.
+- Added synthetic Strix policy/snapshot tests and installer absence checks. Tests and Windows CI have NOT RUN for this branch; no new test installer is available.
+- Release remains NO-GO pending Windows CI, isolated authorized Strix runtime QA, privacy/security review, upstream license review, and explicit owner release approval.
 ## Unreleased — 2026-11-18 source consolidation
 
 - Vendored the exact System Sanitizer `main` source tree into the suite; dropped dependency on its standalone Git repository.
