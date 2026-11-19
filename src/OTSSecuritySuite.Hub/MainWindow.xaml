@@ -1,0 +1,111 @@
+<Window x:Class="OTSSecuritySuite.Hub.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OTS Security Suite · Third-Party Cybersecurity Hub"
+        Icon="AppIcon.ico" Width="1300" Height="800" MinWidth="900" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Loaded="OnWindowLoaded" Closing="OnWindowClosing">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="106"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="45"/>
+    </Grid.RowDefinitions>
+    <Border Background="#0E2234" BorderBrush="#17466B" BorderThickness="0,0,0,1">
+      <DockPanel Margin="24,12">
+        <Image Source="OhanaLogo.png" Width="82" Height="73" Stretch="Uniform"
+               DockPanel.Dock="Left" Margin="0,0,15,0"/>
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="OTS SECURITY SUITE" FontSize="25" FontWeight="Bold" Foreground="#FFFFFF"/>
+          <TextBlock Text="YOUR CYBERSECURITY SWISS ARMY KNIFE. ONE SUITE. EVERY TOOL. EVERY DEFENSE."
+                     FontSize="11" Foreground="#9CCDEA" Margin="0,3,0,0"/>
+          <TextBlock Text="Independent third-party tools · Original applications · No bundled scanners"
+                     FontSize="12" Foreground="#C6DBEC" Margin="0,7,0,0"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="278"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Border Grid.Column="0" Background="#0A1A29" BorderBrush="#214C6C" BorderThickness="0,0,1,0">
+        <DockPanel Margin="14,15,10,14">
+          <TextBlock DockPanel.Dock="Top" Text="UPSTREAM SECURITY TOOLS" Foreground="#8FBDE0"
+                     FontWeight="Bold" FontSize="12" Margin="8,0,0,14"/>
+          <TextBlock DockPanel.Dock="Bottom" Text="Choose a tool to connect or open its official project. No third-party program is installed automatically."
+                     TextWrapping="Wrap" FontSize="12" Foreground="#A5B8CB" Padding="8,12"/>
+          <ListBox Name="ToolList" SelectionChanged="SelectTool" BorderThickness="0"
+                   Background="#0A1A29" Foreground="#EDF7FF" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Margin="7,8,4,8">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"
+                             TextWrapping="Wrap" Foreground="#E8F3FF"/>
+                  <TextBlock Text="{Binding Category}" FontSize="11" Foreground="#91B4D0"
+                             Margin="0,3,0,0" TextWrapping="Wrap"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+      <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,36,20">
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Border Width="72" Height="72" CornerRadius="12" Background="#142E45"
+                    BorderBrush="#3C7198" BorderThickness="1" Padding="8" Margin="0,0,20,0">
+              <Grid>
+                <TextBlock Name="FallbackMark" Text="◈" Foreground="#9BBFDC" FontSize="35"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Image Name="NativeIcon" Visibility="Collapsed" Stretch="Uniform"/>
+              </Grid>
+            </Border>
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Name="SelectedName" FontSize="28" FontWeight="Bold" Foreground="#F1F9FF"
+                         TextWrapping="Wrap"/>
+              <TextBlock Name="SelectedCategory" FontSize="12" Foreground="#8EBEDC" Margin="0,5,0,0"/>
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Name="SelectedPurpose" FontSize="16" TextWrapping="Wrap"
+                     Foreground="#D1E1EE" Margin="0,20,0,16"/>
+          <Border Background="#102B40" BorderBrush="#306A90" BorderThickness="1" CornerRadius="9" Padding="16">
+            <StackPanel>
+              <TextBlock Text="INSTALLATION / CONNECTION" FontSize="12" FontWeight="Bold" Foreground="#9DCAE7"/>
+              <TextBlock Name="ConnectionStatus" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap"
+                         Foreground="White" Margin="0,7,0,0"/>
+              <TextBlock Name="ExecutablePath" FontSize="12" Foreground="#A8C4DA"
+                         TextWrapping="Wrap" Margin="0,6,0,0"/>
+            </StackPanel>
+          </Border>
+          <TextBlock Text="USE THE ORIGINAL TOOL" FontSize="12" FontWeight="Bold"
+                     Foreground="#9DCAE7" Margin="0,26,0,11"/>
+          <WrapPanel>
+            <Button Name="OpenButton" Content="OPEN ORIGINAL APPLICATION" Click="OpenTool"/>
+            <Button Name="HelpButton" Content="SHOW ORIGINAL CLI HELP" Click="ShowHelp"/>
+            <Button Name="LocateButton" Content="CONNECT INSTALLED .EXE" Click="ChooseExecutable"/>
+            <Button Name="UnlinkButton" Content="FORGET CONNECTION" Click="ForgetExecutable"/>
+            <Button Content="OFFICIAL WEBSITE / SOURCE" Click="OpenOfficial"/>
+            <Button Content="REFRESH" Click="RefreshTool"/>
+          </WrapPanel>
+          <TextBlock Name="SelectedSafety" FontSize="13" Foreground="#E0C58E"
+                     TextWrapping="Wrap" Margin="0,10,0,16"/>
+          <TextBlock Text="Upstream interface guarantee" FontSize="12" FontWeight="Bold" Foreground="#97BED9"/>
+          <TextBlock Name="InterfaceNote" FontSize="13" Foreground="#B9CDD9"
+                     TextWrapping="Wrap" Margin="0,6,0,15"/>
+          <TextBlock Name="ActionStatus" FontSize="13" Foreground="#AFCBDE" TextWrapping="Wrap"/>
+          <TextBox Name="HelpOutput" Visibility="Collapsed" IsReadOnly="True"
+                   TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="220"
+                   Background="#071622" Foreground="#D7ECF9" BorderBrush="#3C7198"
+                   FontFamily="Consolas" FontSize="12" Margin="0,12,0,0" Padding="10"/>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <Border Grid.Row="2" Background="#0E2234" BorderBrush="#17466B" BorderThickness="0,1,0,0">
+      <DockPanel Margin="22,10">
+        <TextBlock Text="HUB PREVIEW · NO AUTO-INSTALLS · NO AUTOMATIC SCANS, CLEANUP OR PRIVILEGE CHANGES"
+                   Foreground="#9EB9D0" FontSize="11"/>
+      </DockPanel>
+    </Border>
+  </Grid>
+</Window>
