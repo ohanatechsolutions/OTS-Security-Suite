@@ -393,7 +393,7 @@ public partial class MainWindow : Window
             StrixReportsButton.IsEnabled = Directory.Exists(result.ReportsDirectory);
             StrixStatus.Text = result.ExitCode switch
             {
-                0 => "Strix finished without a validated finding in this run. This is NOT proof that the target is secure.",
+                0 => "Strix exited with code 0. Inspect run.json for completion, findings and any budget limits; the target is NOT certified secure.",
                 2 => "Strix reported at least one finding. Review the local run report before drawing conclusions.",
                 _ => $"Strix ended with exit code {result.ExitCode}; the assessment is incomplete or failed."
             };
