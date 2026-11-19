@@ -1,3 +1,5 @@
+> **NEW TOOLING SCOPE — Strix stays optional:** The previous Strix WPF adapter and its scoped tests remain genuine evidence. The latest architecture retires the accompanying custom RepoScan engine. The Strix adapter may be reused in the external-tools-only hub after revalidation. Actual Docker containment and local LLM runtime are still BLOCKED. See [TOOLING_DECISIONS.md](TOOLING_DECISIONS.md).
+
 # STRIX-001 — Optional local-only Strix integration (IN PROGRESS)
 
 Date: November 18, 2026. Repository branch: feature/strix-local-opt-in-no-sanitizer.

@@ -1,9 +1,15 @@
-## Unreleased — 0.10.0 third-party hub migration (NOT YET QA-APPROVED)
-- Replaced the shipped product scope with a vendor-owned cybersecurity tool catalog and genuine upstream GUI/CLI launcher.
-- New Windows WPF hub project that does not build or bundle RepoScan, OTS White, Sanitizer, Firewall79X or legacy browser extension.
-- Added allowlisted executable/PE header validation, real C# negative/positive smoke tests, user-local path preferences, 10-second bounded CLI help, and original executable icon display. Strix/SkillSpector may be connected for CLI help only.
-- Added installer cleanup for known obsolete installed scanner assets without deleting historical source/vault data.
-- Added separate Windows CI build, third-party-only contract tests and installer smoke checks. Results pending.
+## Unreleased — 0.10.0 third-party-tool hub preview (2026-11-18 HST)
+- Implemented a separate native WPF hub for 14 selected external cybersecurity projects with per-tool navigation and original upstream links. Windows Security launches natively; KopiaUI launches its actual GUI; connected CLI tools provide bounded `--help` only (no automated scans).
+- Removed legacy OTS RepoScan/W.H.I.T.E./Sanitizer/Firewall79X from the **build and installer**; preserved source history and quarantine data. Same AppId upgrade removes only known obsolete app-install assets and local protocol registration.
+- Added local executable filename/PE validation, per-user path preferences, real icon extraction, C# safety tests and Python packaging tests.
+- Windows QA and universal security successful for reviewed candidate; installer remains an **unsigned owner QA artifact**, not a signed production release. True vendor engine execution and independent Windows/upgrade verification remain incomplete.
+
+## Unreleased — 2026-11-18 external-tool strategy and documentation reconciliation
+
+- Recorded the new owner-directed **external security engines only** target and retirement of old OTS detector programs.
+- Added [tool decision register](docs/TOOLING_DECISIONS.md), [implementation roadmap](docs/IMPLEMENTATION_ROADMAP.md), [documentation index](docs/README.md).
+- Reconciled README, status, dependency inventory, release gates and historical QA documentation to distinguish target tools from existing compiled code.
+- This is documentation-only: **no engine replaced, tool installed, new binary built or release approved**. Legacy RepoScan in current shipped code remains a P0 migration blocker.
 
 ## Unreleased — 2026-11-18 Strix optional module and product scope revision (feature branch)
 

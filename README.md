@@ -2,82 +2,93 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="art/SecuritySuite-header-dark.png" />
     <source media="(prefers-color-scheme: light)" srcset="art/SecuritySuite-header-light.png" />
-    <img src="art/SecuritySuite-header-light.png" width="100%" alt="OTS Security Suite banner" />
+    <img src="art/SecuritySuite-header-light.png" width="100%" alt="OTS Security Suite original branded banner" />
   </picture>
 </p>
 
 # OTS Security Suite
 
-<p align="center"><strong>Your Cybersecurity Swiss Army Knife. One Suite. Every Tool. Every Defense.</strong></p>
+<p align="center"><strong>One Windows hub. Proven external security engines. No required subscription.</strong></p>
 
-<p align="center">A Windows launch hub for independently installed third-party security programs. Not another proprietary malware scanner.</p>
+<p align="center">A modular Windows security-tool workspace by <strong>Ohana Tech Solutions</strong>. The next version is a hub for previously reviewed free cybersecurity tools, rather than another in-house malware scanner.</p>
 
-<p align="center"><img src="https://img.shields.io/badge/STATUS-UPSTREAM_HUB_QA-025E91?style=for-the-badge" alt="QA in progress" /> <img src="https://img.shields.io/badge/WINDOWS-10%2F11_X64-025E91?style=for-the-badge" alt="Windows 10/11 x64" /> <img src="https://img.shields.io/badge/NO_PAID_DEPENDENCIES-REQUIRED-025E91?style=for-the-badge" alt="No paid dependencies required" /></p>
+<p align="center"><img src="https://img.shields.io/badge/STATUS-EXTERNAL_TOOL_MIGRATION-025E91?style=for-the-badge" alt="Status: external-tool migration" /> <img src="https://img.shields.io/badge/TARGET-WINDOWS_10%2F11_X64-025E91?style=for-the-badge" alt="Windows 10/11 x64" /> <img src="https://img.shields.io/badge/REQUIRED_SUBSCRIPTIONS-%240-025E91?style=for-the-badge" alt="No mandatory subscription" /></p>
 
-> **Corrected scope, November 18, 2026:** Older **v0.9.0-test.5** and earlier installers ship our retired RepoScan-centered interface. **Do not use those installers to judge the new product.** This new hub is being built on [the upstream-hub feature branch](https://github.com/ohanatechsolutions/OTS-Security-Suite/tree/feature/upstream-security-tool-hub-20261118). The hub is **not production-approved**; a new downloadable installer is valid only if its own Windows CI and package inspection pass.
+> **November 18, 2026 product decision and engineering update:** The owner has directed the Suite to **replace the old OTS-built detection engines** (RepoScan, W.H.I.T.E., System Sanitizer and Firewall79X) with reviewed external tools. **The new 0.10.0 source builds a third-party-only Windows hub; the previously published 0.9.x installers still launch the retired RepoScan engine and must not be used as the new product. Full upstream scanner integration remains incomplete.** Earlier green CI runs and test-prerelease installers relate to the former implementation, not the new target stack. Current decisions: [Tool register](docs/TOOLING_DECISIONS.md), [migration roadmap](docs/IMPLEMENTATION_ROADMAP.md), [documentation index](docs/README.md). Production release remains **NO-GO**.
 
-## Why This Exists · Problem, Purpose, Solution
+### What the new app actually does
 
-Security practitioners already use reliable open-source cybersecurity tools. The problem is jumping between disparate native programs, documentation and command-line workflows. This project **does not recreate or replace those engines**. It provides a single index for the selected original tools, preserves their real native experiences when available, and visibly distinguishes installed, unconnected and manual-only modules.
-
-| The problem | The purpose | The solution |
-|---|---|---|
-| Scattered third-party security applications and inconsistent launch paths | Keep an organized, free, local hub without claiming to reinvent security products | Per-tool Windows pages with official upstream links, explicit executable connections, and safe launch or CLI-help options |
-
-## Selected Upstream Tool Catalog
-
-| Category | Program | Integration in the hub |
-|---|---|---|
-| Endpoint Protection | **Microsoft Defender / Windows Security** | Opens Windows' actual Security interface. Never installs or disables AV |
-| Endpoint Protection | **ClamAV** | Connects to installed `clamscan.exe`, displays official CLI help |
-| Endpoint Protection | **YARA-X** | Connects to installed `yr.exe`, displays official CLI help |
-| Endpoint Visibility | **osquery** | Connects to installed `osqueryi.exe`, displays official CLI help |
-| Backup & Recovery | **KopiaUI** | Launches the original installed Kopia graphical application |
-| Incident Investigation | **Hayabusa** | Connects to installed `hayabusa.exe`, displays official CLI help |
-| Hardening & Telemetry | **HardeningKitty** | Official upstream docs; no elevated scripts executed |
-| Hardening & Telemetry | **Microsoft Sysmon** | Official upstream docs; no service/driver installation |
-| Incident Investigation | **PE-sieve** | Connects to installed `pe-sieve.exe`, displays official CLI help |
-| Code & Supply Chain | **TruffleHog** | Connects to installed `trufflehog.exe`, displays official CLI help |
-| Code & Supply Chain | **OSV-Scanner** | Connects to installed `osv-scanner.exe`, displays official CLI help |
-| Code & Supply Chain | **Semgrep Community Edition** | Connects to installed `semgrep.exe`, displays official CLI help |
-| AI & Agent Security | **NVIDIA SkillSpector** | Connects to installed `skillspector.exe` for local CLI help; runtime/platform checks still required |
-| Authorized Penetration Testing | **Strix** | Connects to installed `strix.exe` for local CLI help; no automatic autonomous execution |
-
-Each tool has an independent project link in the actual interface; source references and licensing/feasibility caveats are documented in [the hub decision log](docs/THIRD_PARTY_HUB_DECISION.md).
-
-**Product behavior:** No vendor executables, models, Docker images, signatures, external API keys or paid cloud services are bundled or automatically installed. A genuine GUI such as KopiaUI opens as its own program with its original windows and executable icon. A command-line tool has **no original GUI to embed**; the hub can connect to that tool's executable and show its real `--help` output, without running scans. Installed vendor icons are read from the selected binary; uninstalled tools show a neutral generic symbol, never a fabricated logo.
-
-## Explicitly Removed from the Shipped Product
-
-- **RepoScan / OTSScannerEngine:** not built or installed; no localhost web scanner or WebView2 scanner UI.
-- **OTS W.H.I.T.E.:** no standalone tab, scanning controls or Python executable.
-- **OTS System Sanitizer:** no cleanup, quarantining or old sanitizer executable.
-- **OTS Firewall79X / bespoke Network Defense:** no in-house firewall or system-modification engine.
-- **Legacy Chrome RepoScan extension and `ots-security://` protocol:** not shipped/registered by the hub.
-
-The historical code remains in Git for preservation and comparison, **not** in the application build. The upgrade installer explicitly removes known obsolete *application-installation* folders (`engines`, `extension`), but does not delete original source repositories, user profiles, reports or quarantined data.
-
-## Local Build / QA
-
-Windows 10/11 x64, .NET 10 SDK and Inno Setup 6 are needed to reproduce the packaging build. The hub itself does not require Go, Python runtime, RepoScan, Docker or a paid API.
-
-```powershell
-python -m unittest discover -s tools -p test_hub.py -v
-dotnet publish src/OTSSecuritySuite.Hub/OTSSecuritySuite.Hub.csproj -c Release -r win-x64 --self-contained true -o bundle
-& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" installer/OTS-Security-Suite.iss
-Get-FileHash artifacts/OTS-Security-Suite-Setup-x64.exe -Algorithm SHA256
-```
-
-A GitHub Windows workflow runs these checks plus installer/launch/uninstall smoke testing. A **7-day owner-test artifact** may be retained for the authorized PR after the entire job passes; a CI success does not equal independent end-user acceptance or a signed production release.
-
-## Safety and Release Gates
-
-No original upstream license is inferred to grant rights to rebundle or rebrand its executable. All upstream programs remain vendor-owned and user-managed. Do not run privileged hardening, network testing or incident-response scans automatically.
-
-The hub is an *organizer*, not a protection product. Defender and other installed antivirus products retain control of real-time protection. Manual Windows 10/11 verification, accessibility/DPI checks, actual vendor installations, publisher signing, and third-party license review remain release gates.
-
-See [hub migration](docs/THIRD_PARTY_HUB_DECISION.md), [project status](docs/PROJECT_STATUS.md), [release gates](docs/RELEASE-GATES.md) and [CI evidence](docs/TEST_EVIDENCE.md).
+The `src/OTSSecuritySuite.Hub/` Windows app has a tab for every selected third-party project, shows official vendor sources, connects allowlisted local Windows executables (with PE header checks), opens genuine Windows Security and installed KopiaUI windows, and displays local `--help` for installed upstream CLI tools. It does **not** reimplement their detectors, bundle vendor binaries, run security scans, automatically install anything or call a paid API. The older OTS scanners remain in Git history for recovery but are **not shipped** by the 0.10.0 hub installer. [Current Windows CI evidence](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44470904063) · [Security CI evidence](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44470904447). An unsigned short-lived test artifact exists; manual Windows acceptance, true tool execution and production release gates remain open.
 
 ---
 
-<p align="center">© Ohana Tech Solutions · All third-party names, icons and software belong to their respective owners.</p>
+## <img src="art/readme-icons/why.svg" width="24" height="24" alt="" /> Why This Exists — Problem, Purpose & Solution
+
+| Problem | Purpose | Solution |
+|---|---|---|
+| Antivirus, threat hunting, vulnerability checks, hardening, backup and security auditing are scattered across unrelated tools. Reimplementing them duplicates logic and risks blind spots. | Make the real coverage, limits, and current health of each security tool accessible from one Windows application. | Use a minimal launcher/orchestrator around vetted external engines, with consistent reporting, per-tool consent, scoped scanning and evidence-based release gates. |
+
+## <img src="art/readme-icons/stack.svg" width="24" height="24" alt="" /> Selected External Tool Roster
+
+These are **selected external tools with navigation in the new hub preview**; the hub does not bundle their executables or provide complete vendor scan integrations. Native vendor programs open separately and CLI vendors can show only their local help. The precise source URLs, cost/license constraints, acceptance criteria and implementation state for all 14 tools are in [TOOLING_DECISIONS.md](docs/TOOLING_DECISIONS.md).
+
+| Role | Target tools | What actually exists now |
+|---|---|---|
+| Existing endpoint antivirus and file signatures | **Microsoft Defender**, **ClamAV**, **YARA-X** | Defender passive status exists; ClamAV/YARA-X adapters not built |
+| Endpoint inventory and memory investigation | **osquery**, **PE-sieve** (optional) | Planned, not integrated |
+| Windows event investigation and hardening | **Hayabusa**, **HardeningKitty**, **Sysmon** (optional) | Planned, not integrated |
+| Optional encrypted backup/restore | **Kopia** | Planned, not integrated |
+| Repository credentials, source and dependency risks | **TruffleHog**, **Semgrep CE**, **OSV-Scanner** | CI checks configured; desktop adapters not built |
+| AI agent skill security | **NVIDIA SkillSpector** | Conditional shared CI check when skills exist |
+| Authorized autonomous penetration test | **Strix OSS CLI** (optional, locally hosted model) | Opt-in WPF adapter and synthetic tests; real Docker/model network-sandbox validation not done |
+
+**Related DevSecOps checks:** Shared CI also uses Trivy and language-specific tests/lint. Branch protection, optional isolated OWASP ZAP, a defensible agent sandbox strategy (possibly NVIDIA OpenShell), build provenance, and installer SHA-256 checks are requirements, **not automatic Suite tabs**.
+
+**Excluded from the future product:** OTS RepoScan, OTS W.H.I.T.E., OTS System Sanitizer, OTS Firewall79X, LOKI-RS, paid AI APIs, cloud-only scanners and mandatory subscriptions. Keep historical sources, release assets and any original quarantine/backup data intact. The Suite may keep a custom **UI shell**; the detection engines should be upstream reviewed tools.
+
+## <img src="art/readme-icons/workflow.svg" width="24" height="24" alt="" /> Intended Safe Workflow
+
+1. Check that the selected upstream tool is authentic, correctly versioned and compatible with the local Windows environment.
+2. Confirm ownership or authorization of a narrowly scoped target before analysis.
+3. Run read-only checks first and keep Windows Defender/Firewall in control of their own protection.
+4. Report actual completed, partial, unsupported and failed states; do not present a tool crash as a clean result.
+5. Require explicit operator authorization before service installation, telemetry, hardening changes, restore, quarantine, deletion or autonomous tests.
+6. For Strix, use a disposable authorized target with separately verified Docker network containment; a loopback LLM endpoint by itself is not a sandbox.
+
+## <img src="art/readme-icons/roadmap.svg" width="24" height="24" alt="" /> Honest Build Status
+
+| Workstream | State | Evidence / next gate |
+|---|---|---|
+| Prior WPF host | **VERIFIED historical preview** | Previous Windows CI build/smoke checks only; still depends on retired RepoScan |
+| Sanitizer product removal | **IMPLEMENTED in current host** | Unshipped old module; historical source and vaults preserved |
+| Strix local adapter | **SCOPED TESTS PASS; runtime BLOCKED** | Synthetic local-target/credential-copy tests; real Strix/Docker isolation not tested |
+| New external-tool runtime integrations | **NOT COMPLETE** | Integrate each official engine with license, fail-closed contracts, authentic Windows tests |
+| Universal DevSecOps | **CONFIGURED / verify latest runs** | Shared scanner/test workflow and OSV; no blanket PASS claim |
+| Full new product and production installer | **NO-GO** | Independent Windows 10/11 tests, licensing, security, artifacts and owner release approval pending |
+
+**Implementation priority:** [M0–M8 roadmap](docs/IMPLEMENTATION_ROADMAP.md) begins with replacing old RepoScan dependencies without deleting historical data, then adds genuine upstream tools one at a time.
+
+## <img src="art/readme-icons/installation.svg" width="24" height="24" alt="" /> Source & Development
+
+The existing repository is a **historical integration preview**, not a working installer containing the selected 14 external tools. To inspect its present source:
+
+    git clone https://github.com/ohanatechsolutions/OTS-Security-Suite.git
+    cd OTS-Security-Suite
+
+Use the existing [Windows build workflow](.github/workflows/windows-build.yml) only for scoped legacy-shell verification. Its success does **not** certify the new architecture. Do not install an older test prerelease expecting ClamAV, osquery or the other new tools.
+
+- **[Tool register](docs/TOOLING_DECISIONS.md):** current selection, explicit rejections, upstream links, status, license/cost and traceability.
+- **[Implementation roadmap](docs/IMPLEMENTATION_ROADMAP.md):** M0–M8 stages and measurable acceptance gates.
+- **[Documentation index](docs/README.md):** current versus historically superseded records.
+- **[Project status](docs/PROJECT_STATUS.md)** · **[Test evidence](docs/TEST_EVIDENCE.md)** · **[Release gates](docs/RELEASE-GATES.md):** verified historical checks and current blockers.
+- **[Strix safety](docs/STRIX_INTEGRATION.md)** · **[Dependency inventory](docs/DEPENDENCY_INVENTORY.md):** previous adapter and currently built dependencies.
+
+**Cost and legal safety:** No mandatory paid services or APIs. Upstream free/open-source code is not automatically cleared for binary/rule redistribution; every integrated version and rules license needs review. Hardware, Windows licensing, optional storage and power are separate. Never silently elevate privileges, disable Defender, download arbitrary executables, run unauthorized pentests or delete old user data. No new production release is approved.
+
+---
+
+## <img src="art/readme-icons/acknowledgements.svg" width="24" height="24" alt="" /> Acknowledgements
+
+Security engines belong to their respective upstream maintainers; retain their identity, versions, licenses, copyrights and third-party notices. OTS provides the controlled Windows integration surface and honest results, not claims to have reimplemented the tools.
+
+<p align="center"><sub>Developed by <strong>Ohana Tech Solutions</strong>. Project accent: <strong>#025E91</strong>.</sub></p>
