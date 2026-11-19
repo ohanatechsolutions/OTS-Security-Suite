@@ -6,16 +6,15 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
-using OTSSystemSanitizer.Core;
 
 namespace OTSSecuritySuite.Desktop;
 
 public partial class MainWindow : Window
 {
     private Process? _engine;
-    private CancellationTokenSource? _scanCancellation;
-    private readonly QuarantineVaultRegistry _quarantine = new();
-    private readonly HashSet<string> _reviewed = new(StringComparer.Ordinal);
+    private readonly StrixIntegration _strix = new();
+    private CancellationTokenSource? _strixCancellation;
+    private string? _strixReportsDirectory;
     private readonly string _engineDirectory = Path.Combine(AppContext.BaseDirectory, "engines");
     private string? _launchRepository;
     private bool _isClosing;
@@ -30,7 +29,6 @@ public partial class MainWindow : Window
         foreach (var arg in Environment.GetCommandLineArgs().Skip(1))
             if (TrustedProtocol.TryParse(arg, out var repo) && repo is not null)
                 _launchRepository = repo;
-        RefreshVault();
     }
 
     private async void OnWindowLoaded(object sender, RoutedEventArgs e)
@@ -161,17 +159,18 @@ public partial class MainWindow : Window
     private void OnWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         _isClosing = true;
-        _scanCancellation?.Cancel();
+        _strixCancellation?.Cancel();
+        _strix.Cancel();
         StopEngine();
     }
     private void SetPanel(Grid selected)
     {
-        foreach (var p in new[] { RepositoryPanel, SystemPanel, NetworkPanel, CleanupPanel })
+        foreach (var p in new[] { RepositoryPanel, SystemPanel, NetworkPanel, StrixPanel })
             p.Visibility = p == selected ? Visibility.Visible : Visibility.Collapsed;
     }
     private void ShowRepository(object sender, RoutedEventArgs e) => SetPanel(RepositoryPanel);
     private void ShowSystem(object sender, RoutedEventArgs e) { SetPanel(SystemPanel); UpdateAntivirusDisplay(); }
-    private void ShowCleanup(object sender, RoutedEventArgs e) { RefreshVault(); SetPanel(CleanupPanel); }
+    private void ShowStrix(object sender, RoutedEventArgs e) => SetPanel(StrixPanel);
 
     private async void ShowNetwork(object sender, RoutedEventArgs e)
     {
@@ -274,51 +273,6 @@ public partial class MainWindow : Window
 
 
 
-    private async void RunQuick(object sender, RoutedEventArgs e) => await RunSystemScan(ScanMode.Quick);
-    private async void RunDeep(object sender, RoutedEventArgs e) => await RunSystemScan(ScanMode.Deep);
-    private void CancelSystemScan(object sender, RoutedEventArgs e)
-    {
-        if (_scanCancellation is not { IsCancellationRequested: false }) return;
-        SystemStatus.Text = "Cancelling Windows inspection...";
-        SystemCancel.IsEnabled = false;
-        _scanCancellation.Cancel();
-    }
-    private async Task RunSystemScan(ScanMode mode)
-    {
-        if (!QuickButton.IsEnabled || !DeepButton.IsEnabled) return;
-        using var cancellation = new CancellationTokenSource();
-        _scanCancellation = cancellation;
-        QuickButton.IsEnabled = DeepButton.IsEnabled = false;
-        SystemCancel.IsEnabled = true;
-        SystemFindings.ItemsSource = null; // Never reuse stale findings for a new scan.
-        SystemStatus.Text = mode == ScanMode.Quick ? "Quick scan started..." : "Deep scan started...";
-        var progress = new Progress<ScanProgress>(p => { if (!_isClosing && !cancellation.IsCancellationRequested) SystemStatus.Text =
-            $"{p.Phase} · {p.Files:N0} files reviewed · {p.Skipped:N0} inaccessible"; });
-        try
-        {
-            var result = await ThreatScanner.RunAsync(mode, progress, cancellation.Token);
-            if (_isClosing) return;
-            if (result.Cancelled || cancellation.IsCancellationRequested)
-            {
-                SystemStatus.Text = $"Scan cancelled · {result.Files:N0} files reviewed before cancellation.";
-                return;
-            }
-            SystemFindings.ItemsSource = result.Findings;
-            SystemStatus.Text = $"Scan finished · {result.Files:N0} files · {result.Findings.Count} findings · " +
-                $"{result.Skipped} inaccessible · {result.Elapsed:g}";
-        }
-        catch (OperationCanceledException) { if (!_isClosing) SystemStatus.Text = "Scan cancelled."; }
-        catch (Exception ex) { if (!_isClosing) SystemStatus.Text = "Scan failed: " + ex.Message; }
-        finally
-        {
-            if (ReferenceEquals(_scanCancellation, cancellation)) _scanCancellation = null;
-            if (!_isClosing)
-            {
-                QuickButton.IsEnabled = DeepButton.IsEnabled = true;
-                SystemCancel.IsEnabled = false;
-            }
-        }
-    }
     private void RefreshAntivirus(object sender, RoutedEventArgs e) => UpdateAntivirusDisplay();
 
     private void UpdateAntivirusDisplay()
@@ -376,100 +330,112 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void RunDefender(object sender, RoutedEventArgs e)
+    private void ChooseStrixExecutable(object sender, RoutedEventArgs e)
     {
-        UpdateAntivirusDisplay();
-        if (_antivirusAssessment?.ActiveDefender != true)
+        var choose = new OpenFileDialog {
+            Title = "Select a trusted, separately installed Strix CLI executable",
+            Filter = "Windows executable (*.exe)|*.exe", CheckFileExists = true, Multiselect = false
+        };
+        if (choose.ShowDialog(this) == true) StrixExecutable.Text = choose.FileName;
+    }
+
+    private void ChooseStrixSource(object sender, RoutedEventArgs e)
+    {
+        var choose = new OpenFolderDialog {
+            Title = "Select a local repository you own or are authorized to test",
+            Multiselect = false
+        };
+        if (choose.ShowDialog(this) == true) StrixSource.Text = choose.FolderName;
+    }
+
+    private async void RunStrix(object sender, RoutedEventArgs e)
+    {
+        if (_isClosing || _strix.IsRunning) return;
+        if (StrixAuthorization.IsChecked != true)
         {
-            SystemStatus.Text = "Microsoft Defender is not reported active. No scan requested. Open Windows Security to check your installed antivirus.";
+            StrixStatus.Text = "Explicit target ownership/authorization confirmation is required.";
             return;
         }
-        SystemStatus.Text = "Requesting Microsoft Defender Quick Scan...";
-        try { SystemStatus.Text = await DefenderIntegration.RunScanAsync(ScanMode.Quick, CancellationToken.None); }
-        catch (Exception ex) { SystemStatus.Text = "Defender request failed: " + ex.Message; }
-    }
-    private void OpenSanitizer(object sender, RoutedEventArgs e)
-    {
-        string binary = Path.Combine(_engineDirectory, "OTSSystemSanitizer.exe");
-        if (!File.Exists(binary)) { SystemStatus.Text = "Full Sanitizer module is missing."; return; }
-        try { Process.Start(new ProcessStartInfo(binary) { UseShellExecute = true }); }
-        catch (Exception ex) { SystemStatus.Text = "Could not open System Sanitizer: " + ex.Message; }
-    }
-    private void InvestigateFinding(object sender, RoutedEventArgs e)
-    {
-        if (SystemFindings.SelectedItem is not ThreatFinding finding) return;
-        MessageBox.Show(this, ThreatInvestigator.Explain(finding), "Finding investigation", MessageBoxButton.OK, MessageBoxImage.Information);
-    }
-    private void QuarantineFinding(object sender, RoutedEventArgs e)
-    {
-        if (SystemFindings.SelectedItem is not ThreatFinding finding) return;
-        if (MessageBox.Show(this, "Move the selected user file into encrypted quarantine?\n\n"+finding.Path,
-            "Confirm quarantine", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+
+        StrixRunOptions options;
         try
         {
-            _quarantine.Quarantine(finding.Path, ThreatInvestigator.Explain(finding));
-            SystemStatus.Text = "File quarantined. Review it in Quarantine & Cleanup.";
-            RefreshVault();
+            options = StrixSafety.Validate(StrixExecutable.Text, StrixSource.Text,
+                StrixModel.Text, StrixEndpoint.Text);
         }
-        catch (Exception ex) { SystemStatus.Text = "Quarantine failed: " + ex.Message; }
-    }
-    private void RefreshQuarantine(object sender, RoutedEventArgs e) => RefreshVault();
-    private void RefreshVault()
-    {
-        _reviewed.Clear(); // Never reuse approval after contents of the vault change.
+        catch (Exception ex) when (ex is ArgumentException or IOException or UnauthorizedAccessException)
+        {
+            StrixStatus.Text = "Strix configuration rejected: " + ex.Message;
+            return;
+        }
+
+        if (MessageBox.Show(this,
+            "Start an autonomous pentest of a DISPOSABLE COPY of the selected local source?\n\n" +
+            "Strix uses Docker, may execute source code and can make network requests. " +
+            "OTS cannot guarantee Docker network isolation. Use an unprivileged disposable test machine, " +
+            "and ensure the source is under your explicit authorization.\n\n" +
+            "Only a numeric loopback LLM endpoint is permitted, and no paid API key is passed.",
+            "Confirm Strix local assessment", MessageBoxButton.YesNo, MessageBoxImage.Warning)
+            != MessageBoxResult.Yes) return;
+
+        using var cancel = new CancellationTokenSource();
+        _strixCancellation = cancel;
+        _strixReportsDirectory = null;
+        StrixRunButton.IsEnabled = false;
+        StrixCancelButton.IsEnabled = true;
+        StrixReportsButton.IsEnabled = false;
+        StrixStatus.Text = "Preparing a bounded disposable source copy and launching local Strix...";
         try
         {
-            QuarantineItems.ItemsSource = _quarantine.List();
+            var result = await _strix.RunAsync(options, cancel.Token);
+            if (_isClosing) return;
+            _strixReportsDirectory = result.ReportsDirectory;
+            StrixReportsButton.IsEnabled = Directory.Exists(result.ReportsDirectory);
+            StrixStatus.Text = result.ExitCode switch
+            {
+                0 => "Strix finished without a validated finding in this run. This is NOT proof that the target is secure.",
+                2 => "Strix reported at least one finding. Review the local run report before drawing conclusions.",
+                _ => $"Strix ended with exit code {result.ExitCode}; the assessment is incomplete or failed."
+            };
+            if (StrixReportsButton.IsEnabled)
+                StrixStatus.Text += " Reports are stored locally and may contain sensitive data.";
         }
-        catch (IOException ex)
+        catch (OperationCanceledException)
         {
-            QuarantineItems.ItemsSource = null;
-            CleanupStatus.Text = "Quarantine listing unavailable: " + ex.Message;
+            if (!_isClosing) StrixStatus.Text = "Strix was cancelled. Inspect Docker for any residual containers.";
         }
-        catch (UnauthorizedAccessException ex)
+        catch (Exception ex)
         {
-            QuarantineItems.ItemsSource = null;
-            CleanupStatus.Text = "Quarantine access denied: " + ex.Message;
+            if (!_isClosing) StrixStatus.Text = "Strix could not complete: " + ex.GetType().Name +
+                ". Confirm Docker, the installed CLI and your local model are working.";
+        }
+        finally
+        {
+            if (ReferenceEquals(_strixCancellation, cancel)) _strixCancellation = null;
+            if (!_isClosing)
+            {
+                StrixRunButton.IsEnabled = true;
+                StrixCancelButton.IsEnabled = false;
+            }
         }
     }
-    private void InvestigateQuarantined(object sender, RoutedEventArgs e)
+
+    private void CancelStrix(object sender, RoutedEventArgs e)
     {
-        if (QuarantineItems.SelectedItem is not QuarantinedFile item) return;
-        MessageBox.Show(this, ThreatInvestigator.QuarantineReport(item), "Quarantine review",
-            MessageBoxButton.OK, MessageBoxImage.Information);
-        _reviewed.Add(QuarantineVaultRegistry.ReviewIdentity(item));
+        StrixCancelButton.IsEnabled = false;
+        StrixStatus.Text = "Stopping Strix. Docker cleanup may still be required.";
+        _strixCancellation?.Cancel();
+        _strix.Cancel();
     }
-    private void RestoreQuarantined(object sender, RoutedEventArgs e)
+
+    private void OpenStrixReports(object sender, RoutedEventArgs e)
     {
-        if (QuarantineItems.SelectedItem is not QuarantinedFile item) return;
-        if (MessageBox.Show(this, "Restore this file to its original location?\n" + item.OriginalPath,
-            "Confirm restore", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-        try { _quarantine.Restore(item); RefreshVault(); CleanupStatus.Text = "File restored."; }
-        catch (Exception ex) { CleanupStatus.Text = "Restore failed: " + ex.Message; }
-    }
-    private void DestroyQuarantined(object sender, RoutedEventArgs e)
-    {
-        if (QuarantineItems.SelectedItem is not QuarantinedFile item) return;
-        if (!_reviewed.Contains(QuarantineVaultRegistry.ReviewIdentity(item))) { CleanupStatus.Text = "Review the selected quarantine item before destroying it."; return; }
-        if (MessageBox.Show(this, "PERMANENTLY destroy this reviewed quarantine item? This cannot be undone.\n"+item.OriginalPath,
-            "Permanent removal", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
-        try { _quarantine.Destroy(item); _reviewed.Remove(QuarantineVaultRegistry.ReviewIdentity(item)); RefreshVault(); CleanupStatus.Text = "Reviewed quarantine item removed."; }
-        catch (Exception ex) { CleanupStatus.Text = "Removal failed: " + ex.Message; }
-    }
-    private void DiscoverCleanup(object sender, RoutedEventArgs e)
-    {
-        var candidates = CleanupService.Discover(BrowserCache.IsChecked == true);
-        CleanupItems.ItemsSource = candidates;
-        CleanupStatus.Text = $"{candidates.Count:N0} cleanup candidates. Select the specific files you want to remove.";
-    }
-    private void RemoveCleanup(object sender, RoutedEventArgs e)
-    {
-        var selected = CleanupItems.SelectedItems.Cast<CleanupCandidate>().ToArray();
-        if (selected.Length == 0) { CleanupStatus.Text = "Select one or more cleanup files first."; return; }
-        if (MessageBox.Show(this, $"Permanently remove {selected.Length:N0} selected old temporary files?",
-            "Confirm space recovery", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
-        var result = CleanupService.RemoveSelected(selected);
-        CleanupStatus.Text = $"Removed {result.Removed} files, {result.BytesRemoved:N0} bytes. Failed: {result.Failures.Count}.";
-        DiscoverCleanup(sender,e);
+        if (_strixReportsDirectory is not { } directory || !Directory.Exists(directory)) return;
+        try { Process.Start(new ProcessStartInfo("explorer.exe") { UseShellExecute = false,
+            ArgumentList = { directory } }); }
+        catch (Exception ex)
+        {
+            StrixStatus.Text = "Could not open the local reports directory: " + ex.GetType().Name;
+        }
     }
 }
