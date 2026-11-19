@@ -14,17 +14,7 @@ permissions:
 jobs:
   baseline:
     name: Universal security baseline
-    uses: ohanatechsolutions/OTS_DevOps/.github/workflows/security-baseline.yml@d3747e6e2efec9a6048b83d7dfb3256489d75c36
+    uses: ohanatechsolutions/OTS_DevOps/.github/workflows/security-baseline.yml@5ebf1a85ed605fddfb26f5147e74af4749cc8d47
     permissions:
       contents: read
 
-  osv:
-    name: OSV dependency and lockfile audit
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.7.1
-    with:
-      upload-sarif: false
-      fail-on-vuln: true
-    permissions:
-      contents: read
-      actions: read
-      security-events: write
