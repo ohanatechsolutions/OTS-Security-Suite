@@ -62,10 +62,22 @@ jobs:
         shell: pwsh
         run: |
           $bundle = (Resolve-Path bundle).Path
-          $required = @('OTSSecuritySuite.exe', 'OhanaLogo.png', 'AppIcon.ico')
+          # WPF Resource assets are embedded in the compiled assembly, not
+          # copied as loose image files into the publish directory.
+          $required = @('OTSSecuritySuite.exe', 'OTSSecuritySuite.dll',
+                        'OTSSecuritySuite.runtimeconfig.json', 'coreclr.dll')
           foreach ($name in $required) {
             if (-not (Test-Path (Join-Path $bundle $name))) {
-              throw "Required hub resource missing: $name"
+              throw "Required self-contained hub dependency missing: $name"
+            }
+          }
+          $project = Get-Content 'src/OTSSecuritySuite.Hub/OTSSecuritySuite.Hub.csproj' -Raw
+          foreach ($asset in @('AppIcon.ico', 'OhanaLogo.png')) {
+            if (-not (Test-Path (Join-Path 'src/OTSSecuritySuite.Desktop' $asset))) {
+              throw "Missing original branding source asset: $asset"
+            }
+            if (-not $project.Contains("Link=""$asset""")) {
+              throw "Original WPF embedded resource mapping missing: $asset"
             }
           }
           $exe = Join-Path $bundle 'OTSSecuritySuite.exe'
