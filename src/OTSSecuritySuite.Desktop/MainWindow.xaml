@@ -25,9 +25,9 @@
           <Button Name="RepoTab" Click="ShowRepository" Content="▣  REPOSCAN · REPOSITORY SECURITY" Foreground="#39FF14"/>
           <Button Name="SystemTab" Click="ShowSystem" Content="▤  WINDOWS SECURITY"/>
           <Button Name="NetworkTab" Click="ShowNetwork" Content="⌁  NETWORK DEFENSE"/>
-          <Button Name="CleanupTab" Click="ShowCleanup" Content="⊞  QUARANTINE &amp; CLEANUP"/>
+          <Button Name="StrixTab" Click="ShowStrix" Content="◇  STRIX · AI PENTEST"/>
           <Border Background="#1C3020" CornerRadius="6" Margin="4,22,8,0" Padding="11">
-            <TextBlock Text="SCAN READ-ONLY BY DEFAULT&#10;&#10;Review findings before quarantining or removing anything." Foreground="#B9D1BD" TextWrapping="Wrap" FontSize="12"/>
+            <TextBlock Text="REPOSCAN IS READ-ONLY BY DEFAULT&#10;&#10;Strix is separate, opt-in, and tests only an authorized disposable copy." Foreground="#B9D1BD" TextWrapping="Wrap" FontSize="12"/>
           </Border>
         </StackPanel>
       </Border>
@@ -43,22 +43,18 @@
           </Border>
         </Grid>
         <Grid Name="SystemPanel" Visibility="Collapsed">
-          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-          <TextBlock Grid.Row="0" Text="WINDOWS THREAT &amp; PERSISTENCE INSPECTION" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,16"/>
-          <Border Grid.Row="1" Background="#14271A" BorderBrush="#3E6849" BorderThickness="1" CornerRadius="7" Padding="12" Margin="0,0,0,12">
-            <StackPanel>
-              <TextBlock Name="AntivirusSummary" Text="CHECKING · Registered antivirus status..." FontWeight="Bold" FontSize="15" Foreground="#E4F8E7" TextWrapping="Wrap"/>
-              <TextBlock Name="AntivirusProducts" Text="Reading Windows Security Center..." Foreground="#B8D2BF" Margin="0,6,0,0" TextWrapping="Wrap"/>
-              <TextBlock Name="AntivirusGuidance" Text="Antivirus status is read-only. OTS does not disable or replace installed antivirus." Foreground="#C6D9C8" Margin="0,5,0,0" TextWrapping="Wrap"/>
-              <WrapPanel Margin="0,9,0,0"><Button Click="RefreshAntivirus" Content="REFRESH PROTECTION STATUS"/><Button Click="OpenWindowsSecurity" Content="OPEN WINDOWS SECURITY"/></WrapPanel>
-            </StackPanel>
-          </Border>
-          <WrapPanel Grid.Row="2"><Button Name="QuickButton" Click="RunQuick" Content="QUICK SCAN"/><Button Name="DeepButton" Click="RunDeep" Content="DEEP SCAN"/><Button Name="SystemCancel" Click="CancelSystemScan" Content="CANCEL SCAN" IsEnabled="False"/><Button Click="RunDefender" Content="REQUEST DEFENDER SCAN"/><Button Click="OpenSanitizer" Content="OPEN FULL SANITIZER"/></WrapPanel>
-          <TextBlock Grid.Row="3" Name="SystemStatus" Foreground="#A9CCA9" Text="System inspection is read-only. Destructive actions require confirmation." Margin="0,14,0,12" TextWrapping="Wrap"/>
-          <ListView Grid.Row="4" Name="SystemFindings" SelectionMode="Single" >
-            <ListView.View><GridView><GridViewColumn Header="Severity" DisplayMemberBinding="{Binding Severity}" Width="90"/><GridViewColumn Header="Finding" DisplayMemberBinding="{Binding Title}" Width="220"/><GridViewColumn Header="Location" DisplayMemberBinding="{Binding Path}" Width="430"/></GridView></ListView.View>
-          </ListView>
-          <WrapPanel Grid.Row="5" Margin="0,12,0,0"><Button Click="InvestigateFinding" Content="INVESTIGATE SELECTED"/><Button Click="QuarantineFinding" Content="QUARANTINE SELECTED"/></WrapPanel>
+          <StackPanel>
+            <TextBlock Text="WINDOWS ANTIVIRUS STATUS" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,16"/>
+            <Border Background="#14271A" BorderBrush="#3E6849" BorderThickness="1" CornerRadius="7" Padding="12" Margin="0,0,0,12">
+              <StackPanel>
+                <TextBlock Name="AntivirusSummary" Text="CHECKING · Registered antivirus status..." FontWeight="Bold" FontSize="15" Foreground="#E4F8E7" TextWrapping="Wrap"/>
+                <TextBlock Name="AntivirusProducts" Text="Reading Windows Security Center..." Foreground="#B8D2BF" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                <TextBlock Name="AntivirusGuidance" Text="Antivirus status is read-only. OTS does not disable or replace installed antivirus." Foreground="#C6D9C8" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                <WrapPanel Margin="0,9,0,0"><Button Click="RefreshAntivirus" Content="REFRESH PROTECTION STATUS"/><Button Click="OpenWindowsSecurity" Content="OPEN WINDOWS SECURITY"/></WrapPanel>
+              </StackPanel>
+            </Border>
+            <TextBlock Name="SystemStatus" Text="The Windows Security tab reports antivirus status. File cleanup and the former System Sanitizer module are not part of this application." Foreground="#A9CCA9" TextWrapping="Wrap" Margin="0,10,0,0"/>
+          </StackPanel>
         </Grid>
         <Grid Name="NetworkPanel" Visibility="Collapsed">
           <Grid.RowDefinitions>
@@ -102,14 +98,29 @@
             </TabItem>
           </TabControl>
         </Grid>
-        <Grid Name="CleanupPanel" Visibility="Collapsed">
-          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-          <TextBlock Grid.Row="0" Text="QUARANTINE VAULT &amp; SPACE RECOVERY" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,14"/>
-          <WrapPanel Grid.Row="1"><Button Click="RefreshQuarantine" Content="REFRESH QUARANTINE"/><Button Click="InvestigateQuarantined" Content="REVIEW SELECTED"/><Button Click="RestoreQuarantined" Content="RESTORE SELECTED"/><Button Click="DestroyQuarantined" Content="DESTROY REVIEWED"/></WrapPanel>
-          <ListView Grid.Row="2" Name="QuarantineItems"><ListView.View><GridView><GridViewColumn Header="Original path" DisplayMemberBinding="{Binding OriginalPath}" Width="570"/><GridViewColumn Header="Quarantined" DisplayMemberBinding="{Binding QuarantinedAt}" Width="195"/></GridView></ListView.View></ListView>
-          <WrapPanel Grid.Row="3" Margin="0,14,0,4"><Button Click="DiscoverCleanup" Content="DISCOVER OLD TEMP FILES"/><Button Click="RemoveCleanup" Content="REMOVE CHECKED FILES"/><CheckBox Name="BrowserCache" Content="Include browser caches"/></WrapPanel>
-          <TextBlock Grid.Row="4" Name="CleanupStatus" Foreground="#B2CBB5" Text="Review the candidate files before removing them." Margin="0,0,0,8"/>
-          <ListView Grid.Row="5" Name="CleanupItems" SelectionMode="Extended"><ListView.View><GridView><GridViewColumn Header="File" DisplayMemberBinding="{Binding Path}" Width="530"/><GridViewColumn Header="Size" DisplayMemberBinding="{Binding SizeLabel}" Width="110"/><GridViewColumn Header="Category" DisplayMemberBinding="{Binding Category}" Width="150"/></GridView></ListView.View></ListView>
+        <Grid Name="StrixPanel" Visibility="Collapsed">
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,14,12">
+              <TextBlock Text="STRIX · OPTIONAL AUTONOMOUS PENETRATION TESTING" Foreground="#39FF14" FontWeight="Bold" FontSize="18" Margin="0,0,0,12"/>
+              <TextBlock Text="Separate Apache-2.0 Strix CLI and Docker are required. No Strix binary is bundled, installed or started automatically. This assessment can execute code, make network requests and consume substantial computing resources." Foreground="#C8DDCD" TextWrapping="Wrap" Margin="0,0,0,12"/>
+              <TextBlock Text="Only a local source directory and numeric loopback AI-model endpoint are accepted. OTS copies the source into a capped disposable workspace; Strix may modify that copy. Docker network isolation is NOT guaranteed by this preview. Never use production secrets or a privileged Docker daemon." Foreground="#E0C987" TextWrapping="Wrap" Margin="0,0,0,13"/>
+              <TextBlock Text="STRIX CLI EXECUTABLE (.exe)" Foreground="#A9CCA9"/>
+              <DockPanel Margin="0,3,0,12"><Button DockPanel.Dock="Right" Click="ChooseStrixExecutable" Content="BROWSE"/><TextBox Name="StrixExecutable" Margin="0,0,8,0" MinWidth="180"/></DockPanel>
+              <TextBlock Text="OWNED / AUTHORIZED LOCAL SOURCE FOLDER" Foreground="#A9CCA9"/>
+              <DockPanel Margin="0,3,0,12"><Button DockPanel.Dock="Right" Click="ChooseStrixSource" Content="BROWSE"/><TextBox Name="StrixSource" Margin="0,0,8,0" MinWidth="180"/></DockPanel>
+              <TextBlock Text="SELF-HOSTED MODEL IDENTIFIER (LiteLLM / OpenAI-compatible)" Foreground="#A9CCA9"/>
+              <TextBox Name="StrixModel" Margin="0,3,0,12" Text="openai/local-model"/>
+              <TextBlock Text="LOCAL MODEL ENDPOINT (LOOPBACK ONLY)" Foreground="#A9CCA9"/>
+              <TextBox Name="StrixEndpoint" Margin="0,3,0,12" Text="http://127.0.0.1:11434/v1"/>
+              <CheckBox Name="StrixAuthorization" Margin="0,0,0,13" Foreground="#E2F0E4" Content="I own or am expressly authorized to test this source and understand autonomous testing can execute code."/>
+              <WrapPanel>
+                <Button Name="StrixRunButton" Click="RunStrix" Content="RUN AUTHORIZED LOCAL TEST"/>
+                <Button Name="StrixCancelButton" Click="CancelStrix" Content="CANCEL" IsEnabled="False"/>
+                <Button Name="StrixReportsButton" Click="OpenStrixReports" Content="OPEN LOCAL REPORTS" IsEnabled="False"/>
+              </WrapPanel>
+              <TextBlock Name="StrixStatus" Margin="0,14,0,0" Foreground="#B9D1BD" TextWrapping="Wrap" Text="Strix is idle. No tests have been started."/>
+            </StackPanel>
+          </ScrollViewer>
         </Grid>
       </Grid>
     </Grid>
