@@ -33,7 +33,7 @@ var cases = new (string Name, Func<Task> Action)[]
     ("firewall rule hints identify duplicate and opposite rules without precedence claims", FirewallRuleOverlapHints),
     ("event history keeps Windows-owned actions distinct from detection", WindowsActivityClassification),
     ("Strix rejects nonlocal model endpoints and missing executable", StrixLocalPolicyRejectsRemote),
-    ("Strix starts with a zero API budget and no inherited paid keys", StrixCommandHasLocalBudget),
+    ("Strix forces local model routing and removes paid keys", StrixCommandHasLocalBudget),
     ("Strix copies bounded local source without modifying originals", StrixSnapshotIsDisposable),
 };
 int passed = 0;
@@ -578,13 +578,15 @@ static Task StrixCommandHasLocalBudget()
         Assert(args.Contains("-n") && args.Contains("--config") && args.Contains("--scan-mode") &&
             args.Contains("quick"), "Expected bounded, configured non-interactive run");
         int budget = Array.IndexOf(args, "--max-budget");
-        Assert(budget >= 0 && args[budget + 1] == "0", "Paid API budget must be zero");
+        Assert(budget >= 0 && args[budget + 1] == "1", "Local-only scan must have a bounded internal budget");
         Assert(!info.Environment.ContainsKey("OPENAI_API_KEY"),
             "Inherited paid-model credentials were passed to Strix");
         Assert(info.Environment["LLM_API_KEY"] == "local-only" &&
             info.Environment["LLM_API_BASE"] == validated.LocalEndpoint,
             "Strix must only receive local model connection information");
         Assert(info.Environment["STRIX_TELEMETRY"] == "0", "Telemetry must be disabled");
+        Assert(info.Environment["DEDUPE_LLM_API_BASE"] == validated.LocalEndpoint, "Dedupe model must be local");
+        Assert(info.Environment["STRIX_LLM_INPUT_COST_PER_MTOK"] == "0", "Local model must have zero monetary unit price");
     }
     finally
     {
@@ -606,6 +608,9 @@ static Task StrixSnapshotIsDisposable()
         Directory.CreateDirectory(Path.Combine(source, "subdir"));
         File.WriteAllText(Path.Combine(source, ".git", "config"), "DO NOT COPY");
         File.WriteAllText(Path.Combine(source, "subdir", "app.cs"), "OWNED FIXTURE");
+        try { StrixSafety.CopySnapshot(source, Path.Combine(source, "inside"), CancellationToken.None);
+            throw new Exception("Accepted an overlapping Strix workspace"); }
+        catch (IOException) { }
         StrixSafety.CopySnapshot(source, copy, CancellationToken.None);
         Assert(File.ReadAllText(Path.Combine(copy, "subdir", "app.cs")) == "OWNED FIXTURE",
             "Source fixture was not copied");
