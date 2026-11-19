@@ -64,6 +64,20 @@ try {
         throw 'Windows Security tab did not show initial read-only confirmation'
     }
     Write-Host 'PASS WPF UI Automation: Windows Security tab navigation'
+    $removed = [System.Windows.Automation.PropertyCondition]::new(
+        [System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'CleanupTab')
+    if ($root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $removed)) {
+        throw 'Retired System Sanitizer cleanup tab is still present'
+    }
+    Click-Ui 'StrixTab'
+    $authorization = Get-Ui 'StrixAuthorization'
+    if ($authorization.Current.Name -notlike '*authorized*') {
+        throw 'Strix authorization text is not visible'
+    }
+    $run = Get-Ui 'StrixRunButton'
+    if ($null -eq $run) { throw 'Strix explicit run control is missing' }
+    Write-Host 'PASS WPF UI Automation: optional Strix navigation and explicit authorization UI'
+
 } finally {
     # No synthetic files or destructive operations were needed.
 }
