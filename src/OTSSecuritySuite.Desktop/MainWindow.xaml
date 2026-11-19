@@ -109,7 +109,7 @@
               <TextBlock Text="OWNED / AUTHORIZED LOCAL SOURCE FOLDER" Foreground="#A9CCA9"/>
               <DockPanel Margin="0,3,0,12"><Button DockPanel.Dock="Right" Click="ChooseStrixSource" Content="BROWSE"/><TextBox Name="StrixSource" Margin="0,0,8,0" MinWidth="180"/></DockPanel>
               <TextBlock Text="SELF-HOSTED MODEL IDENTIFIER (LiteLLM / OpenAI-compatible)" Foreground="#A9CCA9"/>
-              <TextBox Name="StrixModel" Margin="0,3,0,12" Text="openai/local-model"/>
+              <TextBox Name="StrixModel" Margin="0,3,0,12" ToolTip="Required: openai/your-installed-local-model-id (no paid/cloud model provider)" Text=""/>
               <TextBlock Text="LOCAL MODEL ENDPOINT (LOOPBACK ONLY)" Foreground="#A9CCA9"/>
               <TextBox Name="StrixEndpoint" Margin="0,3,0,12" Text="http://127.0.0.1:11434/v1"/>
               <CheckBox Name="StrixAuthorization" Margin="0,0,0,13" Foreground="#E2F0E4" Content="I own or am expressly authorized to test this source and understand autonomous testing can execute code."/>
