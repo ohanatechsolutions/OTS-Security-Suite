@@ -8,10 +8,10 @@ on:
         required: false
         default: false
       prerelease_tag:
-        description: 'Unused unique test tag, e.g. v0.9.0-test.4'
+        description: 'Unused unique test tag, e.g. v0.9.0-test.5'
         type: string
         required: false
-        default: 'v0.9.0-test.4'
+        default: 'v0.9.0-test.5'
   push:
     branches: [main]
   pull_request:
@@ -362,7 +362,7 @@ jobs:
         if: >
           github.event_name == 'workflow_dispatch' ||
           (github.event_name == 'pull_request' && github.event.pull_request.number == 15 && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feature/strix-local-opt-in-no-sanitizer') ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.4]'))
+          (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.5]'))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Windows-Beta
@@ -376,7 +376,7 @@ jobs:
     name: Release test preview after Windows QA (manual draft or one-time approved public test)
     needs: [windows-build]
     # No automatic public release for ordinary main commits or PRs.
-    if: (github.event_name == 'workflow_dispatch' && inputs.create_draft == true) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.4]'))
+    if: (github.event_name == 'workflow_dispatch' && inputs.create_draft == true) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-test-release-v0.9.0-test.5]'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only this isolated job can write releases, not Windows build steps.
@@ -416,7 +416,7 @@ jobs:
       - name: Create owner-only DRAFT prerelease
         env:
           GH_TOKEN: ${{ github.token }}
-          PRERELEASE_TAG: ${{ github.event_name == 'push' && 'v0.9.0-test.4' || inputs.prerelease_tag }}
+          PRERELEASE_TAG: ${{ github.event_name == 'push' && 'v0.9.0-test.5' || inputs.prerelease_tag }}
         shell: bash
         run: |
           set -euo pipefail
