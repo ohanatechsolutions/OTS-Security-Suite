@@ -1,3 +1,10 @@
+## Unreleased — 2026-11-18 external-tool strategy and documentation reconciliation
+
+- Recorded the new owner-directed **external security engines only** target and retirement of old OTS detector programs.
+- Added [tool decision register](docs/TOOLING_DECISIONS.md), [implementation roadmap](docs/IMPLEMENTATION_ROADMAP.md), [documentation index](docs/README.md).
+- Reconciled README, status, dependency inventory, release gates and historical QA documentation to distinguish target tools from existing compiled code.
+- This is documentation-only: **no engine replaced, tool installed, new binary built or release approved**. Legacy RepoScan in current shipped code remains a P0 migration blocker.
+
 ## Unreleased — 2026-11-18 Strix optional module and product scope revision (feature branch)
 
 - Added an explicitly authorized Strix tab and local-only CLI adapter with a bounded, disposable source-code snapshot; external Strix CLI, Docker and model server are user-installed, not shipped.

@@ -1,3 +1,5 @@
+> **CURRENT vs TARGET INVENTORY — 2026-11-18:** The table below inventories the old **currently built** WPF/RepoScan-based product, not the 14 approved external-tool target candidates. No new engine should be listed as a runtime dependency before actual vendor version, package provenance, license review and integration evidence. Defender status is wired; Strix adapter exists but runtime is untested; TruffleHog/Semgrep/OSV/SkillSpector have CI-level use only. See [TOOLING_DECISIONS.md](TOOLING_DECISIONS.md).
+
 > **2026-11-18 source migration:** Historic CI evidence below predates the removal of the Sanitizer Git submodule and must not be treated as validation of the vendored build. The in-repository WHITE replacement is a separate source directory, not a gitlink. `tools/verify-vendored-sanitizer.ps1` provides an independent exact-tree identity check.
 
 # Dependency and Build-Provenance Inventory — OTS Security Suite
