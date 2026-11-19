@@ -294,3 +294,32 @@ jobs:
           echo "### Verified preview release" >> "$GITHUB_STEP_SUMMARY"
           echo "Tag: $tag · Commit: ${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"
           echo "GitHub release download and checksum verified." >> "$GITHUB_STEP_SUMMARY"
+
+  repair-v0-10-1-preview-title:
+    # Post-publication metadata only. Never re-upload or overwrite a release asset.
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      contains(github.event.head_commit.message, '[ots-hub-preview-metadata-0101]')
+    needs: windows-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Correct version-matched preview title without touching published binaries
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag='v0.10.1-test.1'
+          expected_sha='a9f398af58dce88f424cd7f43582d38e31838ddb'
+          release="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/$tag")"
+          jq -e --arg sha "$expected_sha"             '.target_commitish == $sha and .tag_name == "v0.10.1-test.1" and .prerelease == true and .draft == false and ([.assets[].name] | sort) == ["OTS-Security-Suite-Setup-x64.exe","SHA256SUMS.txt"]'             <<< "$release"
+          original_sha="$(jq -r '.assets[] | select(.name == "OTS-Security-Suite-Setup-x64.exe") | .digest' <<< "$release")"
+          test "$original_sha" = 'sha256:e0ba70ffeb7ff8125076f86d37c0f54d84954bdd63f0cfed3e5da4e4de30ab0c'
+          gh release edit "$tag" --repo "${GITHUB_REPOSITORY}"             --title "OTS Security Suite v0.10.1 Test 1 — Hardened Third-Party Hub (UNSIGNED)"             --prerelease
+          after="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/$tag")"
+          jq -e --arg sha "$expected_sha"             '.name == "OTS Security Suite v0.10.1 Test 1 — Hardened Third-Party Hub (UNSIGNED)" and .target_commitish == $sha and .prerelease == true and .draft == false'             <<< "$after"
+          test "$(jq -r '.assets[] | select(.name == "OTS-Security-Suite-Setup-x64.exe") | .digest' <<< "$after")" = "$original_sha"
+          echo "Preview metadata corrected; published signed-provenance/unsigned-publisher installer unchanged."

@@ -1,3 +1,13 @@
+## [v0.10.1-test.1] — Owner QA hardened upstream-tool hub (November 19, 2026)
+
+- [Unsigned Windows x64 pre-release](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/tag/v0.10.1-test.1) published from `a9f398af58dce88f424cd7f43582d38e31838ddb`, 47,071,371-byte installer `OTS-Security-Suite-Setup-x64.exe`; SHA-256 `e0ba70ffeb7ff8125076f86d37c0f54d84954bdd63f0cfed3e5da4e4de30ab0c`.
+- Prevent wrong-tool CLI help output on tab change and disable overlapping help, with safe reset of current selection.
+- Handle restricted settings files, malformed paths and temporary setting-cleanup errors more safely.
+- Verified original WPF branding resource mappings, window icon, published assembly version `0.10.1`, and self-contained .NET runtime.
+- [Windows QA and post-release download/byte/SHA/provenance verification](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44509191199) and [universal security checks](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44509192024) **PASS** on tag source commit.
+- Windows quickstart: [docs/QUICKSTART_WINDOWS.md](docs/QUICKSTART_WINDOWS.md). New owner-test release notes: [docs/RELEASE_NOTES_V0_10_TEST2.md](docs/RELEASE_NOTES_V0_10_TEST2.md).
+- No new runtime vendor scanners are claimed: 14 selected upstream tools remain a partial launcher/help integration, not 14 completed analytic engines. Real Win10/11 owner testing, DPAPI recovery, licensing, source-to-vendor identity and Authenticode signing remain blocked. Production **NO-GO**.
+
 ## [v0.10.0-test.1] — Published unsigned upstream-only hub owner preview (2026-11-19 00:22 HST)
 
 - Published a **real Windows x64 .exe** as [GitHub pre-release](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/tag/v0.10.0-test.1) from tag `v0.10.0-test.1` at source commit `b80cc086f7d87fd3a6c36966d70320ffa5d680a3`.
