@@ -1,3 +1,13 @@
+## [v0.10.0-test.1] — Published unsigned upstream-only hub owner preview (2026-11-19 00:22 HST)
+
+- Published a **real Windows x64 .exe** as [GitHub pre-release](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/tag/v0.10.0-test.1) from tag `v0.10.0-test.1` at source commit `b80cc086f7d87fd3a6c36966d70320ffa5d680a3`.
+- Confirmed the **new vendor-tool hub** installer and 14 external tool navigation replace the retired OTS RepoScan/W.H.I.T.E./Sanitizer/Firewall79X code in the distributed package; historical source remains preserved.
+- Fixed stale no-release contract test while retaining a fail-closed one-time pre-release gate and exact SHA-256/provenance checks.
+- Verified actual upgrade of pinned `v0.9.0-test.5` installer to 0.10.0 on Windows CI with synthetic user-data/legacy-vault canaries retained and obsolete scanner removed.
+- [Windows build, upgrade, installer, attestation and post-download verification](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44504685976) **PASS**; [universal security](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44504686333) **PASS**.
+- Package: `OTS-Security-Suite-Setup-x64.exe` 47,071,315 bytes, SHA-256 `6c1ea64a0e0aa15676cacbd59b16284fb9ece2da135ceaf953fb83e1da026503`.
+- Remains **owner-only QA / production NO-GO**: incomplete third-party scanner runtimes, independent Win10/11 owner UAT, real user-vault/DPAPI restoration, third-party licensing and Authenticode signing. No branches deleted.
+
 ## Unreleased — 0.10.0 third-party-tool hub preview (2026-11-18 HST)
 - Implemented a separate native WPF hub for 14 selected external cybersecurity projects with per-tool navigation and original upstream links. Windows Security launches natively; KopiaUI launches its actual GUI; connected CLI tools provide bounded `--help` only (no automated scans).
 - Removed legacy OTS RepoScan/W.H.I.T.E./Sanitizer/Firewall79X from the **build and installer**; preserved source history and quarantine data. Same AppId upgrade removes only known obsolete app-install assets and local protocol registration.

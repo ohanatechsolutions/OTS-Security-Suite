@@ -8,6 +8,8 @@
 
 # OTS Security Suite
 
+> **Owner test installer now available:** [**Download v0.10.0-test.1**](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/download/v0.10.0-test.1/OTS-Security-Suite-Setup-x64.exe) · [GitHub pre-release](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/tag/v0.10.0-test.1) · [verified Windows build](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44504685976). This is an **unsigned test preview**, **not a production-ready antivirus/security suite**. The 14 selected upstream products have navigation and safe original-tool entry points; their complete scanners and runtime integrations are **not all implemented**. Historical `v0.9.0` releases still launch old OTS scanners and are obsolete for the approved product.
+
 <p align="center"><strong>One Windows hub. Proven external security engines. No required subscription.</strong></p>
 
 <p align="center">A modular Windows security-tool workspace by <strong>Ohana Tech Solutions</strong>. The next version is a hub for previously reviewed free cybersecurity tools, rather than another in-house malware scanner.</p>
