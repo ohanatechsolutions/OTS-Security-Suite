@@ -19,7 +19,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0" />
-    <ProjectReference Include="..\..\modules\OTS_System_Sanitizer\src\OTSSystemSanitizer.Core\OTSSystemSanitizer.Core.csproj" />
+    <!-- Historical Sanitizer sources remain archived in this repository but are not built into the suite. -->
+    <Compile Remove="QuarantineVaultRegistry.cs" />
     <Compile Remove="WhiteAuditRunner.cs" />
     <Compile Remove="WhiteReportWriter.cs" />
     <Resource Include="AppIcon.ico" />
