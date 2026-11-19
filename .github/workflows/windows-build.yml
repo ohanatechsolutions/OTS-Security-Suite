@@ -13,6 +13,10 @@ concurrency:
 
 jobs:
   windows-build:
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     runs-on: windows-latest
     timeout-minutes: 30
     steps:
@@ -115,6 +119,19 @@ jobs:
           if ($removed.ExitCode -ne 0) { throw "Uninstaller exit: $($removed.ExitCode)" }
           if (Test-Path $app) { throw 'Uninstall left hub EXE behind' }
           Write-Host 'Hub install/start/uninstall PASS (no third-party program executed)'
+      - name: Sign GitHub build provenance for main/manual verification
+        if: github.event_name != 'pull_request'
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: 'artifacts/OTS-Security-Suite-Setup-x64.exe'
+      - name: Independently verify GitHub build attestation
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh attestation verify 'artifacts/OTS-Security-Suite-Setup-x64.exe' --repo $env:GITHUB_REPOSITORY
+          if ($LASTEXITCODE -ne 0) { throw 'Hub installer provenance could not be verified' }
       - name: Upload unsigned hub preview for owner testing
         if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
