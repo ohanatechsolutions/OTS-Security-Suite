@@ -17,7 +17,7 @@ public static class StrixSafety
         if (string.IsNullOrWhiteSpace(executable) || !Path.IsPathFullyQualified(executable))
             throw new ArgumentException("Choose an absolute path to a locally installed Strix executable.");
         string exe = Path.GetFullPath(executable);
-        if (!string.Equals(Path.GetExtension(exe), ".exe", StringComparison.OrdinalIgnoreCase) || !File.Exists(exe))
+        if (!string.Equals(Path.GetFileName(exe), "strix.exe", StringComparison.OrdinalIgnoreCase) || !File.Exists(exe))
             throw new ArgumentException("Strix must be an installed Windows .exe, selected explicitly.");
         if (string.IsNullOrWhiteSpace(source) || !Path.IsPathFullyQualified(source))
             throw new ArgumentException("Choose a local source-code folder.");
@@ -27,8 +27,8 @@ public static class StrixSafety
         if ((File.GetAttributes(folder) & FileAttributes.ReparsePoint) != 0)
             throw new ArgumentException("Reparse points and directory links cannot be scanned.");
         model = model?.Trim() ?? "";
-        if (!Regex.IsMatch(model, @"^[A-Za-z0-9][A-Za-z0-9._:/-]{1,127}$", RegexOptions.CultureInvariant))
-            throw new ArgumentException("Enter a local model ID without spaces or control characters.");
+        if (!Regex.IsMatch(model, @"^openai/[A-Za-z0-9][A-Za-z0-9._/-]{0,120}$", RegexOptions.CultureInvariant))
+            throw new ArgumentException("Only openai/<local-model-id> is allowed with a self-hosted OpenAI-compatible server; remote provider prefixes are rejected.");
         if (!Uri.TryCreate(endpoint?.Trim(), UriKind.Absolute, out var uri) ||
             uri.Scheme != Uri.UriSchemeHttp || !IPAddress.TryParse(uri.Host, out var ip) ||
             !IPAddress.IsLoopback(ip) || uri.Port <= 0 ||
@@ -99,11 +99,21 @@ public static class StrixSafety
                     throw new IOException("A link or reparse point was found. Refusing to copy this source.");
                 if (entry is DirectoryInfo)
                 {
-                    if (entry.Name is ".git" or "node_modules" or "strix_runs") continue;
+                    if (entry.Name is ".git" or "node_modules" or "strix_runs" or ".venv" or ".ssh" or ".aws" or ".azure") continue;
                     pending.Push(entry.FullName);
                     continue;
                 }
                 if (entry is not FileInfo file) continue;
+                string name = file.Name;
+                if (name.StartsWith(".env", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("id_rsa", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("id_ed25519", StringComparison.OrdinalIgnoreCase) ||
+                    name.Equals("credentials.json", StringComparison.OrdinalIgnoreCase) ||
+                    name.EndsWith(".pem", StringComparison.OrdinalIgnoreCase) ||
+                    name.EndsWith(".p12", StringComparison.OrdinalIgnoreCase) ||
+                    name.EndsWith(".pfx", StringComparison.OrdinalIgnoreCase) ||
+                    name.EndsWith(".key", StringComparison.OrdinalIgnoreCase))
+                    continue;
                 files++;
                 bytes += file.Length;
                 if (files > maxFiles || file.Length > maxSingleFile || bytes > maxBytes)
