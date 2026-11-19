@@ -550,6 +550,9 @@ static Task StrixLocalPolicyRejectsRemote()
                 throw new Exception("Accepted nonlocal or credential-bearing model endpoint: " + endpoint); }
             catch (ArgumentException) { }
         }
+        try { StrixSafety.Validate(cli, src, "openrouter/cloud-model", valid.LocalEndpoint);
+            throw new Exception("Accepted a nonlocal model-provider prefix"); }
+        catch (ArgumentException) { }
         try { StrixSafety.Validate(Path.Combine(root, "not-present.exe"), src, "openai/local", valid.LocalEndpoint);
             throw new Exception("Accepted a missing Strix CLI"); }
         catch (ArgumentException) { }
@@ -608,6 +611,8 @@ static Task StrixSnapshotIsDisposable()
         Directory.CreateDirectory(Path.Combine(source, "subdir"));
         File.WriteAllText(Path.Combine(source, ".git", "config"), "DO NOT COPY");
         File.WriteAllText(Path.Combine(source, "subdir", "app.cs"), "OWNED FIXTURE");
+        File.WriteAllText(Path.Combine(source, ".env"), "SYNTHETIC_SECRET=SHOULD_NOT_COPY");
+        File.WriteAllText(Path.Combine(source, "subdir", "id_rsa"), "SYNTHETIC_SSH_KEY");
         try { StrixSafety.CopySnapshot(source, Path.Combine(source, "inside"), CancellationToken.None);
             throw new Exception("Accepted an overlapping Strix workspace"); }
         catch (IOException) { }
@@ -615,6 +620,8 @@ static Task StrixSnapshotIsDisposable()
         Assert(File.ReadAllText(Path.Combine(copy, "subdir", "app.cs")) == "OWNED FIXTURE",
             "Source fixture was not copied");
         Assert(!Directory.Exists(Path.Combine(copy, ".git")), "Git history/secrets were copied to Strix");
+        Assert(!File.Exists(Path.Combine(copy, ".env")), "Environment credentials were copied");
+        Assert(!File.Exists(Path.Combine(copy, "subdir", "id_rsa")), "SSH credentials were copied");
         File.WriteAllText(Path.Combine(copy, "subdir", "app.cs"), "SANDBOX MODIFICATION");
         Assert(File.ReadAllText(Path.Combine(source, "subdir", "app.cs")) == "OWNED FIXTURE",
             "Changing the Strix workspace modified the original source");
