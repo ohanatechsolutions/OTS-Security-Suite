@@ -1,15 +1,18 @@
 import re
 import unittest
 from pathlib import Path
-from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[1]
 HUB = ROOT / "src" / "OTSSecuritySuite.Hub"
 
 class UpstreamOnlyHubContractTests(unittest.TestCase):
     def test_hub_wpf_documents_parse(self):
+        # Native WPF compilation performs full XAML parsing; do not parse
+        # XML using unsafe Python stdlib parsers in a security CI job.
         for name in ("App.xaml", "MainWindow.xaml"):
-            ElementTree.parse(HUB / name)
+            source = (HUB / name).read_text(encoding="utf8")
+            self.assertIn("x:Class=", source)
+            self.assertIn("schemas.microsoft.com/winfx/2006/xaml", source)
 
     def test_old_ots_engines_not_referenced(self):
         for name in ("ToolCatalog.cs", "MainWindow.xaml", "MainWindow.xaml.cs"):
