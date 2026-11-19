@@ -27,11 +27,11 @@ Decision: add an optional self-hosted Strix capability with no required paid API
 
 | ID | Requirement | Current evidence |
 |---|---|---|
-| STRIX-T01 | Reject remote or credential-bearing LLM endpoints, missing executable, unsafe source roots | Synthetic C# test written; NOT RUN |
-| STRIX-T02 | Start non-interactively; do not forward paid credentials; force local deduplication and zero token prices | Synthetic C# test written; NOT RUN |
-| STRIX-T03 | Preserve source, skip Git metadata, enforce size/reparse/overlap limits | Synthetic C# test written; NOT RUN |
-| STRIX-T04 | Authorization and cancellation controls in WPF; no Sanitizer UI | Static Python regression test written; NOT RUN |
-| STRIX-T05 | Windows build and unsigned installer contain neither Strix binary nor Sanitizer | CI updated; NOT RUN |
+| STRIX-T01 | Reject remote or credential-bearing LLM endpoints, missing executable, unsafe source roots | Synthetic C# test PASS within 29/29 audit suite, CI #44463640720 |
+| STRIX-T02 | Start non-interactively; do not forward paid credentials; force local deduplication and zero token prices | Synthetic C# test PASS within 29/29 audit suite, CI #44463640720 |
+| STRIX-T03 | Preserve source, skip Git metadata, enforce size/reparse/overlap limits | Synthetic C# test PASS within 29/29 audit suite, CI #44463640720 |
+| STRIX-T04 | Authorization and cancellation controls in WPF; no Sanitizer UI | Python static checks and installed-app WPF UI smoke PASS, CI #44463640720 |
+| STRIX-T05 | Windows build and unsigned installer contain neither Strix binary nor Sanitizer | Windows CI build, package and installed-app smoke PASS #44463640720; artifact upload SKIPPED for PR |
 | STRIX-T06 | Real local Strix/Docker/LLM test in a controlled, owner-authorized Windows VM | BLOCKED: real environment and approval |
 | STRIX-T07 | Independent network-egress, container lifetime, source-data and report privacy review | BLOCKED: security acceptance |
 

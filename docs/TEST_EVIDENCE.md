@@ -1,3 +1,5 @@
+> **2026-11-18 — STRIX-001 feature branch CI evidence:** [Windows build #44463640720](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44463640720) **SUCCESS** for `e18d87023bac07fc56f4bd0ac0c30401d4606ac8`: Go, Python, in-repository audit; AuditSmoke **29/29 PASS**, including 3 Strix policy/snapshot tests; Windows antivirus **16 assertions PASS**; WPF publish; Inno installer assembly; installed-app UI Automation verified Strix tab and removed cleanup tab; same-version repair/uninstall preserved synthetic legacy vault canary. Package artifact upload was **SKIPPED**, by PR policy; no new downloadable installer/release. Actual Strix/Docker/local-model execution, network isolation, independent owner acceptance and signed distribution **NOT RUN / NO-GO**. Earlier evidence below applies to the indicated historical commits, not this feature without a matching run.
+
 ## 2026-11-18 — CONSOL-001 source consolidation (verified branch CI)
 
 - Source PR [#5](https://github.com/ohanatechsolutions/OTS_Security_Suite/pull/5) merged into `main@d190b03726c08cc0dfb90d62592ff0355a0f930a`.
