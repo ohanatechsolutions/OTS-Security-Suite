@@ -6,8 +6,8 @@ Decision: add an optional self-hosted Strix capability with no required paid API
 ## Implemented on the feature branch
 
 - A dedicated Strix WPF tab, separate from the normal non-executing RepoScan and read-only Windows Security/Network Defense interfaces.
-- Explicitly selected local Strix Windows CLI executable and source directory; a user-selected local model ID and HTTP URL at a numeric loopback address; authorization checkbox and a separate Yes/No runtime approval.
-- A source snapshot copied into a per-run directory. Limits: 3,000 files, 100 MiB total, 20 MiB per file. Reject filesystem reparse points, reject copying source into itself, skip .git, node_modules and strix_runs. Original files are never mounted directly by the adapter.
+- Explicitly selected local Strix Windows CLI executable and source directory; an explicitly entered model ID with the openai/ prefix and HTTP URL at a numeric loopback address; authorization checkbox and a separate Yes/No runtime approval.
+- A source snapshot copied into a per-run directory. Limits: 3,000 files, 100 MiB total, 20 MiB per file. Reject filesystem reparse points, reject copying source into itself, skip .git, node_modules, strix_runs, common credential directories (.ssh/.aws/.azure/.venv), and common secret files (.env*, .pem, .key, .p12, .pfx, id_rsa/id_ed25519, credentials.json). This is defense in depth, NOT complete secret discovery. Original files are never mounted directly by the adapter.
 - Separate no-shell process with non-interactive quick mode, 30 model turns, an internal --max-budget 1 accounting bound, and a 30-minute timeout. This is NOT authorization to spend $1. The configured locally hosted model has all supported monetary token-pricing values set to zero; no paid provider credentials are passed.
 - A fresh child environment containing only minimal Windows variables and local-model settings. Both primary and deduplication endpoints are local; Strix telemetry disabled; remote Docker overrides not inherited.
 - Stdout and stderr drained without writing possibly sensitive excerpts to the Suite UI. Cancellation attempts to terminate the CLI process tree. The temporary source copy is deleted in finally; any local Strix report is left for manual review.
@@ -17,11 +17,11 @@ Decision: add an optional self-hosted Strix capability with no required paid API
 
 1. Docker container network isolation is NOT established by restricting the model endpoint to loopback. Strix may execute code or initiate network requests. Use only owned, non-production target copies inside a dedicated unprivileged test VM with separately enforced egress controls.
 2. The Strix CLI may create Docker-managed containers that outlive the child process. Cancellation is best effort and does not constitute a complete Docker cleanup guarantee.
-3. Source snapshots can still include secrets already present in selected files. Do not select production code containing real secrets. Local reports may also contain private data; inspect, securely store or remove them manually.
-4. No Strix executable, Docker image, local LLM weights, paid API or remote hosted service is downloaded, installed or launched by installing OTS Security Suite.
+3. Source snapshots can still include secrets embedded in ordinary code or files, despite exclusion of known credential-file patterns. Do not select production code containing real secrets. Local reports may also contain private data; inspect, securely store or remove them manually.
+4. No Strix executable, Docker image, local LLM weights, paid API or remote hosted service is downloaded, installed or launched by installing OTS Security Suite. First explicitly authorized execution may allow upstream Strix/Docker to download sandbox images; do not attempt this without reviewing network access.
 5. Windows CLI flag/version compatibility, model tool-calling quality, Docker isolation, network egress, real report parsing, and Windows acceptance have NOT been verified in an independent runtime test.
 6. Returning exit code 0 does not prove a vulnerability-free target. Stopped and incomplete conditions must be checked in the native Strix reports.
-7. The original Sanitizer repository and any prior user DPAPI/quarantine vaults are NOT deleted or migrated as part of this change.
+7. The original Sanitizer repository and any prior user DPAPI/quarantine vaults are NOT deleted or migrated as part of this change. Previously installed versions may contain the old executable until users follow a separate, data-preserving clean-upgrade procedure.
 
 ## Verification gates
 
