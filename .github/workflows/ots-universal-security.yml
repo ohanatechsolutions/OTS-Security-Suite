@@ -14,6 +14,6 @@ permissions:
 jobs:
   baseline:
     name: Universal security baseline
-    uses: ohanatechsolutions/OTS_DevOps/.github/workflows/security-baseline.yml@db739a5baa60c667b5621ab028583063a807218d
+    uses: ohanatechsolutions/OTS_DevOps/.github/workflows/security-baseline.yml@4c525e992c0b2a5b067fc255c1e5238357e4e601
     permissions:
       contents: read
