@@ -75,6 +75,32 @@ jobs:
           } | Set-Content artifacts/SHA256SUMS.txt
           if ((Get-Item $exe).Length -lt 1MB) { throw 'Implausible installer size' }
           Write-Host 'Unsigned TEST installer built and hashed'
+      - name: Verify legacy v0.9.0 installation for real upgrade test
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path legacy-0.9.0 | Out-Null
+          gh release download v0.9.0-test.5 --repo $env:GITHUB_REPOSITORY --pattern OTS-Security-Suite-Setup-x64.exe --dir legacy-0.9.0
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot fetch pinned legacy installer for upgrade QA' }
+          $legacySetup = (Resolve-Path legacy-0.9.0/OTS-Security-Suite-Setup-x64.exe).Path
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $legacySetup).Hash
+          if ($hash -ne 'D5AA9EDB57D63E5B31B14F8FD8E130CAE696A9011087D2EF9229C15C49722A46') {
+            throw "Legacy installer checksum mismatch. Refusing to execute unverified binary."
+          }
+          $old = Start-Process -FilePath $legacySetup -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-') -Wait -PassThru
+          if ($old.ExitCode -ne 0) { throw "Legacy v0.9.0 install returned $($old.ExitCode)" }
+          $installed = Join-Path $env:LOCALAPPDATA 'Programs/Ohana Tech Solutions/Security Suite'
+          if (-not (Test-Path (Join-Path $installed 'engines/OTSScannerEngine.exe'))) {
+            throw 'Real legacy scanner engine missing; upgrade test would not exercise previous installation'
+          }
+          $dataFolder = Join-Path $env:LOCALAPPDATA 'Ohana Tech Solutions/Security Suite'
+          $vaultFolder = Join-Path $env:LOCALAPPDATA 'OTSSystemSanitizer/Quarantine'
+          New-Item -ItemType Directory -Force -Path $dataFolder,$vaultFolder | Out-Null
+          Set-Content -LiteralPath (Join-Path $dataFolder 'qa-upgrade-data-canary.txt') -Value 'preserve-user-data-v0.9' -NoNewline
+          Set-Content -LiteralPath (Join-Path $vaultFolder 'qa-upgrade-vault-canary.txt') -Value 'preserve-legacy-vault-v0.9' -NoNewline
+          Write-Host 'Pinned legacy v0.9.0 install and protected user-data canaries seeded'
       - name: Install, smoke test and uninstall (Windows runner)
         shell: pwsh
         run: |
@@ -87,6 +113,15 @@ jobs:
           if (Test-Path (Join-Path $installed 'engines')) { throw 'Stale OTS scanner engines still installed' }
           if (Test-Path (Join-Path $installed 'extension')) { throw 'Stale RepoScan browser extension still installed' }
           if (Test-Path 'HKCU:\Software\Classes\ots-security') { throw 'Obsolete RepoScan protocol remains registered' }
+          $dataCanary = Join-Path $env:LOCALAPPDATA 'Ohana Tech Solutions/Security Suite/qa-upgrade-data-canary.txt'
+          $vaultCanary = Join-Path $env:LOCALAPPDATA 'OTSSystemSanitizer/Quarantine/qa-upgrade-vault-canary.txt'
+          if ((Get-Content -LiteralPath $dataCanary -Raw) -ne 'preserve-user-data-v0.9') {
+            throw 'Real 0.9.0 upgrade damaged the user-data canary'
+          }
+          if ((Get-Content -LiteralPath $vaultCanary -Raw) -ne 'preserve-legacy-vault-v0.9') {
+            throw 'Real 0.9.0 upgrade damaged the legacy vault canary'
+          }
+          Write-Host 'PASS: actual v0.9.0 to 0.10.0 upgrade removed obsolete scanner and preserved user-data canaries'
           $process = Start-Process -FilePath $app -PassThru
           try {
             Start-Sleep -Seconds 5
@@ -118,6 +153,10 @@ jobs:
           $removed = Start-Process -FilePath $uninstall -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART') -Wait -PassThru
           if ($removed.ExitCode -ne 0) { throw "Uninstaller exit: $($removed.ExitCode)" }
           if (Test-Path $app) { throw 'Uninstall left hub EXE behind' }
+          if ((Get-Content -LiteralPath $dataCanary -Raw) -ne 'preserve-user-data-v0.9' -or
+              (Get-Content -LiteralPath $vaultCanary -Raw) -ne 'preserve-legacy-vault-v0.9') {
+            throw 'Hub uninstall damaged protected legacy user data'
+          }
           Write-Host 'Hub install/start/uninstall PASS (no third-party program executed)'
       - name: Sign GitHub build provenance for main/manual verification
         if: github.event_name != 'pull_request'
@@ -138,7 +177,9 @@ jobs:
         if: >
           github.event_name == 'workflow_dispatch' ||
           (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[ots-hub-owner-qa-artifact]'))
+          (github.event_name == 'push' && github.ref == 'refs/heads/main' &&
+            (contains(github.event.head_commit.message, '[ots-hub-owner-qa-artifact]') ||
+             contains(github.event.head_commit.message, '[ots-hub-release-v0.10.0-test.1]')))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: OTS-Security-Suite-Upstream-Hub-Windows
@@ -147,3 +188,80 @@ jobs:
             artifacts/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 7
+
+  publish-v0-10-test1:
+    # A single, explicit, owner-authorized marker is required on the main merge commit.
+    # Pull requests and routine main pushes never publish a release.
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      contains(github.event.head_commit.message, '[ots-hub-release-v0.10.0-test.1]')
+    needs: windows-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Require successful universal security checks on exact release source
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for i in {1..40}; do
+            runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${GITHUB_SHA}&per_page=100" --jq '[.workflow_runs[] | select(.name == "OTS Universal Security" and .event == "push") | {status: .status, conclusion: .conclusion}]')"
+            if [ "$(jq 'length' <<< "$runs")" -eq 0 ]; then
+              sleep 10
+              continue
+            fi
+            conclusion="$(jq -r '.[0].conclusion // "pending"' <<< "$runs")"
+            case "$conclusion" in
+              success) echo "Universal Security PASS on ${GITHUB_SHA}"; break ;;
+              pending) sleep 10 ;;
+              *) echo "Universal Security did not pass: $conclusion"; exit 1 ;;
+            esac
+            if [ "$i" -eq 40 ]; then echo "Security CI did not finish in allotted time"; exit 1; fi
+          done
+      - name: Checkout exact release documentation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Download tested unsigned installer and checksum
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: OTS-Security-Suite-Upstream-Hub-Windows
+          path: release-assets
+      - name: Verify exact Windows package before publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s release-assets/OTS-Security-Suite-Setup-x64.exe
+          test -s release-assets/SHA256SUMS.txt
+          test "$(find release-assets -type f | wc -l)" -eq 2
+          (cd release-assets && sha256sum -c SHA256SUMS.txt)
+          test "$(od -An -tx1 -N2 release-assets/OTS-Security-Suite-Setup-x64.exe | tr -d ' \n')" = "4d5a"
+          test "$(stat -c %s release-assets/OTS-Security-Suite-Setup-x64.exe)" -gt 1000000
+          echo "Unsigned Windows installer verified for ${GITHUB_SHA}"
+      - name: Publish one-time unsigned GitHub pre-release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag='v0.10.0-test.1'
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/$tag" >/dev/null 2>&1; then
+            echo "Tag already exists; refusing to overwrite or republish"
+            exit 1
+          fi
+          gh release create "$tag"             release-assets/OTS-Security-Suite-Setup-x64.exe             release-assets/SHA256SUMS.txt             --repo "${GITHUB_REPOSITORY}"             --target "${GITHUB_SHA}"             --title "OTS Security Suite v0.10.0 Test 1 — Third-Party Hub (UNSIGNED)"             --notes-file docs/RELEASE_NOTES_V0_10_TEST1.md             --prerelease
+          gh api "repos/${GITHUB_REPOSITORY}/releases/tags/$tag" |
+            jq -e --arg sha "${GITHUB_SHA}" '.tag_name == "v0.10.0-test.1" and .prerelease == true and .draft == false and .target_commitish == $sha and ([.assets[].name] | sort) == ["OTS-Security-Suite-Setup-x64.exe","SHA256SUMS.txt"]'
+          mkdir downloaded-release
+          gh release download "$tag" --repo "${GITHUB_REPOSITORY}" --dir downloaded-release             --pattern 'OTS-Security-Suite-Setup-x64.exe' --pattern 'SHA256SUMS.txt'
+          (cd downloaded-release && sha256sum -c SHA256SUMS.txt)
+          cmp release-assets/OTS-Security-Suite-Setup-x64.exe downloaded-release/OTS-Security-Suite-Setup-x64.exe
+          echo "### Verified preview release" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tag: $tag · Commit: ${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"
+          echo "GitHub release download and checksum verified." >> "$GITHUB_STEP_SUMMARY"

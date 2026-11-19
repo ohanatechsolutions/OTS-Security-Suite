@@ -55,7 +55,11 @@ class HubReleaseManifestTests(unittest.TestCase):
         self.assertNotIn("OTSSecuritySuite.Desktop.csproj", ci)
         self.assertNotIn("PyInstaller", ci)
         self.assertNotIn("go build", ci)
-        self.assertNotIn("gh release create", ci)
+        self.assertIn("gh release create", ci)
+        self.assertIn("--prerelease", ci)
+        self.assertIn("needs: windows-build", ci)
+        self.assertIn("OTS Universal Security", ci)
+        self.assertIn("[ots-hub-release-v0.10.0-test.1]", ci)
         self.assertIn("Upload unsigned hub preview", ci)
         self.assertIn("no-OTS-engines", ci)
 
