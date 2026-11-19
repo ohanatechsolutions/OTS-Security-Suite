@@ -1,5 +1,5 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="art/header-dark.png">
+  <source media="(prefers-color-scheme: dark)" srcset="art/SecuritySuite-header-dark.png">
   <img alt="OTS Security Suite" src="art/header-light.png">
 </picture>
 
