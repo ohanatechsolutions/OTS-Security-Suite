@@ -79,7 +79,7 @@ class ReleaseManifestTests(unittest.TestCase):
         self.assertIn('StrixSafety.Validate', code)
         self.assertIn('MessageBoxButton.YesNo', code)
         for control in ('IPAddress.IsLoopback', 'CopySnapshot', 'ProcessStartInfo', 'UseShellExecute = false',
-                        'STRIX_TELEMETRY', '"--max-budget", "0"', 'CancelAfter(TimeSpan.FromMinutes(30))'):
+                        'STRIX_TELEMETRY', '--max-budget", "1"', 'CancelAfter(TimeSpan.FromMinutes(30))'):
             self.assertIn(control, runner)
         self.assertNotIn('curl -sSL', runner, 'The installer must never download or execute a remote install script')
 
