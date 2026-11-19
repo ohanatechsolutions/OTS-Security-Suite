@@ -1,7 +1,7 @@
 ## Unreleased — 0.10.0 third-party hub migration (NOT YET QA-APPROVED)
 - Replaced the shipped product scope with a vendor-owned cybersecurity tool catalog and genuine upstream GUI/CLI launcher.
 - New Windows WPF hub project that does not build or bundle RepoScan, OTS White, Sanitizer, Firewall79X or legacy browser extension.
-- Added explicit executable validation, user-local path preferences, 10-second bounded CLI help, and original executable icon display.
+- Added allowlisted executable/PE header validation, real C# negative/positive smoke tests, user-local path preferences, 10-second bounded CLI help, and original executable icon display. Strix/SkillSpector may be connected for CLI help only.
 - Added installer cleanup for known obsolete installed scanner assets without deleting historical source/vault data.
 - Added separate Windows CI build, third-party-only contract tests and installer smoke checks. Results pending.
 
