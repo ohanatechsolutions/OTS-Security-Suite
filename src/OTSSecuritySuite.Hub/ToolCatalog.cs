@@ -66,12 +66,12 @@ public static class ToolCatalog
             new[] {"semgrep.exe"}, "No hosted Semgrep account or paid plan is required by this application."),
         new ToolSpec("skillspector", "NVIDIA SkillSpector", "AI & Agent Security",
             "Review externally sourced agent skills for unsafe instructions and supply-chain risks.",
-            ToolMode.DocumentationOnly, "https://github.com/NVIDIA/SkillSpector",
-            Array.Empty<string>(), "Platform and local-model support must be verified upstream; no external AI credentials are used."),
+            ToolMode.CommandLine, "https://github.com/NVIDIA/SkillSpector",
+            new[] {"skillspector.exe"}, "Only locally installed CLI help is offered; Windows support, model backend and optional external providers are managed by upstream, not OTS."),
         new ToolSpec("strix", "Strix", "Authorized Penetration Testing",
             "Optional autonomous penetration-testing tool installed and controlled independently.",
-            ToolMode.DocumentationOnly, "https://github.com/usestrix/strix",
-            Array.Empty<string>(), "No autonomous test, Docker container, model download or network target is started by this hub.")
+            ToolMode.CommandLine, "https://github.com/usestrix/strix",
+            new[] {"strix.exe"}, "Only the local Strix --help command is available in this hub; no agent assessment, Docker container, model download or network target is started.")
     });
 
     public static bool ValidExecutable(ToolSpec tool, string path)
@@ -82,9 +82,26 @@ public static class ToolCatalog
         try
         {
             string full = Path.GetFullPath(path);
-            return tool.ExecutableNames.Any(name =>
-                string.Equals(name, Path.GetFileName(full), StringComparison.OrdinalIgnoreCase))
-                && File.Exists(full);
+            if (!tool.ExecutableNames.Any(name =>
+                    string.Equals(name, Path.GetFileName(full), StringComparison.OrdinalIgnoreCase))
+                || !File.Exists(full))
+                return false;
+
+            // A filename or .exe extension does not prove this is a Windows program.
+            // Read only the DOS and NT signatures; this is NOT a trust/signature verdict.
+            using var stream = File.Open(full, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            if (stream.Length < 68) return false;
+            Span<byte> dosHeader = stackalloc byte[64];
+            stream.ReadExactly(dosHeader);
+            if (dosHeader[0] != 0x4D || dosHeader[1] != 0x5A) return false;
+            int peOffset = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(
+                dosHeader.Slice(0x3C, 4));
+            if (peOffset < 64 || peOffset > stream.Length - 4) return false;
+            stream.Position = peOffset;
+            Span<byte> peHeader = stackalloc byte[4];
+            stream.ReadExactly(peHeader);
+            return peHeader[0] == 0x50 && peHeader[1] == 0x45 &&
+                peHeader[2] == 0 && peHeader[3] == 0;
         }
         catch (Exception ex) when (ex is ArgumentException or IOException or UnauthorizedAccessException or NotSupportedException)
         {
