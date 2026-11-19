@@ -11,7 +11,7 @@
     <ApplicationIcon>../OTSSecuritySuite.Desktop/AppIcon.ico</ApplicationIcon>
     <Company>Ohana Tech Solutions</Company>
     <Product>OTS Security Suite — Third-Party Tool Hub</Product>
-    <Version>0.10.0</Version>
+    <Version>0.10.1</Version>
     <Description>Local launchpad for independently installed cybersecurity tools.</Description>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>

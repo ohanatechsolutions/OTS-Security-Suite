@@ -51,7 +51,11 @@ public partial class MainWindow : Window
             if (_helpProcess is { HasExited: false } process)
                 process.Kill(entireProcessTree: true);
         }
-        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception) { }
+        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception)
+        {
+            // The process may already have exited while the window is closing.
+            Debug.WriteLine("CLI help shutdown: " + ex.GetType().Name);
+        }
     }
 
     private void LoadConnections()
@@ -65,7 +69,8 @@ public partial class MainWindow : Window
                 if (saved.TryGetValue(tool.Id, out string? path) && ToolCatalog.ValidExecutable(tool, path))
                     _connected[tool.Id] = Path.GetFullPath(path);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException
+            or ArgumentException or NotSupportedException or System.Security.SecurityException)
         {
             // Corrupt settings never grant arbitrary execution permission.
             _connected.Clear();
@@ -84,7 +89,7 @@ public partial class MainWindow : Window
             File.Move(temp, _settingsPath, overwrite: true);
             return true;
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Security.SecurityException)
         {
             ActionStatus.Text = "Cannot save tool connection: " + ex.Message;
             return false;
@@ -93,7 +98,10 @@ public partial class MainWindow : Window
         {
             if (temp is not null)
                 try { if (File.Exists(temp)) File.Delete(temp); }
-                catch (IOException) { }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    Debug.WriteLine("Unable to remove temporary settings file: " + ex.GetType().Name);
+                }
         }
     }
 
@@ -151,7 +159,7 @@ public partial class MainWindow : Window
         }
         OpenButton.IsEnabled = tool.Mode == ToolMode.WindowsSecurity ||
             (tool.Mode == ToolMode.NativeGui && path is not null);
-        HelpButton.IsEnabled = tool.Mode == ToolMode.CommandLine && path is not null;
+        HelpButton.IsEnabled = _helpProcess is null && tool.Mode == ToolMode.CommandLine && path is not null;
         LocateButton.IsEnabled = tool.Mode is ToolMode.NativeGui or ToolMode.CommandLine;
         UnlinkButton.IsEnabled = _connected.ContainsKey(tool.Id);
     }
@@ -191,6 +199,9 @@ public partial class MainWindow : Window
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
+        // A recognized filename and PE header are structural checks, not a
+        // publisher identity or malware-trust guarantee. The user explicitly
+        // chooses which separately installed program will execute.
         _connected[tool.Id] = Path.GetFullPath(dialog.FileName);
         bool saved = SaveConnections();
         RenderTool();
@@ -300,14 +311,14 @@ public partial class MainWindow : Window
             try
             {
                 await Task.WhenAll(stdout, stderr, process.WaitForExitAsync(timeout.Token));
-                if (_closing) return;
+                if (_closing || _selected?.Id != tool.Id) return;
                 HelpOutput.Text = stdout.Result + (stderr.Result.Length > 0 ? "\n" + stderr.Result : "");
                 ActionStatus.Text = $"Original {tool.Name} --help exited with status {process.ExitCode}. No security scan was run.";
             }
             catch (OperationCanceledException)
             {
                 if (!process.HasExited) process.Kill(entireProcessTree: true);
-                if (!_closing)
+                if (!_closing && _selected?.Id == tool.Id)
                 {
                     HelpOutput.Text = "Timed out after 10 seconds; the help process was terminated.";
                     ActionStatus.Text = "The tool did not return help within the time limit.";
@@ -316,12 +327,19 @@ public partial class MainWindow : Window
         }
         catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception or IOException)
         {
-            if (!_closing) ActionStatus.Text = "Cannot run original CLI help: " + ex.Message;
+            if (!_closing && _selected?.Id == tool.Id)
+                ActionStatus.Text = "Cannot run original CLI help: " + ex.Message;
         }
         finally
         {
             _helpProcess = null;
-            if (!_closing) RenderToolPreservingHelp();
+            if (!_closing)
+            {
+                // A user may have selected another tool while the asynchronous
+                // help command ran; never place the old output in the new tab.
+                if (_selected?.Id == tool.Id) RenderToolPreservingHelp();
+                else RenderTool();
+            }
         }
     }
 

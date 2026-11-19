@@ -8,6 +8,8 @@
 
 # OTS Security Suite
 
+> **Latest hardening candidate:** v0.10.1-test.1 (release only after new main CI confirms all gates). See [Windows quickstart](docs/QUICKSTART_WINDOWS.md) and [QA release notes](docs/RELEASE_NOTES_V0_10_TEST2.md). The currently published v0.10.0-test.1 remains available until its successor passes. This is a native launcher and does **not** execute all 14 selected upstream scanners.
+
 > **Owner test installer now available:** [**Download v0.10.0-test.1**](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/download/v0.10.0-test.1/OTS-Security-Suite-Setup-x64.exe) · [GitHub pre-release](https://github.com/ohanatechsolutions/OTS-Security-Suite/releases/tag/v0.10.0-test.1) · [verified Windows build](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44504685976). This is an **unsigned test preview**, **not a production-ready antivirus/security suite**. The 14 selected upstream products have navigation and safe original-tool entry points; their complete scanners and runtime integrations are **not all implemented**. Historical `v0.9.0` releases still launch old OTS scanners and are obsolete for the approved product.
 
 <p align="center"><strong>One Windows hub. Proven external security engines. No required subscription.</strong></p>
