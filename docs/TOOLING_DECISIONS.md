@@ -1,3 +1,5 @@
+> **2026-11-18 HST — IMPLEMENTATION UPDATE (HUB-001–005):** The 14 selected products now have navigation and safe connect/help/doc entry points in a separate WPF hub; these **are not 14 functioning analysis engines**. The obsolete 0.9.x public installer still contains RepoScan, but the current 0.10.0 hub-only CI package no longer bundles RepoScan/W.H.I.T.E./Sanitizer/Firewall79X. [Windows CI #44470904063](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44470904063) and [Universal Security #44470904447](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44470904447) passed at reviewed code commit `5a5361a...`. Actual original GUI launch is available only for installed KopiaUI and Windows Security; user-selected CLI software exposes `--help` only. Full scanner execution and its tests remain **NOT WIRED**, upgrade UAT/signing/licensing **BLOCKED**, production **NO-GO**. This implementation update supersedes earlier "still launches in current main" assertions *for the hub package only*; older published releases remain unchanged.
+
 # OTS Security Suite — Current Tool Decisions (Source of Truth)
 
 **Decision date:** November 18, 2026 (Hawaii). **Status:** APPROVED DIRECTION / IMPLEMENTATION IN PROGRESS.  
@@ -39,7 +41,7 @@ Each row is individually tracked. **SELECTED** is an architecture decision, **no
 
 | ID | Component | Decision | Why / preservation rule |
 |---|---|---|---|
-| RET-01 | Original OTS RepoScan / Go heuristic engine | **RETIRED FROM TARGET** | Superseded by reviewed external detection and audit engines. **Still launches in the existing main-branch installer**; migration is P0, not done |
+| RET-01 | Original OTS RepoScan / Go heuristic engine | **RETIRED FROM TARGET** | Superseded by reviewed external detection and audit engines. **Still launches in historical v0.9.x release installers**; excluded from the 0.10.0 hub-only CI package; upgrade/real-device QA pending |
 | RET-02 | OTS W.H.I.T.E. and Python replacement auditor | **RETIRED FROM TARGET** | Use TruffleHog + Semgrep CE + OSV-Scanner instead. Old replacement still runs in CI; move to external tools only after security equivalence checks |
 | RET-03 | OTS System Sanitizer | **RETIRED FROM SHIPPED PRODUCT** | Already excluded from product UI/package in earlier PR; archived source and historical vaults stay preserved |
 | RET-04 | OTS Firewall79X | **RETIRED / NO INTEGRATION** | Do not replace or compete with built-in Windows Firewall or silently install a second firewall |
@@ -66,7 +68,7 @@ These are **engineering security gates**, not all end-user desktop tabs. In this
 | Requirement | Acceptance evidence needed | Present state |
 |---|---|---|
 | REQ-TOOL-001 | Each SELECTED tool has version, official download/source, cost/licensing gate, safe CLI contract, tab/runner, synthetic positive/negative tests and real Windows evidence | **IN PROGRESS**, only partial existing integration |
-| REQ-TOOL-002 | Old RepoScan/WHITE/Sanitizer/Firewall79X engines no longer ship or launch, without deleting legacy data | **BLOCKED** — RepoScan still shipped; Sanitizer removed from product |
+| REQ-TOOL-002 | Old RepoScan/WHITE/Sanitizer/Firewall79X engines no longer ship or launch, without deleting legacy data | **PARTIAL PASS** — 0.10.0 hub-only CI packaging excludes old engines; 0.9.x in-place upgrade and production signing still blocked |
 | REQ-TOOL-003 | AV coexistence, safe on-demand scans, no automatic destructive action | **IN PROGRESS** — Windows status contract only |
 | REQ-TOOL-004 | Autonomous Strix only with owned targets, isolated disposable environment, local model and verified network controls | **BLOCKED** — code-level tests yes, sandbox runtime no |
 | REQ-TOOL-005 | Zero mandatory paid software, APIs or cloud services; per-component license and rules review | **IN PROGRESS** — licensed candidate roster, distro reviews incomplete |

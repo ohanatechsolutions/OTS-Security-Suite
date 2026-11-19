@@ -1,3 +1,9 @@
+## Unreleased — 0.10.0 third-party-tool hub preview (2026-11-18 HST)
+- Implemented a separate native WPF hub for 14 selected external cybersecurity projects with per-tool navigation and original upstream links. Windows Security launches natively; KopiaUI launches its actual GUI; connected CLI tools provide bounded `--help` only (no automated scans).
+- Removed legacy OTS RepoScan/W.H.I.T.E./Sanitizer/Firewall79X from the **build and installer**; preserved source history and quarantine data. Same AppId upgrade removes only known obsolete app-install assets and local protocol registration.
+- Added local executable filename/PE validation, per-user path preferences, real icon extraction, C# safety tests and Python packaging tests.
+- Windows QA and universal security successful for reviewed candidate; installer remains an **unsigned owner QA artifact**, not a signed production release. True vendor engine execution and independent Windows/upgrade verification remain incomplete.
+
 ## Unreleased — 2026-11-18 external-tool strategy and documentation reconciliation
 
 - Recorded the new owner-directed **external security engines only** target and retirement of old OTS detector programs.

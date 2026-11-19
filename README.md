@@ -14,7 +14,11 @@
 
 <p align="center"><img src="https://img.shields.io/badge/STATUS-EXTERNAL_TOOL_MIGRATION-025E91?style=for-the-badge" alt="Status: external-tool migration" /> <img src="https://img.shields.io/badge/TARGET-WINDOWS_10%2F11_X64-025E91?style=for-the-badge" alt="Windows 10/11 x64" /> <img src="https://img.shields.io/badge/REQUIRED_SUBSCRIPTIONS-%240-025E91?style=for-the-badge" alt="No mandatory subscription" /></p>
 
-> **November 18, 2026 product decision:** The owner has directed the Suite to **replace the old OTS-built detection engines** (RepoScan, W.H.I.T.E., System Sanitizer and Firewall79X) with reviewed external tools. **This migration is NOT complete. The existing application still launches the old Go RepoScan engine.** Earlier green CI runs and test-prerelease installers relate to the former implementation, not the new target stack. Current decisions: [Tool register](docs/TOOLING_DECISIONS.md), [migration roadmap](docs/IMPLEMENTATION_ROADMAP.md), [documentation index](docs/README.md). Production release remains **NO-GO**.
+> **November 18, 2026 product decision and engineering update:** The owner has directed the Suite to **replace the old OTS-built detection engines** (RepoScan, W.H.I.T.E., System Sanitizer and Firewall79X) with reviewed external tools. **The new 0.10.0 source builds a third-party-only Windows hub; the previously published 0.9.x installers still launch the retired RepoScan engine and must not be used as the new product. Full upstream scanner integration remains incomplete.** Earlier green CI runs and test-prerelease installers relate to the former implementation, not the new target stack. Current decisions: [Tool register](docs/TOOLING_DECISIONS.md), [migration roadmap](docs/IMPLEMENTATION_ROADMAP.md), [documentation index](docs/README.md). Production release remains **NO-GO**.
+
+### What the new app actually does
+
+The `src/OTSSecuritySuite.Hub/` Windows app has a tab for every selected third-party project, shows official vendor sources, connects allowlisted local Windows executables (with PE header checks), opens genuine Windows Security and installed KopiaUI windows, and displays local `--help` for installed upstream CLI tools. It does **not** reimplement their detectors, bundle vendor binaries, run security scans, automatically install anything or call a paid API. The older OTS scanners remain in Git history for recovery but are **not shipped** by the 0.10.0 hub installer. [Current Windows CI evidence](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44470904063) · [Security CI evidence](https://github.com/ohanatechsolutions/OTS-Security-Suite/actions/runs/44470904447). An unsigned short-lived test artifact exists; manual Windows acceptance, true tool execution and production release gates remain open.
 
 ---
 
@@ -26,7 +30,7 @@
 
 ## <img src="art/readme-icons/stack.svg" width="24" height="24" alt="" /> Selected External Tool Roster
 
-These are **selected target tools**, NOT a claim that their adapters, binaries or native tabs already exist. The precise source URLs, cost/license constraints, acceptance criteria and implementation state for all 14 tools are in [TOOLING_DECISIONS.md](docs/TOOLING_DECISIONS.md).
+These are **selected external tools with navigation in the new hub preview**; the hub does not bundle their executables or provide complete vendor scan integrations. Native vendor programs open separately and CLI vendors can show only their local help. The precise source URLs, cost/license constraints, acceptance criteria and implementation state for all 14 tools are in [TOOLING_DECISIONS.md](docs/TOOLING_DECISIONS.md).
 
 | Role | Target tools | What actually exists now |
 |---|---|---|

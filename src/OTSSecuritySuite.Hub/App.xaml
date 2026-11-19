@@ -1,0 +1,21 @@
+<Application x:Class="OTSSecuritySuite.Hub.App"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  StartupUri="MainWindow.xaml">
+  <Application.Resources>
+    <Style TargetType="Window">
+      <Setter Property="Background" Value="#09131E"/>
+      <Setter Property="Foreground" Value="#ECF5FF"/>
+      <Setter Property="FontFamily" Value="Segoe UI"/>
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="Padding" Value="15,10"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Background" Value="#025E91"/>
+      <Setter Property="BorderBrush" Value="#4085AD"/>
+      <Setter Property="Margin" Value="0,0,10,10"/>
+    </Style>
+  </Application.Resources>
+</Application>
