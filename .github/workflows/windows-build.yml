@@ -23,6 +23,10 @@ concurrency:
   cancel-in-progress: true
 jobs:
   windows-build:
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
@@ -355,6 +359,19 @@ jobs:
           Remove-Item -LiteralPath $vaultCanary -Force
           Write-Host 'Synthetic user-vault preservation through install/uninstall verified'
           Write-Host 'Installer, bundled modules, icon, URI registration and uninstaller smoke checks passed'
+      - name: Sign build provenance attestation
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: 'artifacts/OTS-Security-Suite-Setup-x64.exe'
+      - name: Independently verify GitHub artifact attestation
+        if: ${{ github.event_name != 'pull_request' }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh attestation verify 'artifacts/OTS-Security-Suite-Setup-x64.exe' --repo $env:GITHUB_REPOSITORY
+          if ($LASTEXITCODE -ne 0) { throw 'Build provenance attestation could not be verified' }
       - name: Upload Windows installer (unsigned test build)
         # Owner-authorized PR #15 can retain a short-lived unsigned, test-only artifact.
         # This does NOT publish a release or grant PR code a write token.
