@@ -34,6 +34,11 @@ jobs:
         run: |
           python -m unittest discover -s tools -p 'test_hub.py' -v
           if ($LASTEXITCODE -ne 0) { throw 'Hub contract tests failed' }
+      - name: Execute upstream catalog and executable-security regression tests
+        shell: pwsh
+        run: |
+          dotnet run --project tests/OTSSecuritySuite.HubSmoke/OTSSecuritySuite.HubSmoke.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Hub trust-boundary smoke tests failed' }
       - name: Publish native Windows hub (no old engines)
         shell: pwsh
         run: |
