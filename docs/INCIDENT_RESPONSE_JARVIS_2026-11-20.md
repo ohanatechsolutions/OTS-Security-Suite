@@ -69,7 +69,7 @@ python incident_center/incident_center.py --db ./incidents.sqlite recent --limit
 
 ## Evidence (not release certification)
 
-- **E-IR-001:** 2026-11-20, Linux Python 3.13.5; `python -m unittest discover -s tests -v` in isolated local copy of `incident_center/`: **4 tests passed**. Covered malformed and oversized records, dedupe, metadata-only storage, CLI and limit validation.
+- **E-IR-001:** 2026-11-20, Linux Python 3.13.5; `python -m unittest discover -s tests -v` in isolated local copy of `incident_center/`: **5 tests passed**. Covered malformed and oversized records (including multi-chunk lines), dedupe, metadata-only storage, CLI and limit validation.
 - **E-IR-002:** `python -m compileall -q incident_center.py tests`: **passed** in isolated local copy.
 - **NOT RUN:** exact GitHub branch clean-clone verification, GitHub Actions on branch, Windows integration, Pi live sensor, Firewalla live integration, restore test, human UAT, installer/release. Production remains **NO-GO**.
 
