@@ -73,7 +73,16 @@ def connect(db_path: Path) -> sqlite3.Connection:
 def ingest(log_path: Path, db_path: Path) -> dict[str, int]:
     stats = {"accepted": 0, "duplicates": 0, "rejected": 0}
     with connect(db_path) as db, log_path.open("rb") as log:
-        for line in log:
+        while True:
+            line = log.readline(MAX_LINE + 1)
+            if not line:
+                break
+            if len(line) > MAX_LINE or (len(line) == MAX_LINE and not line.endswith(b"\n")):
+                stats["rejected"] += 1
+                # Consume the remainder in bounded chunks, not one huge allocation.
+                while line and not line.endswith(b"\n"):
+                    line = log.readline(MAX_LINE + 1)
+                continue
             try:
                 event = parse_event(line)
             except ValueError:
