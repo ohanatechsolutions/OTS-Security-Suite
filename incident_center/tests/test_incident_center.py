@@ -42,6 +42,14 @@ class IntakeTests(unittest.TestCase):
             if os.name == "posix":
                 self.assertEqual(db.stat().st_mode & 0o077, 0)
 
+    def test_oversized_log_line_is_one_rejection(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            log = root / "events.jsonl"
+            log.write_bytes(b"x" * (MAX_LINE * 3) + b"\n" + event())
+            self.assertEqual(ingest(log, root / "events.sqlite"),
+                             {"accepted": 1, "duplicates": 0, "rejected": 1})
+
     def test_cli_and_limit(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
