@@ -5,21 +5,32 @@
 **Base inspected:** `main@1da5de24275b387145d88c10733b5783f9e4ed23`  
 **Source of truth:** existing `docs/THIRD_PARTY_HUB_DECISION.md`, `docs/TOOLING_DECISIONS.md`, `docs/PROJECT_STATUS.md`. This track extends the vendor-tool hub; it does not restore retired proprietary scanner engines.
 
-## Hardware and cost decisions
+## Owner-approved five-layer system architecture (2026-11-20)
 
-- Intel NUC 12 Enthusiast: 32 GB **system RAM**, Intel Arc A770M **16 GB VRAM** (VRAM is not general-purpose RAM for security services); Windows/Jarvis/AI workloads share system resources.
-- Firewalla Orange: intended perimeter and inter-VLAN enforcement; API/alert export and license/cost availability **unverified**.
-- Raspberry Pi 3 B+: isolated OpenCanary sensor; no access to NUC management, storage or Firewalla admin.
-- ICY BOX IB-RD3820 RAID 1 DAS: local redundant storage/backup target; independent protected backup still required.
-- **UPS deferred by owner for funding.** UPS agent, NUT, power-failure shutdown automation: **N/A in this build — not purchased**. Revisit when funded.
-- No paid subscriptions, cloud AI transfer of incident data, automatic software installs, production deployment, releases, or destructive actions authorized.
+| Name | Planned component | Responsibility | Current verification |
+|---|---|---|---|
+| **Brain** | Intel NUC 12 Enthusiast / Serpent Canyon (32 GB system RAM, Arc A770M 16 GB VRAM, 1 TB SSD) | Jarvis, Windows security telemetry, OTS Security Suite incident center | Hardware choice accepted; runtime load and physical setup not tested |
+| **Barbed Fence** | Firewalla **Orange** (exact product/SKU pending verification) | Perimeter, VPN and inter-VLAN policy where supported | Hardware choice accepted; actual features, licensing, API/export and deployment not verified |
+| **Booby Trap** | Raspberry Pi 3 B+ with **OpenCanary** | Isolated decoy services and alert source | Planned; Pi setup and log contract not tested |
+| **Secured Pathway** | **Managed, VLAN-capable** LAN switch | Physical connectivity and VLAN transport; switch does not itself guarantee secure traffic | Model, 802.1Q support, VLAN policies and physical configuration pending |
+| **Watchdog** | Identity-centric zero-trust policies across Google, Squarespace, Jarvis, TanDM and administrator accounts | Phishing-resistant MFA, least privilege, separate admin identity, authorization, high-risk action approval, alerts, revocation | **Architecture approved; controls NOT deployed or verified** |
+
+**Naming clarification:** OpenCanary is the honeypot service. OpenCanopy is a separate optional web dashboard for OpenCanary events, **not** the decoy service itself. Dashboard deployment and exposure are not authorized.
+
+**Scope and cost:** Owner deferred the UPS, ICY BOX DAS, and two 4 TB drives for the initial release. Use the existing 1 TB NUC SSD; existing pCloud 2 TB may hold a **minimal, encrypted, versioned recovery copy** of irreplaceable local configurations/databases and critical business exports, subject to integration and restore validation. No additional cloud purchase approved. RAID/DAS-based backup is **N/A — deferred**, but recovery of critical data is **NOT waived**. No production backup automation has been deployed.
+
+**Safety boundaries:** Do not expose Pi decoys, OpenCanopy, the NUC management interface or SQLite incident storage directly to the internet. A honeypot hit is a signal, not proof of compromise. No automated Firewalla blocking, mass account suspension, external alerts or employee permission changes until separately tested and authorized. The NUC can fail; ensure administrative access to network and identity systems remains independently recoverable.
 
 ## Architecture and trust boundaries
 
 ```text
-ISP -> Firewalla -> VLAN-capable switch -> NUC (Jarvis/Windows agents)
-                                   \-> Pi (OpenCanary decoy, isolated)
-NUC --USB--> ICY BOX RAID DAS --separate protected versioned backup--> offsite/offline
+Internet/ISP -> Barbed Fence (Firewalla) -> Secured Pathway (managed VLAN switch)
+                                         |-> Brain (NUC 12 / Jarvis + Security Suite)
+                                         |-> Booby Trap (Pi 3 B+ / OpenCanary on isolated VLAN)
+Watchdog: separate identity/authorization policies at Google, Squarespace,
+          Jarvis, TanDM and admin entry points (not a device in the LAN path).
+Minimal protected recovery: critical local files -> encrypted versioned pCloud
+                              (integration and restore NOT YET VERIFIED)
 ```
 
 - **Decoy access is not proof of a Firewalla breach.** Treat an OpenCanary interaction as a signal for investigation.
@@ -39,9 +50,13 @@ NUC --USB--> ICY BOX RAID DAS --separate protected versioned backup--> offsite/o
 | IR-006 | Local dashboard, case history and operator acknowledgements | **NOT STARTED** | WPF hub integration required |
 | IR-007 | Out-of-band alerts and escalation | **NOT STARTED** | Need channel, credential, availability and privacy approval |
 | IR-008 | Containment playbooks with explicit allowlist, dry-run, rollback, approval, audit trail | **NOT STARTED** | No automatic firewall or endpoint changes permitted yet |
-| IR-009 | Versioned encrypted backups and tested clean restore | **NOT STARTED** | Kopia selected upstream; real storage and restore UAT required |
+| IR-009 | Minimal encrypted versioned recovery copies to existing pCloud, with tested restore | **NOT STARTED** | DAS deferred; verify pCloud integration, separation of credentials, retention and restore before production |
 | IR-010 | Attack simulations and Windows 10/11 / Pi 3 / Firewalla end-to-end verification | **NOT RUN** | Hardware unavailable in this development environment |
 | IR-011 | UPS monitoring and shutdown | **N/A — deferred by owner** | Funding and UPS model not selected |
+| ID-001 | Watchdog account inventory, account types and privilege map | **NOT STARTED** | Determine personal Gmail vs Workspace; list owners/admins and service recovery paths |
+| ID-002 | Phishing-resistant MFA and protected independent admin identities | **NOT STARTED** | Enrollment and recovery UAT required for each platform |
+| ID-003 | Server-side least privilege in Jarvis/TanDM; step-up approval for destructive/export actions | **NOT STARTED** | Authz tests for employee, compromised session and admin required |
+| ID-004 | Account compromise detection, alert routing and session/token revocation runbook | **NOT STARTED** | Platform capabilities and emergency drills unverified |
 
 ### Risk register
 
@@ -51,7 +66,7 @@ NUC --USB--> ICY BOX RAID DAS --separate protected versioned backup--> offsite/o
 | Compromised honeypot becomes pivot | Separate VLAN, least-privilege access, no management/data route, hardened Pi |
 | Incident logs contain secrets | Metadata-only schema; no raw logdata; local ACLs, retention and deletion policy before deployment |
 | Monitoring fails with NUC outage | Firewalla and Pi remain independent; external alert route to be designed |
-| Ransomware reaches attached DAS | Separate immutable/append-only or offline backup; restore test; don't snapshot contaminated data as clean |
+| Account theft or ransomware corrupts critical records | Restrict privileges, separate owner/admin credentials, maintain encrypted versioned recovery in independent pCloud account, test restore; do not treat ordinary sync as backup |
 | Firewalla automation requires paid API | Manual operator-approved rules unless a free supported interface is verified |
 | Heavy security services impact local AI | Baseline NUC RAM/CPU while AI uses GPU; defer full Wazuh/Velociraptor servers pending benchmark |
 
@@ -79,6 +94,7 @@ python incident_center/incident_center.py --db ./incidents.sqlite recent --limit
 2. Integrate incident read-only display into the **current** WPF hub, preserving existing vendor launcher behavior.
 3. Validate Windows ACLs, retention, timestamp formats and privacy redaction.
 4. Only then add Firewalla and Defender event adapters and alert-only correlation.
-5. Design containment and backup protection as separately authorized, reversible actions with an operator kill switch.
+5. Define Watchdog platform-specific permissions, identity threat model and incident-revocation drill; test independently of the firewall.
+6. Design containment and minimal pCloud recovery as separately authorized, reversible actions with an operator kill switch.
 
 **Applicability:** mobile-app release, billing, cloud hosting, payment compliance: **N/A — local Windows security hub**. Installer QA, Windows privilege boundaries, supply-chain licensing, endpoint isolation and backup recovery: **required, pending**.
